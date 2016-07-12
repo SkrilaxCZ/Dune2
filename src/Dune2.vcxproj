@@ -1,0 +1,369 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A851EA9B-C45F-4838-B7D3-0A1084560274}</ProjectGuid>
+    <RootNamespace>Dune2</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>Build\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>Build\$(Platform)-$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)32.dbg</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>Build\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>Build\$(Platform)-$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName).dbg</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>Build\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>Build\$(Platform)-$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>Build\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>Build\$(Platform)-$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\include;..\allegro\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>allegro\win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib;opengl32.lib;allegro-debug.lib;allegro_acodec-debug.lib;allegro_audio-debug.lib;allegro_image-debug.lib;allegro_memfile-debug.lib;allegro_primitives-debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\include;..\allegro\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\allegro\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib;opengl32.lib;allegro-debug.lib;allegro_acodec-debug.lib;allegro_audio-debug.lib;allegro_image-debug.lib;allegro_memfile-debug.lib;allegro_primitives-debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\include;..\allegro\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>allegro\win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib;opengl32.lib;allegro.lib;allegro_acodec.lib;allegro_audio.lib;allegro_image.lib;allegro_memfile.lib;allegro_primitives.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\include;..\allegro\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\allegro\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib;opengl32.lib;allegro.lib;allegro_acodec.lib;allegro_audio.lib;allegro_image.lib;allegro_memfile.lib;allegro_primitives.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ai.cpp" />
+    <ClCompile Include="animation.cpp" />
+    <ClCompile Include="audio\adl\fmopl.cpp" />
+    <ClCompile Include="audio\adl\opl_dosbox.cpp" />
+    <ClCompile Include="audio\adl\opl_mame.cpp" />
+    <ClCompile Include="audio\adl\sound_adlib.cpp" />
+    <ClCompile Include="audio\audio.cpp" />
+    <ClCompile Include="audio\audio_a5.cpp" />
+    <ClCompile Include="binheap.cpp" />
+    <ClCompile Include="buildqueue.cpp" />
+    <ClCompile Include="codec\format40.cpp" />
+    <ClCompile Include="codec\format80.cpp" />
+    <ClCompile Include="common_a5.cpp" />
+    <ClCompile Include="config_a5.cpp" />
+    <ClCompile Include="cutscene.cpp" />
+    <ClCompile Include="enhancement.cpp" />
+    <ClCompile Include="explosion.cpp" />
+    <ClCompile Include="file.cpp" />
+    <ClCompile Include="gfx.cpp" />
+    <ClCompile Include="gui\editbox.cpp" />
+    <ClCompile Include="gui\font.cpp" />
+    <ClCompile Include="gui\gui.cpp" />
+    <ClCompile Include="gui\mentat.cpp" />
+    <ClCompile Include="gui\viewport.cpp" />
+    <ClCompile Include="gui\widget.cpp" />
+    <ClCompile Include="gui\widget_click.cpp" />
+    <ClCompile Include="gui\widget_draw.cpp" />
+    <ClCompile Include="house.cpp" />
+    <ClCompile Include="ini.cpp" />
+    <ClCompile Include="input\input_a5.cpp" />
+    <ClCompile Include="input\input_dd.cpp" />
+    <ClCompile Include="input\mouse_dd.cpp" />
+    <ClCompile Include="load.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="mapgenerator\skirmish.cpp" />
+    <ClCompile Include="newui\actionpanel.cpp" />
+    <ClCompile Include="newui\halloffame.cpp" />
+    <ClCompile Include="newui\mentatnewui.cpp" />
+    <ClCompile Include="newui\menu.cpp" />
+    <ClCompile Include="newui\menubar.cpp" />
+    <ClCompile Include="newui\savemenu.cpp" />
+    <ClCompile Include="newui\scrollbar.cpp" />
+    <ClCompile Include="newui\slider.cpp" />
+    <ClCompile Include="newui\strategicmap.cpp" />
+    <ClCompile Include="newui\viewportnewui.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="opendune.cpp" />
+    <ClCompile Include="os\endian.cpp" />
+    <ClCompile Include="os\error.cpp" />
+    <ClCompile Include="pool\housepool.cpp" />
+    <ClCompile Include="pool\structurepool.cpp" />
+    <ClCompile Include="pool\teampool.cpp" />
+    <ClCompile Include="pool\unitpool.cpp" />
+    <ClCompile Include="save.cpp" />
+    <ClCompile Include="saveload\saveloadhouse.cpp" />
+    <ClCompile Include="saveload\saveloadinfo.cpp" />
+    <ClCompile Include="saveload\saveloadmap.cpp" />
+    <ClCompile Include="saveload\saveloadobject.cpp" />
+    <ClCompile Include="saveload\saveload.cpp" />
+    <ClCompile Include="saveload\saveloadscenario.cpp" />
+    <ClCompile Include="saveload\saveloadscriptengine.cpp" />
+    <ClCompile Include="saveload\saveloadstructure.cpp" />
+    <ClCompile Include="saveload\saveloadteam.cpp" />
+    <ClCompile Include="saveload\saveloadunit.cpp" />
+    <ClCompile Include="scenario.cpp" />
+    <ClCompile Include="script\generalscript.cpp" />
+    <ClCompile Include="script\script.cpp" />
+    <ClCompile Include="script\structurescript.cpp" />
+    <ClCompile Include="script\teamscript.cpp" />
+    <ClCompile Include="script\unitscript.cpp" />
+    <ClCompile Include="shape.cpp" />
+    <ClCompile Include="sprites.cpp" />
+    <ClCompile Include="string.cpp" />
+    <ClCompile Include="structure.cpp" />
+    <ClCompile Include="table\actioninfo.cpp" />
+    <ClCompile Include="table\animationtable.cpp" />
+    <ClCompile Include="table\explosiontable.cpp" />
+    <ClCompile Include="table\fileinfo.cpp" />
+    <ClCompile Include="table\houseanimation.cpp" />
+    <ClCompile Include="table\houseinfo.cpp" />
+    <ClCompile Include="table\landscapeinfo.cpp" />
+    <ClCompile Include="table\locale.cpp" />
+    <ClCompile Include="table\movementtype.cpp" />
+    <ClCompile Include="table\selectiontype.cpp" />
+    <ClCompile Include="table\sound.cpp" />
+    <ClCompile Include="table\structureinfo.cpp" />
+    <ClCompile Include="table\teamaction.cpp" />
+    <ClCompile Include="table\tilediff.cpp" />
+    <ClCompile Include="table\unitinfo.cpp" />
+    <ClCompile Include="table\widgettable.cpp" />
+    <ClCompile Include="table\widgetinfo.cpp" />
+    <ClCompile Include="table\windowdesc.cpp" />
+    <ClCompile Include="team.cpp" />
+    <ClCompile Include="tile.cpp" />
+    <ClCompile Include="timer\timer.cpp" />
+    <ClCompile Include="timer\timer_a5.cpp" />
+    <ClCompile Include="tools\coord.cpp" />
+    <ClCompile Include="tools\encoded_index.cpp" />
+    <ClCompile Include="tools\orientation.cpp" />
+    <ClCompile Include="tools\random_general.cpp" />
+    <ClCompile Include="tools\random_lcg.cpp" />
+    <ClCompile Include="tools\random_starport.cpp" />
+    <ClCompile Include="tools\random_xorshift.cpp" />
+    <ClCompile Include="unit.cpp" />
+    <ClCompile Include="video\prim_a5.cpp" />
+    <ClCompile Include="video\video_a5.cpp" />
+    <ClCompile Include="wsa.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ai.h" />
+    <ClInclude Include="animation.h" />
+    <ClInclude Include="audio\adl\fmopl.h" />
+    <ClInclude Include="audio\adl\opl_dosbox.h" />
+    <ClInclude Include="audio\adl\opl_impl.h" />
+    <ClInclude Include="audio\adl\opl_inc.h" />
+    <ClInclude Include="audio\adl\opl_mame.h" />
+    <ClInclude Include="audio\adl\sound_adlib.h" />
+    <ClInclude Include="audio\audio.h" />
+    <ClInclude Include="audio\audio_a5.h" />
+    <ClInclude Include="binheap.h" />
+    <ClInclude Include="buildqueue.h" />
+    <ClInclude Include="codec\format40.h" />
+    <ClInclude Include="codec\format80.h" />
+    <ClInclude Include="common_a5.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="cutscene.h" />
+    <ClInclude Include="enhancement.h" />
+    <ClInclude Include="explosion.h" />
+    <ClInclude Include="file.h" />
+    <ClInclude Include="gfx.h" />
+    <ClInclude Include="gui\font.h" />
+    <ClInclude Include="gui\gui.h" />
+    <ClInclude Include="gui\mentat.h" />
+    <ClInclude Include="gui\widget.h" />
+    <ClInclude Include="house.h" />
+    <ClInclude Include="include\enumeration.h" />
+    <ClInclude Include="include\enum_string.h" />
+    <ClInclude Include="include\multichar.h" />
+    <ClInclude Include="include\types.h" />
+    <ClInclude Include="ini.h" />
+    <ClInclude Include="input\input.h" />
+    <ClInclude Include="input\input_a5.h" />
+    <ClInclude Include="input\mouse.h" />
+    <ClInclude Include="input\scancode.h" />
+    <ClInclude Include="load.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="mapgenerator\skirmish.h" />
+    <ClInclude Include="newui\actionpanel.h" />
+    <ClInclude Include="newui\halloffame.h" />
+    <ClInclude Include="newui\mentatnewui.h" />
+    <ClInclude Include="newui\menu.h" />
+    <ClInclude Include="newui\menubar.h" />
+    <ClInclude Include="newui\savemenu.h" />
+    <ClInclude Include="newui\scrollbar.h" />
+    <ClInclude Include="newui\slider.h" />
+    <ClInclude Include="newui\strategicmap.h" />
+    <ClInclude Include="newui\viewportnewui.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="opendune.h" />
+    <ClInclude Include="os\common.h" />
+    <ClInclude Include="os\endian.h" />
+    <ClInclude Include="os\error.h" />
+    <ClInclude Include="os\file.h" />
+    <ClInclude Include="os\math.h" />
+    <ClInclude Include="os\sleep.h" />
+    <ClInclude Include="pool\housepool.h" />
+    <ClInclude Include="pool\pool.h" />
+    <ClInclude Include="pool\structurepool.h" />
+    <ClInclude Include="pool\teampool.h" />
+    <ClInclude Include="pool\unitpool.h" />
+    <ClInclude Include="save.h" />
+    <ClInclude Include="saveload\saveload.h" />
+    <ClInclude Include="scenario.h" />
+    <ClInclude Include="script\script.h" />
+    <ClInclude Include="shape.h" />
+    <ClInclude Include="sprites.h" />
+    <ClInclude Include="string.h" />
+    <ClInclude Include="structure.h" />
+    <ClInclude Include="table\fileinfo.h" />
+    <ClInclude Include="table\houseanimation.h" />
+    <ClInclude Include="table\locale.h" />
+    <ClInclude Include="table\movementtype.h" />
+    <ClInclude Include="table\sound.h" />
+    <ClInclude Include="table\tilediff.h" />
+    <ClInclude Include="table\widgetinfo.h" />
+    <ClInclude Include="team.h" />
+    <ClInclude Include="tile.h" />
+    <ClInclude Include="timer\timer.h" />
+    <ClInclude Include="timer\timer_a5.h" />
+    <ClInclude Include="tools\coord.h" />
+    <ClInclude Include="tools\encoded_index.h" />
+    <ClInclude Include="tools\orientation.h" />
+    <ClInclude Include="tools\random_general.h" />
+    <ClInclude Include="tools\random_lcg.h" />
+    <ClInclude Include="tools\random_starport.h" />
+    <ClInclude Include="tools\random_xorshift.h" />
+    <ClInclude Include="unit.h" />
+    <ClInclude Include="video\prim.h" />
+    <ClInclude Include="video\video.h" />
+    <ClInclude Include="video\video_a5.h" />
+    <ClInclude Include="wsa.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon\dune2_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon\icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="video\dune2_16x16.xpm" />
+    <None Include="video\dune2_32x32.xpm" />
+    <None Include="video\dune2_32x32a.xpm" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

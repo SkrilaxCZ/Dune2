@@ -1,0 +1,30 @@
+# Visual Studio related
+*.sdf
+*.opensdf
+*.user
+*.suo
+*.aps
+*.idb
+*.psess
+*.vsp
+*.pdb
+*.exp
+*.db
+.vs
+
+
+# Windows binaries
+*.exe
+*.dll
+*.lib
+
+# Build directories
+src/Build
+
+# Allow prebuilts
+!allegro/Win32/bin/*.dll
+!allegro/Win32/lib/*.lib
+!allegro/Win32/lib/*.pdb
+!allegro/x64/bin/*.dll
+!allegro/x64/lib/*.lib
+!allegro/x64/lib/*.pdb

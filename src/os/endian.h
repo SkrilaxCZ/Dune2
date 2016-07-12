@@ -1,0 +1,39 @@
+/** @file src/os/endian.h Os-independent endian detection routines. */
+
+#ifndef OS_ENDIAN_H
+#define OS_ENDIAN_H
+
+#include "types.h"
+
+#if !defined(__LITTLE_ENDIAN)
+#define __LITTLE_ENDIAN 1234
+#endif /* __LITTLE_ENDIAN */
+#define __BYTE_ORDER __LITTLE_ENDIAN
+
+extern uint16 endian_bswap16(uint16 x);
+extern uint32 endian_bswap32(uint32 x);
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define HTOBE32(x) endian_bswap32(x)
+#define BETOH32(x) endian_bswap32(x)
+#define HTOBE16(x) endian_bswap16(x)
+#define BETOH16(x) endian_bswap16(x)
+#define HTOLE32(x) (x)
+#define LETOH32(x) (x)
+#define HTOLE16(x) (x)
+#define LETOH16(x) (x)
+#else
+	#define HTOBE32(x) (x)
+	#define BETOH32(x) (x)
+	#define HTOBE16(x) (x)
+	#define BETOH16(x) (x)
+	#define HTOLE32(x) endian_bswap32(x)
+	#define LETOH32(x) endian_bswap32(x)
+	#define HTOLE16(x) endian_bswap16(x)
+	#define LETOH16(x) endian_bswap16(x)
+#endif
+
+#define READ_LE_UINT16(p) ((uint16)(p)[0] | ((uint16)(p)[1] << 8))
+#define READ_LE_UINT32(p) ((uint32)(p)[0] | ((uint32)(p)[1] << 8) | ((uint32)(p)[2] << 16) | ((uint32)(p)[3] << 24))
+
+#endif /* OS_ENDIAN_H */

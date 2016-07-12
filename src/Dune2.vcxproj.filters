@@ -1,0 +1,570 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="audio\audio_a5.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\adl\fmopl.cpp">
+      <Filter>audio\adl</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\adl\opl_dosbox.cpp">
+      <Filter>audio\adl</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\adl\opl_mame.cpp">
+      <Filter>audio\adl</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\adl\sound_adlib.cpp">
+      <Filter>audio\adl</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\audio.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="codec\format40.cpp">
+      <Filter>codec</Filter>
+    </ClCompile>
+    <ClCompile Include="codec\format80.cpp">
+      <Filter>codec</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\editbox.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\font.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\gui.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\mentat.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\viewport.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\widget.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\widget_click.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\widget_draw.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="input\input_a5.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="input\input_dd.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="input\mouse_dd.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="mapgenerator\skirmish.cpp">
+      <Filter>mapgenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\actionpanel.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\halloffame.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\menu.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\menubar.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\savemenu.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\scrollbar.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\slider.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\strategicmap.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="os\endian.cpp">
+      <Filter>os</Filter>
+    </ClCompile>
+    <ClCompile Include="os\error.cpp">
+      <Filter>os</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveload.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="script\script.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="table\actioninfo.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\fileinfo.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\houseanimation.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\houseinfo.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\landscapeinfo.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\locale.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\movementtype.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\selectiontype.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\sound.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\structureinfo.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\teamaction.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\tilediff.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\unitinfo.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\widgetinfo.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\windowdesc.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="timer\timer.cpp">
+      <Filter>timer</Filter>
+    </ClCompile>
+    <ClCompile Include="timer\timer_a5.cpp">
+      <Filter>timer</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\coord.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\encoded_index.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\orientation.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\random_general.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\random_lcg.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\random_starport.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\random_xorshift.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="video\prim_a5.cpp">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\video_a5.cpp">
+      <Filter>video</Filter>
+    </ClCompile>
+    <ClCompile Include="ai.cpp" />
+    <ClCompile Include="animation.cpp" />
+    <ClCompile Include="binheap.cpp" />
+    <ClCompile Include="buildqueue.cpp" />
+    <ClCompile Include="common_a5.cpp" />
+    <ClCompile Include="config_a5.cpp" />
+    <ClCompile Include="cutscene.cpp" />
+    <ClCompile Include="enhancement.cpp" />
+    <ClCompile Include="explosion.cpp" />
+    <ClCompile Include="file.cpp" />
+    <ClCompile Include="gfx.cpp" />
+    <ClCompile Include="house.cpp" />
+    <ClCompile Include="ini.cpp" />
+    <ClCompile Include="load.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="opendune.cpp" />
+    <ClCompile Include="save.cpp" />
+    <ClCompile Include="scenario.cpp" />
+    <ClCompile Include="shape.cpp" />
+    <ClCompile Include="sprites.cpp" />
+    <ClCompile Include="string.cpp" />
+    <ClCompile Include="structure.cpp" />
+    <ClCompile Include="team.cpp" />
+    <ClCompile Include="tile.cpp" />
+    <ClCompile Include="unit.cpp" />
+    <ClCompile Include="wsa.cpp" />
+    <ClCompile Include="table\animationtable.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="table\explosiontable.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\mentatnewui.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="newui\viewportnewui.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
+    <ClCompile Include="table\widgettable.cpp">
+      <Filter>table</Filter>
+    </ClCompile>
+    <ClCompile Include="pool\housepool.cpp">
+      <Filter>pool</Filter>
+    </ClCompile>
+    <ClCompile Include="pool\structurepool.cpp">
+      <Filter>pool</Filter>
+    </ClCompile>
+    <ClCompile Include="pool\teampool.cpp">
+      <Filter>pool</Filter>
+    </ClCompile>
+    <ClCompile Include="pool\unitpool.cpp">
+      <Filter>pool</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadstructure.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadteam.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadunit.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadobject.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadhouse.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadmap.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadscenario.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadinfo.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="saveload\saveloadscriptengine.cpp">
+      <Filter>saveload</Filter>
+    </ClCompile>
+    <ClCompile Include="script\unitscript.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="script\teamscript.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="script\structurescript.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="script\generalscript.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ai.h" />
+    <ClInclude Include="animation.h" />
+    <ClInclude Include="binheap.h" />
+    <ClInclude Include="buildqueue.h" />
+    <ClInclude Include="common_a5.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="cutscene.h" />
+    <ClInclude Include="enhancement.h" />
+    <ClInclude Include="explosion.h" />
+    <ClInclude Include="file.h" />
+    <ClInclude Include="gfx.h" />
+    <ClInclude Include="house.h" />
+    <ClInclude Include="ini.h" />
+    <ClInclude Include="load.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="opendune.h" />
+    <ClInclude Include="save.h" />
+    <ClInclude Include="scenario.h" />
+    <ClInclude Include="shape.h" />
+    <ClInclude Include="sprites.h" />
+    <ClInclude Include="string.h" />
+    <ClInclude Include="structure.h" />
+    <ClInclude Include="team.h" />
+    <ClInclude Include="tile.h" />
+    <ClInclude Include="unit.h" />
+    <ClInclude Include="wsa.h" />
+    <ClInclude Include="audio\audio.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\audio_a5.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\adl\fmopl.h">
+      <Filter>audio\adl</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\adl\opl_dosbox.h">
+      <Filter>audio\adl</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\adl\opl_inc.h">
+      <Filter>audio\adl</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\adl\opl_mame.h">
+      <Filter>audio\adl</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\adl\sound_adlib.h">
+      <Filter>audio\adl</Filter>
+    </ClInclude>
+    <ClInclude Include="codec\format40.h">
+      <Filter>codec</Filter>
+    </ClInclude>
+    <ClInclude Include="codec\format80.h">
+      <Filter>codec</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\font.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\gui.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\mentat.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\widget.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="input\input.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="input\input_a5.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="input\mouse.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="input\scancode.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="mapgenerator\skirmish.h">
+      <Filter>mapgenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\actionpanel.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\halloffame.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\menu.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\menubar.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\savemenu.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\scrollbar.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\slider.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\strategicmap.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="os\common.h">
+      <Filter>os</Filter>
+    </ClInclude>
+    <ClInclude Include="os\endian.h">
+      <Filter>os</Filter>
+    </ClInclude>
+    <ClInclude Include="os\error.h">
+      <Filter>os</Filter>
+    </ClInclude>
+    <ClInclude Include="os\file.h">
+      <Filter>os</Filter>
+    </ClInclude>
+    <ClInclude Include="os\math.h">
+      <Filter>os</Filter>
+    </ClInclude>
+    <ClInclude Include="os\sleep.h">
+      <Filter>os</Filter>
+    </ClInclude>
+    <ClInclude Include="saveload\saveload.h">
+      <Filter>saveload</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\pool.h">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="script\script.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="table\houseanimation.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="table\locale.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="table\sound.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="table\widgetinfo.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="timer\timer.h">
+      <Filter>timer</Filter>
+    </ClInclude>
+    <ClInclude Include="timer\timer_a5.h">
+      <Filter>timer</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\coord.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\encoded_index.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\orientation.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\random_general.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\random_lcg.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\random_starport.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\random_xorshift.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="video\prim.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClInclude Include="video\video.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClInclude Include="video\video_a5.h">
+      <Filter>video</Filter>
+    </ClInclude>
+    <ClInclude Include="include\enum_string.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\enumeration.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\multichar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\adl\opl_impl.h">
+      <Filter>audio\adl</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\mentatnewui.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\viewportnewui.h">
+      <Filter>newui</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\housepool.h">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\structurepool.h">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\teampool.h">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="pool\unitpool.h">
+      <Filter>pool</Filter>
+    </ClInclude>
+    <ClInclude Include="table\fileinfo.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="table\movementtype.h">
+      <Filter>table</Filter>
+    </ClInclude>
+    <ClInclude Include="table\tilediff.h">
+      <Filter>table</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="audio">
+      <UniqueIdentifier>{2b595f47-32d1-4631-a825-8745508f4697}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\adl">
+      <UniqueIdentifier>{37ec5d36-7aa2-44fc-91bb-e974ca52a038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codec">
+      <UniqueIdentifier>{ee95887c-21dc-416f-8279-d10f310e2549}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{93116d16-559c-4cb7-a506-988827772a14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="icon">
+      <UniqueIdentifier>{0e5e5755-5e40-423c-9895-a7dfdccd07cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{d40b9bd2-6414-4efa-ab1c-01db673214f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mapgenerator">
+      <UniqueIdentifier>{2260de55-0380-41e2-a8be-1c321aaef2ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="os">
+      <UniqueIdentifier>{9a3d6282-d6fe-4a0f-839b-6c6ca8b61055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="newui">
+      <UniqueIdentifier>{4b674812-73c5-4320-a867-f4d5d84926ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="saveload">
+      <UniqueIdentifier>{41387a09-186f-46fb-a88c-68d96e2e6c04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pool">
+      <UniqueIdentifier>{c2ce2568-3468-430f-9789-d0b88a045258}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="script">
+      <UniqueIdentifier>{c5bff8f1-caca-49e6-9997-a72d0724a42d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="table">
+      <UniqueIdentifier>{b696cbb7-31a9-46e8-a0aa-8c245dd2edea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="timer">
+      <UniqueIdentifier>{27a4fb0c-ae5b-430d-a531-44cff884349c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools">
+      <UniqueIdentifier>{69c11647-25e2-4283-943b-17559065fdaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video">
+      <UniqueIdentifier>{dfc017b0-3310-4f5d-bf47-29ba56fcee44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{9dc81097-f0f4-46be-b991-b25e37e08bbf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon\dune2_icon.ico">
+      <Filter>icon</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon\icon.rc">
+      <Filter>icon</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="video\dune2_16x16.xpm">
+      <Filter>video</Filter>
+    </None>
+    <None Include="video\dune2_32x32.xpm">
+      <Filter>video</Filter>
+    </None>
+    <None Include="video\dune2_32x32a.xpm">
+      <Filter>video</Filter>
+    </None>
+  </ItemGroup>
+</Project>
