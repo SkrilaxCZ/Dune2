@@ -8,7 +8,7 @@
 
 WindowDesc g_optionsWindowDesc = {
 	/* index       */ 16,
-	/* stringID    */ STR_DUNE_II_THE_BATTLE_FOR_ARRAKIS,
+	/* stringID    */ STR_DUNE_II_TITLE,
 	/* addArrows   */ false,
 	/* widgetCount */ 7,
 	{/* widgets */
@@ -152,7 +152,7 @@ WindowDesc g_gameControlWindowDesc = {
 
 WindowDesc g_yesNoWindowDesc = {
 	/* index       */ 18,
-	/* stringID    */ STR_ARE_YOU_SURE_YOU_WANT_TO_QUIT_PLAYING,
+	/* stringID    */ STR_SURE_TO_QUIT,
 	/* addArrows   */ false,
 	/* widgetCount */ 2,
 	{/* widgets */
@@ -224,7 +224,7 @@ WindowDesc g_yesNoWindowDesc = {
 
 WindowDesc g_saveLoadWindowDesc = {
 	/* index       */ 17,
-	/* stringID    */ STR_SELECT_A_SAVED_GAME_TO_LOAD,
+	/* stringID    */ STR_SELECT_SAVE,
 	/* addArrows   */ true,
 	/* widgetCount */ 6,
 	{/* widgets */
@@ -296,7 +296,7 @@ WindowDesc g_saveLoadWindowDesc = {
 
 WindowDesc g_savegameNameWindowDesc = {
 	/* index       */ 14,
-	/* stringID    */ STR_ENTER_A_DESCRIPTION_OF_YOUR_SAVED_GAME,
+	/* stringID    */ STR_SAVE_FILE_NAME,
 	/* addArrows   */ false,
 	/* widgetCount */ 2,
 	{/* widgets */

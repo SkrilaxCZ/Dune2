@@ -29,39 +29,39 @@ namespace OPL
 	bool OPL::_hasInstance = false;
 } // End of namespace OPL
 
-void OPLDestroy(FM_OPL* OPL)
+void OPLDestroy(OPL::OPL* OPL)
 {
 	delete OPL;
 }
 
-void OPLResetChip(FM_OPL* OPL)
+void OPLResetChip(OPL::OPL* OPL)
 {
 	OPL->reset();
 }
 
-void OPLWrite(FM_OPL* OPL, int a, int v)
+void OPLWrite(OPL::OPL* OPL, int a, int v)
 {
 	OPL->write(a, v);
 }
 
-unsigned char OPLRead(FM_OPL* OPL, int a)
+unsigned char OPLRead(OPL::OPL* OPL, int a)
 {
 	return OPL->read(a);
 }
 
-void OPLWriteReg(FM_OPL* OPL, int r, int v)
+void OPLWriteReg(OPL::OPL* OPL, int r, int v)
 {
 	OPL->writeReg(r, v);
 }
 
-void YM3812UpdateOne(FM_OPL* OPL, int16_t* buffer, int length)
+void YM3812UpdateOne(OPL::OPL* OPL, int16_t* buffer, int length)
 {
 	OPL->readBuffer(buffer, length);
 }
 
-FM_OPL* makeAdLibOPL(int rate, bool bMAME)
+OPL::OPL* makeAdLibOPL(int rate, bool bMAME)
 {
-	FM_OPL* opl;
+	OPL::OPL* opl;
 	if (bMAME)
 		opl = new OPL::MAME::OPL();
 	else

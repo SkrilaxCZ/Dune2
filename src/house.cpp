@@ -186,7 +186,7 @@ void GameLoop_House()
 				if (nu != NULL)
 				{
 					u->o.linkedID = nu->o.linkedID;
-					nu->o.linkedID = (uint8)u->o.index;
+					nu->o.linkedID = u->o.index;
 					nu->o.flags.s.inTransport = true;
 					g_scenario.reinforcement[i].unitID = UNIT_INDEX_INVALID;
 					deployed = true;
@@ -249,7 +249,7 @@ void GameLoop_House()
 				{
 					h->credits = maxCredits;
 
-					GUI_DisplayText(String_Get_ByIndex(STR_INSUFFICIENT_SPICE_STORAGE_AVAILABLE_SPICE_IS_LOST), 1);
+					GUI_DisplayText(String_Get_ByIndex(STR_INSUFFICIENT_STORAGE), 1);
 				}
 			}
 
@@ -308,7 +308,7 @@ void GameLoop_House()
 						s = Structure_Find(&find2);
 						if (s == NULL)
 							break;
-						if (s->o.linkedID != 0xFF)
+						if (s->o.linkedID != 0xFFFF)
 							continue;
 
 						u = Unit_CreateWrapper((uint8)h->index, UNIT_FRIGATE, Tools_Index_Encode(s->o.index, IT_STRUCTURE));
@@ -318,7 +318,7 @@ void GameLoop_House()
 
 				if (u != NULL)
 				{
-					u->o.linkedID = (uint8)h->starportLinkedID;
+					u->o.linkedID = h->starportLinkedID;
 					h->starportLinkedID = UNIT_INDEX_INVALID;
 					u->o.flags.s.inTransport = true;
 
@@ -393,7 +393,7 @@ void House_EnsureHarvesterAvailable(uint8 houseID)
 
 		if (s->o.type == STRUCTURE_CONSTRUCTION_YARD)
 			continue;
-		if (s->o.linkedID == UNIT_INVALID)
+		if (s->o.linkedID == 0xFFFF)
 			continue;
 		if (Unit_Get_ByIndex(s->o.linkedID)->o.type == UNIT_HARVESTER)
 			return;
@@ -410,7 +410,7 @@ void House_EnsureHarvesterAvailable(uint8 houseID)
 		u = Unit_Find(&find);
 		if (u == NULL)
 			break;
-		if (u->o.linkedID == UNIT_INVALID)
+		if (u->o.linkedID == 0xFFFF)
 			continue;
 		if (Unit_Get_ByIndex(u->o.linkedID)->o.type == UNIT_HARVESTER)
 			return;
@@ -433,7 +433,7 @@ void House_EnsureHarvesterAvailable(uint8 houseID)
 	if (houseID != g_playerHouseID)
 		return;
 
-	GUI_DisplayText(String_Get_ByIndex(STR_HARVESTER_IS_HEADING_TO_REFINERY), 0);
+	GUI_DisplayText(String_Get_ByIndex(STR_HARVESTER_RETURN), 0);
 }
 
 /**
@@ -579,7 +579,7 @@ void House_CalculatePowerAndCredit(House* h)
 	/* Check if we are low on power */
 	if (h->index == g_playerHouseID && h->powerUsage > h->powerProduction)
 	{
-		GUI_DisplayText(String_Get_ByIndex(STR_INSUFFICIENT_POWER_WINDTRAP_IS_NEEDED), 1);
+		GUI_DisplayText(String_Get_ByIndex(STR_INSUFFICIENT_POWER), 1);
 	}
 
 	/* If there are no buildings left, you lose your right on 'credits without storage'
@@ -610,8 +610,18 @@ UnitType House_GetInfantrySquad(HouseType houseID)
 {
 	if (houseID == HOUSE_ATREIDES)
 		return UNIT_INFANTRY;
+	if (houseID == HOUSE_SARDAUKAR)
+		return UNIT_SARDAUKAR;
 
 	return UNIT_TROOPERS;
+}
+
+UnitType House_GetMediumVehicle(HouseType houseID)
+{
+	if (houseID == HOUSE_ORDOS)
+		return UNIT_TANK;
+
+	return Tools_RandomLCG_Range(0, 1) == 1 ? UNIT_LAUNCHER : UNIT_TANK;
 }
 
 UnitType House_GetLightVehicle(HouseType houseID)
@@ -630,6 +640,8 @@ UnitType House_GetIXVehicle(HouseType houseID)
 		return UNIT_SONIC_TANK;
 	if (houseID == HOUSE_ORDOS)
 		return UNIT_DEVIATOR;
+	if (houseID == HOUSE_HARKONNEN)
+		return UNIT_DEVASTATOR;
 
-	return UNIT_DEVASTATOR;
+	return Tools_RandomLCG_Range(0, 1) == 1 ? UNIT_SONIC_TANK : UNIT_DEVASTATOR;
 }

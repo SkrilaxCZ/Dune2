@@ -311,7 +311,10 @@ void Audio_PlaySoundAtTile(SoundID soundID, tile32 position)
 
 	const SampleID sampleID = g_table_voiceMapping[soundID];
 	if (sampleID == SAMPLE_INVALID)
+	{
+		Audio_PlayEffect(soundID);
 		return;
+	}
 
 	int volume = 255;
 	float pan = 0.0f;

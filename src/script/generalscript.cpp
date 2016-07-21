@@ -289,7 +289,7 @@ uint16 Script_General_GetIndexType(ScriptEngine* script)
  * Stack: *none*.
  *
  * @param script The script engine to operate on.
- * @return The type, or 0xFFFF if no linked unit.
+ * @return The type, or 0xFF if no linked unit.
  */
 uint16 Script_General_GetLinkedUnitType(ScriptEngine* script)
 {
@@ -298,7 +298,7 @@ uint16 Script_General_GetLinkedUnitType(ScriptEngine* script)
 
 	linkedID = g_scriptCurrentObject->linkedID;
 
-	if (linkedID == 0xFF)
+	if (linkedID == 0xFFFF)
 		return 0xFFFF;
 
 	return Unit_Get_ByIndex(linkedID)->o.type;

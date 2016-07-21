@@ -447,7 +447,7 @@ private:
 	uint8 _unkValue20;
 
 	int _flags;
-	FM_OPL* _adlib;
+	OPL::OPL* _adlib;
 	int _rate;
 
 	uint8* _soundData;

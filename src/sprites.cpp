@@ -355,14 +355,14 @@ void Sprites_CPS_LoadRegionClick()
 	buf = (uint8*)GFX_Screen_Get_ByIndex(SCREEN_2);
 
 	g_fileRgnclkCPS = buf;
-	Sprites_LoadCPSFile(SEARCHDIR_GLOBAL_DATA_DIR, "RGNCLK.CPS", SCREEN_2, NULL);
+	Sprites_LoadCPSFile(SEARCHDIR_DATA_DIR, "RGNCLK.CPS", SCREEN_2, NULL);
 	for (i = 0; i < 120; i++)
 		memcpy(buf + (i * 304), buf + 7688 + (i * 320), 304);
 	buf += 120 * 304;
 
 	g_fileRegionINI = buf;
 	snprintf(filename, sizeof(filename), "REGION%c.INI", g_table_houseInfo[g_playerHouseID].name[0]);
-	buf += File_ReadFile_Ex(SEARCHDIR_GLOBAL_DATA_DIR, filename, buf);
+	buf += File_ReadFile_Ex(SEARCHDIR_DATA_DIR, filename, buf);
 
 	g_regions = (uint16 *)buf;
 
@@ -388,25 +388,25 @@ void Sprites_Init()
 {
 	g_spriteBuffer = (uint8*)calloc(1, 20000);
 
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "MOUSE.SHP", 0, 6);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, String_GenerateFilename("BTTN"), 7, 11);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "SHAPES.SHP", 12, 110);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "UNITS2.SHP", 111, 150);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "UNITS1.SHP", 151, 237);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "UNITS.SHP", 238, 354);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, String_GenerateFilename("CHOAM"), 355, 372);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, String_GenerateFilename("MENTAT"), 373, 386);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "PIECES.SHP", 477, 504);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "ARROWS.SHP", 505, 513);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "MOUSE.SHP", 0, 6);
+	Sprites_Load(SEARCHDIR_DATA_DIR, String_GenerateFilename("BTTN"), 7, 11);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "SHAPES.SHP", 12, 110);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "UNITS2.SHP", 111, 150);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "UNITS1.SHP", 151, 237);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "UNITS.SHP", 238, 354);
+	Sprites_Load(SEARCHDIR_DATA_DIR, String_GenerateFilename("CHOAM"), 355, 372);
+	Sprites_Load(SEARCHDIR_DATA_DIR, String_GenerateFilename("MENTAT"), 373, 386);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "PIECES.SHP", 477, 504);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "ARROWS.SHP", 505, 513);
 }
 
 void Sprites_InitCHOAM(const char* bttn, const char* choam)
 {
 	if (bttn != NULL)
-		Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, bttn, 7, 11);
+		Sprites_Load(SEARCHDIR_DATA_DIR, bttn, 7, 11);
 
 	if (choam != NULL)
-		Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, choam, 355, 372);
+		Sprites_Load(SEARCHDIR_DATA_DIR, choam, 355, 372);
 }
 
 void Sprites_InitMentat(MentatID mentatID)
@@ -423,7 +423,7 @@ void Sprites_InitMentat(MentatID mentatID)
 		return;
 
 	const HouseType houseID = (mentatID == MENTAT_BENE_GESSERIT) ? HOUSE_MERCENARY : (HouseType)mentatID;
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, shapes[houseID], SHAPE_MENTAT_EYES, SHAPE_MENTAT_EYES + 15 - 1);
+	Sprites_Load(SEARCHDIR_DATA_DIR, shapes[houseID], SHAPE_MENTAT_EYES, SHAPE_MENTAT_EYES + 15 - 1);
 
 	const bool use_benepal = (mentatID == MENTAT_BENE_GESSERIT);
 
@@ -439,17 +439,17 @@ void Sprites_InitCredits()
 	if (l_loaded)
 		return;
 
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT1.SHP", 514, 514);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT2.SHP", 515, 515);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT3.SHP", 516, 516);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT4.SHP", 517, 517);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT5.SHP", 518, 518);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT6.SHP", 519, 519);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT7.SHP", 520, 520);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT8.SHP", 521, 521);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT9.SHP", 522, 522);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT10.SHP", 523, 523);
-	Sprites_Load(SEARCHDIR_GLOBAL_DATA_DIR, "CREDIT11.SHP", 524, 524);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT1.SHP", 514, 514);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT2.SHP", 515, 515);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT3.SHP", 516, 516);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT4.SHP", 517, 517);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT5.SHP", 518, 518);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT6.SHP", 519, 519);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT7.SHP", 520, 520);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT8.SHP", 521, 521);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT9.SHP", 522, 522);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT10.SHP", 523, 523);
+	Sprites_Load(SEARCHDIR_DATA_DIR, "CREDIT11.SHP", 524, 524);
 
 	l_loaded = true;
 }

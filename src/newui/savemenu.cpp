@@ -52,7 +52,7 @@ static bool SaveMenu_IsValidFilename(const ALLEGRO_PATH* path)
 static void SaveMenu_FindSavedGames(bool save, Widget* scrollbar)
 {
 	char dirname[1024];
-	File_MakeCompleteFilename(dirname, sizeof(dirname), SEARCHDIR_PERSONAL_DATA_DIR, "", false);
+	File_MakeCompleteFilename(dirname, sizeof(dirname), SEARCHDIR_SAVE_DIR, "", false);
 
 	WidgetScrollbar* ws = (WidgetScrollbar*)scrollbar->data;
 	ws->scrollMax = 0;
@@ -117,15 +117,15 @@ static void SaveMenu_FillSavegameDesc(bool save, Widget* scrollbar)
 
 		if (save && entry == 0)
 		{
-			strcpy(desc, String_Get_ByIndex(STR_EMPTY_SLOT_));
+			strcpy(desc, String_Get_ByIndex(STR_EMPTY_SLOT));
 			continue;
 		}
 
 		const char* filename = si->text;
-		if (!File_Exists_Personal(filename))
+		if (!File_Exists_Ex(SEARCHDIR_SAVE_DIR, filename))
 			continue;
 
-		uint8 fileId = ChunkFile_Open_Personal(filename);
+		uint8 fileId = ChunkFile_Open_Ex(SEARCHDIR_SAVE_DIR, filename);
 		ChunkFile_Read(fileId, HTOBE32(CC_NAME), desc, 50);
 		ChunkFile_Close(fileId);
 	}
@@ -236,7 +236,7 @@ void SaveMenu_InitSaveLoad(bool save)
 	SaveMenu_FindSavedGames(save, s_scrollbar);
 	SaveMenu_FillSavegameDesc(save, s_scrollbar);
 
-	desc->stringID = save ? STR_SELECT_A_POSITION_TO_SAVE_TO : STR_SELECT_A_SAVED_GAME_TO_LOAD;
+	desc->stringID = save ? STR_SELECT_SAVE_FILE : STR_SELECT_SAVE;
 
 	GUI_Window_Create(desc);
 

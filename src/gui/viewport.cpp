@@ -86,7 +86,7 @@ void GUI_Widget_Viewport_Draw(bool forceRedraw, bool arg08, bool drawToMainScree
 	Unit* u = Unit_Find(&find);
 	while (u != NULL)
 	{
-		if ((19 <= u->o.index && u->o.index <= 101))
+		if ((UNIT_INDEX_SABOTEUR_START <= u->o.index && u->o.index <= UNIT_INDEX_NORMAL_END))
 			Viewport_DrawUnit(u, 0, 0, false);
 
 		u = Unit_Find(&find);
@@ -126,7 +126,7 @@ void GUI_Widget_Viewport_Draw(bool forceRedraw, bool arg08, bool drawToMainScree
 	u = Unit_Find(&find);
 	while (u != NULL)
 	{
-		if (u->o.index <= 15)
+		if (u->o.index <= UNIT_INDEX_PROJECTILE_END)
 			Viewport_DrawAirUnit(u);
 
 		u = Unit_Find(&find);

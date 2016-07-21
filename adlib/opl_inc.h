@@ -27,21 +27,21 @@
 	define Bits, Bitu, Bit32s, Bit32u, Bit16s, Bit16u, Bit8s, Bit8u here
 */
 
-#include "types.h"
-
 #ifndef OPL_BITS_DEFINED
 #define OPL_BITS_DEFINED
+
+#include <cstdint>
 
 #define fltype double
 
 #define Bitu unsigned int
 #define Bits int
-#define Bit32u uint32
-#define Bit32s int32
-#define Bit16u uint16
-#define Bit16s int16
-#define Bit8u uint8
-#define Bit8s int8
+#define Bit32u uint32_t
+#define Bit32s int32_t
+#define Bit16u uint16_t
+#define Bit16s int16_t
+#define Bit8u uint8_t
+#define Bit8s int8_t
 
 #endif //OPL_BITS_DEFINED
 

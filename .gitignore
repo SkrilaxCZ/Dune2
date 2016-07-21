@@ -20,6 +20,7 @@
 
 # Build directories
 src/Build
+adlib/Build
 
 # Allow prebuilts
 !allegro/Win32/bin/*.dll

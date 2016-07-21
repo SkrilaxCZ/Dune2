@@ -192,7 +192,7 @@ Structure* Structure_Allocate(uint16 index, uint8 type)
 	memset(s, 0, sizeof(Structure));
 	s->o.index = index;
 	s->o.type = type;
-	s->o.linkedID = 0xFF;
+	s->o.linkedID = 0xFFFF;
 	s->o.flags.s.used = true;
 	s->o.flags.s.allocated = true;
 	s->o.script.delay = 0;

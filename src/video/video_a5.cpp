@@ -619,7 +619,7 @@ void VideoA5_Tick()
 		tm = localtime(&timep);
 
 		strftime(filename, sizeof(filename), "screenshot_%Y%m%d_%H%M%S.png", tm);
-		snprintf(filepath, sizeof(filepath), "%s/%s", g_personal_data_dir, filename);
+		snprintf(filepath, sizeof(filepath), "%s/%s", g_dune_data_dir, filename);
 
 		al_save_bitmap(filepath, al_get_backbuffer(display));
 		fprintf(stdout, "screenshot: %s\n", filepath);
@@ -1162,9 +1162,9 @@ static void VideoA5_InitCPS()
 	VideoA5_SetBitmapFlags(ALLEGRO_MEMORY_BITMAP);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ZERO);
 
-	CPSStore* cps_screen = VideoA5_ExportCPS(SEARCHDIR_GLOBAL_DATA_DIR, "SCREEN.CPS", buf);
-	CPSStore* cps_fame = VideoA5_LoadCPS(SEARCHDIR_GLOBAL_DATA_DIR, "FAME.CPS");
-	CPSStore* cps_mapmach = VideoA5_LoadCPS(SEARCHDIR_GLOBAL_DATA_DIR, "MAPMACH.CPS");
+	CPSStore* cps_screen = VideoA5_ExportCPS(SEARCHDIR_DATA_DIR, "SCREEN.CPS", buf);
+	CPSStore* cps_fame = VideoA5_LoadCPS(SEARCHDIR_DATA_DIR, "FAME.CPS");
+	CPSStore* cps_mapmach = VideoA5_LoadCPS(SEARCHDIR_DATA_DIR, "MAPMACH.CPS");
 	assert(cps_screen != NULL && cps_fame != NULL && cps_mapmach != NULL);
 
 	VideoA5_SetBitmapFlags(ALLEGRO_VIDEO_BITMAP);
@@ -1191,7 +1191,7 @@ static void VideoA5_InitCPS()
 
 	for (HouseType houseID = HOUSE_HARKONNEN; houseID < HOUSE_MAX; houseID++)
 	{
-		Sprites_LoadImage(SEARCHDIR_GLOBAL_DATA_DIR, "SCREEN.CPS", SCREEN_1, NULL);
+		Sprites_LoadImage(SEARCHDIR_DATA_DIR, "SCREEN.CPS", SCREEN_1, NULL);
 		GUI_Palette_CreateRemap(g_table_houseInfo[houseID].spriteColor);
 		GUI_Palette_RemapScreen(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_1, g_remap);
 		VideoA5_CopyBitmap(SCREEN_WIDTH, buf, cps_screen->bmp, TRANSPARENT_COLOUR_0);
@@ -1218,7 +1218,7 @@ static void VideoA5_InitCPS()
 	VideoA5_DrawBitmapRegion_Padded(cps_mapmach->bmp, &cps_special_coord[CPS_CONQUEST_FR], coord->tx, cps_special_coord[CPS_CONQUEST_FR].ty, false, false);
 	VideoA5_DrawBitmapRegion_Padded(cps_mapmach->bmp, &cps_special_coord[CPS_CONQUEST_DE], coord->tx, cps_special_coord[CPS_CONQUEST_DE].ty, false, false);
 
-	Sprites_LoadImage(SEARCHDIR_GLOBAL_DATA_DIR, "MAPMACH.CPS", SCREEN_1, NULL);
+	Sprites_LoadImage(SEARCHDIR_DATA_DIR, "MAPMACH.CPS", SCREEN_1, NULL);
 	ALLEGRO_LOCKED_REGION* reg = al_lock_bitmap(interface_texture, ALLEGRO_PIXEL_FORMAT_ABGR_8888_LE, ALLEGRO_LOCK_READWRITE);
 	VideoA5_CreateWhiteMask(buf, reg, SCREEN_WIDTH, coord->cx, cps_special_coord[CPS_CONQUEST_EN].cy, coord->tx, cps_special_coord[CPS_CONQUEST_EN].ty + 30, coord->w, 20, CONQUEST_COLOUR);
 	VideoA5_CreateWhiteMask(buf, reg, SCREEN_WIDTH, coord->cx, cps_special_coord[CPS_CONQUEST_FR].cy, coord->tx, cps_special_coord[CPS_CONQUEST_FR].ty + 30, coord->w, 20, CONQUEST_COLOUR);
@@ -1311,7 +1311,7 @@ void VideoA5_DrawCPSSpecialScale(CPSID cpsID, HouseType houseID, int x, int y, f
 
 FadeInAux* Video_InitFadeInCPS(const char* filename, int x, int y, int w, int h, bool fade_in)
 {
-	CPSStore* cps = VideoA5_LoadCPS(SEARCHDIR_GLOBAL_DATA_DIR, filename);
+	CPSStore* cps = VideoA5_LoadCPS(SEARCHDIR_DATA_DIR, filename);
 	if (cps == NULL)
 		return NULL;
 
@@ -1374,9 +1374,7 @@ static IconConnectivity* VideoA5_CreateIconConnectivities()
 	return connect;
 }
 
-static void
-VideoA5_ExportIconGroup(IconMapEntries group, int num_common,
-                        int x, int y, int* retx, int* rety)
+static void VideoA5_ExportIconGroup(IconMapEntries group, int num_common, int x, int y, int* retx, int* rety)
 {
 	const int WINDOW_W = g_widgetProperties[WINDOWID_RENDER_TEXTURE].width;
 	const int WINDOW_H = g_widgetProperties[WINDOWID_RENDER_TEXTURE].height;
@@ -1978,27 +1976,20 @@ static void VideoA5_InitShapes(unsigned char* buf)
 					{
 						const uint8 backup = g_remap[RADIO_BUTTON_BACKGROUND_COLOUR];
 						g_remap[RADIO_BUTTON_BACKGROUND_COLOUR] = 0;
-
 						s_shape[shapeID][houseID] = VideoA5_ExportShape(shapeID, x, y, row_h, &x, &y, &row_h, g_remap);
-
 						g_remap[RADIO_BUTTON_BACKGROUND_COLOUR] = backup;
 					}
 					else
-					{
 						s_shape[shapeID][houseID] = VideoA5_ExportShape(shapeID, x, y, row_h, &x, &y, &row_h, g_remap);
-					}
 
 					if (SHAPE_CONCRETE_SLAB <= shapeID && shapeID <= SHAPE_SANDWORM)
 					{
 						const ShapeID greyID = SHAPE_CONCRETE_SLAB_GREY + (shapeID - SHAPE_CONCRETE_SLAB);
-
 						s_shape[greyID][houseID] = VideoA5_ExportShape(shapeID, x, y, row_h, &x, &y, &row_h, greymap);
 					}
 				}
 				else
-				{
 					s_shape[shapeID][houseID] = s_shape[shapeID][HOUSE_HARKONNEN];
-				}
 			}
 		}
 	}
@@ -2480,9 +2471,7 @@ void Video_DrawMinimap(int left, int top, int map_scale, int mode)
 						}
 					}
 					else
-					{
 						colour = g_table_minimapColour[g_table_houseInfo[Unit_GetHouseID(u)].spriteColor];
-					}
 				}
 
 				if (colour == 12)
@@ -2490,23 +2479,15 @@ void Video_DrawMinimap(int left, int top, int map_scale, int mode)
 					uint16 type = Map_GetLandscapeTypeVisible(packed);
 
 					if (g_table_landscapeInfo[type].radarColour == 0xFFFF)
-					{
 						colour = g_table_minimapColour[g_table_houseInfo[t->houseID].spriteColor];
-					}
 					else if (enhancement_fog_of_war && g_mapVisible[packed].timeout <= g_timerGame)
-					{
 						colour = -g_table_landscapeInfo[type].radarColour;
-					}
 					else
-					{
 						colour = g_table_landscapeInfo[type].radarColour;
-					}
 				}
 			}
 			else if (t->hasStructure && t->houseID == g_playerHouseID)
-			{
 				colour = g_table_minimapColour[g_table_houseInfo[t->houseID].spriteColor];
-			}
 
 			if (s_minimap_colour[i] != colour)
 			{
@@ -2551,8 +2532,7 @@ void Video_DrawMinimap(int left, int top, int map_scale, int mode)
 		al_unlock_bitmap(s_minimap);
 	}
 
-	al_draw_scaled_bitmap(s_minimap, 0.0f, 0.0f, mapInfo->sizeX, mapInfo->sizeY,
-	                      left, top, (map_scale + 1.0f) * mapInfo->sizeX, (map_scale + 1.0f) * mapInfo->sizeY, 0);
+	al_draw_scaled_bitmap(s_minimap, 0.0f, 0.0f, mapInfo->sizeX, mapInfo->sizeY, left, top, (map_scale + 1.0f) * mapInfo->sizeX, (map_scale + 1.0f) * mapInfo->sizeY, 0);
 
 	/* Always redraw sandworms because they glow. */
 	for (int i = 0; i < num_sandworms; i++)

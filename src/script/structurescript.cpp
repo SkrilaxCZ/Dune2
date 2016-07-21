@@ -66,7 +66,7 @@ uint16 Script_Structure_SetState(ScriptEngine* script)
 
 	if (state == STRUCTURE_STATE_DETECT)
 	{
-		if (s->o.linkedID == 0xFF)
+		if (s->o.linkedID == 0xFFFF)
 		{
 			state = STRUCTURE_STATE_IDLE;
 		}
@@ -124,7 +124,7 @@ uint16 Script_Structure_RefineSpice(ScriptEngine* script)
 
 	s = g_scriptCurrentStructure;
 
-	if (s->o.linkedID == 0xFF)
+	if (s->o.linkedID == 0xFFFF)
 	{
 		Structure_SetState(s, STRUCTURE_STATE_IDLE);
 		return 0;
@@ -228,7 +228,7 @@ uint16 Script_Structure_FindUnitByType(ScriptEngine* script)
 
 	if (s->state != STRUCTURE_STATE_READY)
 		return IT_NONE;
-	if (s->o.linkedID == 0xFF)
+	if (s->o.linkedID == 0xFFFF)
 		return IT_NONE;
 
 	type = STACK_PEEK(1);
@@ -272,7 +272,7 @@ uint16 Script_Structure_Unknown0C5A(ScriptEngine* script)
 
 	s = g_scriptCurrentStructure;
 
-	if (s->o.linkedID == 0xFF)
+	if (s->o.linkedID == 0xFFFF)
 		return 0;
 
 	u = Unit_Get_ByIndex(s->o.linkedID);
@@ -280,9 +280,9 @@ uint16 Script_Structure_Unknown0C5A(ScriptEngine* script)
 	if (g_table_unitInfo[u->o.type].movementType == MOVEMENT_WINGER && Unit_SetPosition(u, s->o.position))
 	{
 		s->o.linkedID = u->o.linkedID;
-		u->o.linkedID = 0xFF;
+		u->o.linkedID = 0xFFFF;
 
-		if (s->o.linkedID == 0xFF)
+		if (s->o.linkedID == 0xFFFF)
 			Structure_SetState(s, STRUCTURE_STATE_IDLE);
 		Object_Script_Variable4_Clear(&s->o);
 
@@ -304,7 +304,7 @@ uint16 Script_Structure_Unknown0C5A(ScriptEngine* script)
 		return 0;
 
 	s->o.linkedID = u->o.linkedID;
-	u->o.linkedID = 0xFF;
+	u->o.linkedID = 0xFFFF;
 
 	if (s->rallyPoint != 0xFFFF)
 	{
@@ -339,7 +339,7 @@ uint16 Script_Structure_Unknown0C5A(ScriptEngine* script)
 		GUI_DisplayHint(STR_HINT_SEARCH_FOR_SPICE_FIELDS_TO_HARVEST, 0x6A);
 	}
 
-	if (s->o.linkedID == 0xFF)
+	if (s->o.linkedID == 0xFFFF)
 		Structure_SetState(s, STRUCTURE_STATE_IDLE);
 	Object_Script_Variable4_Clear(&s->o);
 
@@ -715,10 +715,7 @@ uint16 Script_Structure_Destroy(ScriptEngine* script)
 			/* AI units shouldn't use ACTION_ATTACK.  Use ACTION_HUNT
 			 * so the soldier will move and we can rebuild here later.
 			 */
-			if (enhancement_ai_respects_structure_placement || AI_IsBrutalAI((HouseType)s->o.houseID))
-				Unit_SetAction(u, ACTION_HUNT);
-			else
-				Unit_SetAction(u, ACTION_ATTACK);
+			Unit_SetAction(u, ACTION_HUNT);
 			continue;
 		}
 

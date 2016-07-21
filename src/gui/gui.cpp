@@ -630,7 +630,7 @@ void GUI_UpdateProductionStringID()
 		return;
 	}
 
-	if (s->o.linkedID == 0xFF)
+	if (s->o.linkedID == 0xFFFF)
 	{
 		g_productionStringID = STR_BUILD_IT;
 		return;
@@ -1362,7 +1362,7 @@ uint16 GUI_DisplayHint(uint16 stringID, uint16 spriteID)
 	if (g_debugGame || stringID == STR_NULL || !g_gameConfig.hints || g_selectionType == SELECTIONTYPE_MENTAT)
 		return 0;
 
-	hint = stringID - STR_HINT_YOU_MUST_BUILD_A_WINDTRAP_TO_PROVIDE_POWER_TO_YOUR_BASE_WITHOUT_POWER_YOUR_STRUCTURES_WILL_DECAY;
+	hint = stringID - STR_HINT_BUILD_WINDTRAP;
 
 	assert(hint < 64);
 
@@ -2087,11 +2087,11 @@ void GUI_HallOfFame_Show(HouseType houseID, uint16 score)
 
 	data = (HallOfFameStruct *)GFX_Screen_Get_ByIndex(SCREEN_2);
 
-	if (!File_Exists_Personal("SAVEFAME.DAT"))
+	if (!File_Exists_Ex(SEARCHDIR_SAVE_DIR, "SAVEFAME.DAT"))
 		memset(data, 0, 128);
 	else
 	{
-		File_ReadBlockFile_Personal("SAVEFAME.DAT", data, 128);
+		File_ReadBlockFile_Ex(SEARCHDIR_SAVE_DIR, "SAVEFAME.DAT", data, 128);
 		GUI_HallOfFame_Decode(data);
 	}
 
@@ -2165,7 +2165,7 @@ void GUI_HallOfFame_Show(HouseType houseID, uint16 score)
 		memcpy(&g_widgetProperties[19], &backupProperties, sizeof(WidgetProperties));
 
 		GUI_HallOfFame_Encode(data);
-		fileID = File_Open_Personal("SAVEFAME.DAT", FILE_MODE_WRITE);
+		fileID = File_Open_Ex(SEARCHDIR_SAVE_DIR, "SAVEFAME.DAT", FILE_MODE_WRITE);
 		File_Write(fileID, data, 128);
 		File_Close(fileID);
 		GUI_HallOfFame_Decode(data);

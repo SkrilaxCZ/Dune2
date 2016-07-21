@@ -158,7 +158,7 @@ Unit* Unit_Allocate(uint16 index, uint8 type, uint8 houseID)
 	u->o.index = index;
 	u->o.type = type;
 	u->o.houseID = houseID;
-	u->o.linkedID = 0xFF;
+	u->o.linkedID = 0xFFFF;
 	u->o.flags.s.used = true;
 	u->o.flags.s.allocated = true;
 	u->o.flags.s.isUnit = true;

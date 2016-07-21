@@ -624,7 +624,7 @@ const HouseAnimation_Animation g_table_houseAnimation_animation[HOUSEANIMATION_M
 const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX][32] = {
 	{/* 0 - intro */
 		{/* 0 */
-			/* stringID       */ STR_PRESENT,
+			/* stringID       */ STR_INTRO_PRESENT,
 			/* colour         */ 0,
 			/* animationID    */ 0,
 			/* top            */ 94,
@@ -646,7 +646,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 2 */
-			/* stringID       */ STR_THE_BATTLE_FOR_ARRAKIS,
+			/* stringID       */ STR_INTRO_THE_BUILDING_OF_A_DYNASTY,
 			/* colour         */ 0,
 			/* animationID    */ 2,
 			/* top            */ 104,
@@ -657,7 +657,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 3 */
-			/* stringID       */ STR_THE_PLANET_ARRAKIS_KNOWN_AS_DUNE,
+			/* stringID       */ STR_INTRO_THE_PLANET_ARRAKIS_KNOWN_AS_DUNE,
 			/* colour         */ 0,
 			/* animationID    */ 3,
 			/* top            */ 154,
@@ -668,7 +668,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 4 */
-			/* stringID       */ STR_LAND_OF_SAND,
+			/* stringID       */ STR_INTRO_LAND_OF_SAND,
 			/* colour         */ 0,
 			/* animationID    */ 5,
 			/* top            */ 154,
@@ -679,7 +679,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 5 */
-			/* stringID       */ STR_HOME_OF_THE_SPICE_MELANGE,
+			/* stringID       */ STR_INTRO_HOME_OF_THE_SPICE_MELANGE,
 			/* colour         */ 0,
 			/* animationID    */ 5,
 			/* top            */ 154,
@@ -690,7 +690,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 6 */
-			/* stringID       */ STR_THE_SPICE_CONTROLS_THE_EMPIRE,
+			/* stringID       */ STR_INTRO_THE_SPICE_CONTROLS_THE_EMPIRE,
 			/* colour         */ 0,
 			/* animationID    */ 7,
 			/* top            */ 154,
@@ -701,7 +701,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 7 */
-			/* stringID       */ STR_WHOEVER_CONTROLS_DUNECONTROLS_THE_SPICE,
+			/* stringID       */ STR_INTRO_WHOEVER_CONTROLS_DUNE_CONTROLS_THE_SPICE,
 			/* colour         */ 0,
 			/* animationID    */ 7,
 			/* top            */ 154,
@@ -712,7 +712,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 8 */
-			/* stringID       */ STR_THE_EMPEROR_HAS_PROPOSED_ACHALLENGE_TO_EACH_OF_THE_HOUSES,
+			/* stringID       */ STR_INTRO_THE_EMPEROR_HAS_PROPOSED_A_CHALLENGE_TO_EACH_OF_THE_HOUSES,
 			/* colour         */ 0,
 			/* animationID    */ 8,
 			/* top            */ 154,
@@ -723,7 +723,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 9 */
-			/* stringID       */ STR_THE_HOUSE_THAT_PRODUCES_THEMOST_SPICE_WILL_CONTROL_DUNE,
+			/* stringID       */ STR_INTRO_THE_HOUSE_THAT_PRODUCES_THE_MOST_SPICE_WILL_CONTROL_DUNE,
 			/* colour         */ 4,
 			/* animationID    */ 9,
 			/* top            */ 154,
@@ -734,7 +734,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 10 */
-			/* stringID       */ STR_THERE_ARE_NO_SET_TERRITORIES,
+			/* stringID       */ STR_INTRO_THERE_ARE_NO_SET_TERRITORIES,
 			/* colour         */ 4,
 			/* animationID    */ 11,
 			/* top            */ 154,
@@ -745,7 +745,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 11 */
-			/* stringID       */ STR_AND_NO_RULES_OF_ENGAGEMENT,
+			/* stringID       */ STR_INTRO_AND_NO_RULES_OF_ENGAGEMENT,
 			/* colour         */ 4,
 			/* animationID    */ 11,
 			/* top            */ 154,
@@ -756,7 +756,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 12 */
-			/* stringID       */ STR_VAST_ARMIES_HAVE_ARRIVED,
+			/* stringID       */ STR_INTRO_VAST_ARMIES_HAVE_ARRIVED,
 			/* colour         */ 0,
 			/* animationID    */ 12,
 			/* top            */ 154,
@@ -767,7 +767,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 13 */
-			/* stringID       */ STR_NOW_THREE_HOUSES_FIGHTFOR_CONTROL_OF_DUNE,
+			/* stringID       */ STR_INTRO_NOW_THREE_HOUSES_FIGHTFOR_CONTROL_OF_DUNE,
 			/* colour         */ 0,
 			/* animationID    */ 13,
 			/* top            */ 85,
@@ -778,7 +778,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 14 */
-			/* stringID       */ STR_THE_NOBLE_ATREIDES,
+			/* stringID       */ STR_INTRO_THE_NOBLE_ATREIDES,
 			/* colour         */ 0,
 			/* animationID    */ 14,
 			/* top            */ 154,
@@ -789,7 +789,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 15 */
-			/* stringID       */ STR_THE_INSIDIOUS_ORDOS,
+			/* stringID       */ STR_INTRO_THE_INSIDIOUS_ORDOS,
 			/* colour         */ 0,
 			/* animationID    */ 15,
 			/* top            */ 154,
@@ -800,7 +800,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 16 */
-			/* stringID       */ STR_AND_THE_EVIL_HARKONNEN,
+			/* stringID       */ STR_INTRO_AND_THE_EVIL_HARKONNEN,
 			/* colour         */ 0,
 			/* animationID    */ 17,
 			/* top            */ 154,
@@ -811,7 +811,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 17 */
-			/* stringID       */ STR_ONLY_ONE_HOUSE_WILL_PREVAIL,
+			/* stringID       */ STR_INTRO_ONLY_ONE_HOUSE_WILL_PREVAIL,
 			/* colour         */ 0,
 			/* animationID    */ 20,
 			/* top            */ 154,
@@ -822,7 +822,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 18 */
-			/* stringID       */ STR_YOUR_BATTLE_FOR_DUNE_BEGINS,
+			/* stringID       */ STR_INTRO_YOUR_BATTLE_FOR_DUNE_BEGINS,
 			/* colour         */ 0,
 			/* animationID    */ 21,
 			/* top            */ 85,
@@ -833,7 +833,7 @@ const HouseAnimation_Subtitle g_table_houseAnimation_subtitle[HOUSEANIMATION_MAX
 		},
 
 		{/* 19 */
-			/* stringID       */ STR_NOW,
+			/* stringID       */ STR_INTRO_NOW,
 			/* colour         */ 0,
 			/* animationID    */ 21,
 			/* top            */ 85,

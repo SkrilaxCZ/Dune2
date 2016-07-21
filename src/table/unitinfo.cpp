@@ -8,6 +8,7 @@
 #include "../shape.h"
 #include "../table/sound.h"
 #include "../unit.h"
+#include "../pool/unitpool.h"
 
 const uint16 g_table_actionsAI[4] = {ACTION_HUNT, ACTION_AREA_GUARD, ACTION_AMBUSH, ACTION_GUARD};
 
@@ -16,7 +17,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_CARRYALL,
 			/* name                 */ "Carryall",
-			/* stringID_full        */ STR_ALLPURPOSE_CARRYALL,
+			/* stringID_full        */ STR_CARRYALL_LONG,
 			/* wsa                  */ "carryall.wsa",
 			{/* flags */
 				/* hasShadow            */ true,
@@ -50,8 +51,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 16,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 0,
-		/* indexEnd             */ 10,
+		/* indexStart           */ UNIT_INDEX_AIR_START,
+		/* indexEnd             */ UNIT_INDEX_AIR_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -89,7 +90,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_THOPTER,
 			/* name                 */ "'Thopter",
-			/* stringID_full        */ STR_ORNITHOPTER,
+			/* stringID_full        */ STR_THOPTER_LONG,
 			/* wsa                  */ "orni.wsa",
 			{/* flags */
 				/* hasShadow            */ true,
@@ -123,8 +124,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 30,
 			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_ATREIDES,
 		},
-		/* indexStart           */ 0,
-		/* indexEnd             */ 10,
+		/* indexStart           */ UNIT_INDEX_AIR_START,
+		/* indexEnd             */ UNIT_INDEX_AIR_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -162,7 +163,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_INFANTRY,
 			/* name                 */ "Infantry",
-			/* stringID_full        */ STR_LIGHT_INFANTRY_SQUAD,
+			/* stringID_full        */ STR_INFANTRY_LONG,
 			/* wsa                  */ "infantry.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -194,10 +195,10 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* hintStringID         */ STR_NULL,
 			/* priorityBuild        */ 20,
 			/* priorityTarget       */ 20,
-			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_ATREIDES,
+			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_ORDOS | FLAG_HOUSE_ATREIDES,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -235,7 +236,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_TROOPERS,
 			/* name                 */ "Troopers",
-			/* stringID_full        */ STR_HEAVY_TROOPER_SQUAD,
+			/* stringID_full        */ STR_TROOPERS_LONG,
 			/* wsa                  */ "hyinfy.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -267,10 +268,10 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* hintStringID         */ STR_NULL,
 			/* priorityBuild        */ 50,
 			/* priorityTarget       */ 50,
-			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_HARKONNEN,
+			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_HARKONNEN,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -308,7 +309,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_SOLDIER,
 			/* name                 */ "Soldier",
-			/* stringID_full        */ STR_INFANTRY_SOLDIER,
+			/* stringID_full        */ STR_SOLDIER_LONG,
 			/* wsa                  */ "infantry.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -340,10 +341,10 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* hintStringID         */ STR_NULL,
 			/* priorityBuild        */ 10,
 			/* priorityTarget       */ 10,
-			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_ATREIDES,
+			/* availableHouse       */ FLAG_HOUSE_MERCENARY  | FLAG_HOUSE_ORDOS | FLAG_HOUSE_ATREIDES,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -381,7 +382,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_TROOPER,
 			/* name                 */ "Trooper",
-			/* stringID_full        */ STR_HEAVY_TROOPER,
+			/* stringID_full        */ STR_TROOPER_LONG,
 			/* wsa                  */ "hyinfy.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -413,10 +414,10 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* hintStringID         */ STR_NULL,
 			/* priorityBuild        */ 20,
 			/* priorityTarget       */ 30,
-			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_HARKONNEN,
+			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_HARKONNEN,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -488,8 +489,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 700,
 			/* availableHouse       */ FLAG_HOUSE_ORDOS,
 		},
-		/* indexStart           */ 19,
-		/* indexEnd             */ 21,
+		/* indexStart           */ UNIT_INDEX_SABOTEUR_START,
+		/* indexEnd             */ UNIT_INDEX_SABOTEUR_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -527,7 +528,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_LAUNCHER,
 			/* name                 */ "Launcher",
-			/* stringID_full        */ STR_ROCKET_LAUNCHER,
+			/* stringID_full        */ STR_LAUNCHER_LONG,
 			/* wsa                  */ "rtank.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -561,8 +562,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 150,
 			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ATREIDES | FLAG_HOUSE_HARKONNEN,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -600,7 +601,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_DEVIATOR,
 			/* name                 */ "Deviator",
-			/* stringID_full        */ STR_DEVIATOR_LAUNCHER,
+			/* stringID_full        */ STR_DEVIATOR_LONG,
 			/* wsa                  */ "ordrtank.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -634,8 +635,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 175,
 			/* availableHouse       */ FLAG_HOUSE_ORDOS,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -673,7 +674,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_TANK,
 			/* name                 */ "Tank",
-			/* stringID_full        */ STR_COMBAT_TANK,
+			/* stringID_full        */ STR_TANK_LONG,
 			/* wsa                  */ "ltank.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -707,8 +708,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 100,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -746,7 +747,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_SIEGE_TANK,
 			/* name                 */ "Siege Tank",
-			/* stringID_full        */ STR_HEAVY_SIEGE_TANK,
+			/* stringID_full        */ STR_SIEGE_TANK_LONG,
 			/* wsa                  */ "htank.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -780,8 +781,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 150,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -819,7 +820,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_DEVASTATOR,
 			/* name                 */ "Devastator",
-			/* stringID_full        */ STR_DEVASTATOR_TANK,
+			/* stringID_full        */ STR_DEVASTATOR_LONG,
 			/* wsa                  */ "harktank.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -853,8 +854,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 180,
 			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_HARKONNEN,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -892,7 +893,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_SONIC_TANK,
 			/* name                 */ "Sonic Tank",
-			/* stringID_full        */ STR_SONIC_WAVE_TANK,
+			/* stringID_full        */ STR_SONIC_TANK_LONG,
 			/* wsa                  */ "stank.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -926,8 +927,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 110,
 			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ATREIDES,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -965,7 +966,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_TRIKE,
 			/* name                 */ "Trike",
-			/* stringID_full        */ STR_LIGHT_ATTACK_TRIKE,
+			/* stringID_full        */ STR_TRIKE_LONG,
 			/* wsa                  */ "trike.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -999,8 +1000,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 50,
 			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ATREIDES,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -1038,7 +1039,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_RAIDER_TRIKE,
 			/* name                 */ "Raider Trike",
-			/* stringID_full        */ STR_FAST_RAIDER_TRIKE,
+			/* stringID_full        */ STR_RAIDER_TRIKE_LONG,
 			/* wsa                  */ "otrike.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -1072,8 +1073,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 60,
 			/* availableHouse       */ FLAG_HOUSE_ORDOS, /* was | FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN */
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -1111,7 +1112,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_QUAD,
 			/* name                 */ "Quad",
-			/* stringID_full        */ STR_HEAVY_ATTACK_QUAD,
+			/* stringID_full        */ STR_QUAD_LONG,
 			/* wsa                  */ "quad.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -1145,8 +1146,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 60,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -1184,7 +1185,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_HARVESTER,
 			/* name                 */ "Harvester",
-			/* stringID_full        */ STR_SPICE_HARVESTER,
+			/* stringID_full        */ STR_HARVESTER_LONG,
 			/* wsa                  */ "harvest.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -1218,8 +1219,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 150,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -1257,7 +1258,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_MCV,
 			/* name                 */ "MCV",
-			/* stringID_full        */ STR_MOBILE_CONST_VEHICLE,
+			/* stringID_full        */ STR_MCV_LONG,
 			/* wsa                  */ "mcv.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -1291,8 +1292,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 150,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 22,
-		/* indexEnd             */ 101,
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ true,
@@ -1364,8 +1365,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_HARKONNEN,
 		},
-		/* indexStart           */ 12,
-		/* indexEnd             */ 15,
+		/* indexStart           */ UNIT_INDEX_PROJECTILE_START,
+		/* indexEnd             */ UNIT_INDEX_PROJECTILE_END,
 		{/* flags */
 			/* isBullet             */ true,
 			/* explodeOnDeath       */ false,
@@ -1437,8 +1438,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 12,
-		/* indexEnd             */ 15,
+		/* indexStart           */ UNIT_INDEX_PROJECTILE_START,
+		/* indexEnd             */ UNIT_INDEX_PROJECTILE_END,
 		{/* flags */
 			/* isBullet             */ true,
 			/* explodeOnDeath       */ false,
@@ -1510,8 +1511,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 12,
-		/* indexEnd             */ 15,
+		/* indexStart           */ UNIT_INDEX_PROJECTILE_START,
+		/* indexEnd             */ UNIT_INDEX_PROJECTILE_END,
 		{/* flags */
 			/* isBullet             */ true,
 			/* explodeOnDeath       */ false,
@@ -1583,8 +1584,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 12,
-		/* indexEnd             */ 15,
+		/* indexStart           */ UNIT_INDEX_PROJECTILE_START,
+		/* indexEnd             */ UNIT_INDEX_PROJECTILE_END,
 		{/* flags */
 			/* isBullet             */ true,
 			/* explodeOnDeath       */ false,
@@ -1656,8 +1657,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 12,
-		/* indexEnd             */ 15,
+		/* indexStart           */ UNIT_INDEX_PROJECTILE_START,
+		/* indexEnd             */ UNIT_INDEX_PROJECTILE_END,
 		{/* flags */
 			/* isBullet             */ true,
 			/* explodeOnDeath       */ false,
@@ -1729,8 +1730,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 12,
-		/* indexEnd             */ 15,
+		/* indexStart           */ UNIT_INDEX_PROJECTILE_START,
+		/* indexEnd             */ UNIT_INDEX_PROJECTILE_END,
 		{/* flags */
 			/* isBullet             */ true,
 			/* explodeOnDeath       */ true,
@@ -1802,8 +1803,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 12,
-		/* indexEnd             */ 15,
+		/* indexStart           */ UNIT_INDEX_PROJECTILE_START,
+		/* indexEnd             */ UNIT_INDEX_PROJECTILE_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -1841,7 +1842,7 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_SANDWORM,
 			/* name                 */ "Sandworm",
-			/* stringID_full        */ STR_SANDWORM2,
+			/* stringID_full        */ STR_SANDWORM_LONG,
 			/* wsa                  */ NULL,
 			{/* flags */
 				/* hasShadow            */ false,
@@ -1875,8 +1876,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_FREMEN,
 		},
-		/* indexStart           */ 16,
-		/* indexEnd             */ 18,
+		/* indexStart           */ UNIT_INDEX_SANDWORM_START,
+		/* indexEnd             */ UNIT_INDEX_SANDWORM_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -1948,8 +1949,8 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 			/* priorityTarget       */ 0,
 			/* availableHouse       */ FLAG_HOUSE_ALL,
 		},
-		/* indexStart           */ 11,
-		/* indexEnd             */ 11,
+		/* indexStart           */ UNIT_INDEX_FRIGATE_START,
+		/* indexEnd             */ UNIT_INDEX_FRIGATE_END,
 		{/* flags */
 			/* isBullet             */ false,
 			/* explodeOnDeath       */ false,
@@ -1981,7 +1982,82 @@ const UnitInfo g_table_base_unitInfo[UNIT_MAX] = {
 		/* explosionType        */ EXPLOSION_INVALID,
 		/* bulletType           */ UNIT_INVALID,
 		/* bulletSound          */ -1
-	}
+	},
+
+	/* The following are custom units */
+
+	{/* 28 */
+		{/* objectInfo */
+			/* stringID_abbrev      */ STR_TROOPERS,
+			/* name                 */ "Saudarkar",
+			/* stringID_full        */ STR_TROOPERS_LONG,
+			/* wsa                  */ "hyinfy.wsa",
+			{/* flags */
+				/* hasShadow            */ false,
+				/* factory              */ false,
+				/* notOnConcrete        */ false,
+				/* busyStateIsIncoming  */ false,
+				/* blurTile             */ false,
+				/* hasTurret            */ false,
+				/* conquerable          */ false,
+				/* canBePickedUp        */ false,
+				/* noMessageOnDeath     */ false,
+				/* tabSelectable        */ true,
+				/* scriptNoSlowdown     */ true,
+				/* targetAir            */ true,
+				/* priority             */ true
+			},
+			/* spawnChance          */ 0,
+			/* hitpoints            */ 125,
+			/* fogUncoverRadius     */ 1,
+			/* spriteID             */ SHAPE_SARDAUKAR,
+			/* buildCredits         */ 240,
+			/* buildTime            */ 22,
+			/* availableCampaign    */ {0, 0, 0, 0, 0, 0},
+			/* structuresRequired   */ FLAG_STRUCTURE_NONE,
+			/* sortPriority         */ 8,
+			/* upgradeLevelRequired */ {0, 0, 0, 0, 0, 0},
+			/* actionsPlayer        */ {ACTION_ATTACK, ACTION_MOVE, ACTION_RETREAT, ACTION_GUARD},
+			/* available            */ 0,
+			/* hintStringID         */ STR_NULL,
+			/* priorityBuild        */ 50,
+			/* priorityTarget       */ 50,
+			/* availableHouse       */ FLAG_HOUSE_SARDAUKAR,
+		},
+		/* indexStart           */ UNIT_INDEX_NORMAL_START,
+		/* indexEnd             */ UNIT_INDEX_NORMAL_END,
+		{/* flags */
+			/* isBullet             */ false,
+			/* explodeOnDeath       */ false,
+			/* sonicProtection      */ false,
+			/* canWobble            */ false,
+			/* isTracked            */ false,
+			/* isGroundUnit         */ true,
+			/* mustStayInMap        */ false,
+			/* firesTwice           */ true,
+			/* impactOnSand         */ false,
+			/* isNotDeviatable      */ true,
+			/* hasAnimationSet      */ false,
+			/* notAccurate          */ false,
+			/* isNormalUnit         */ true
+		},
+		/* dimension            */ 16,
+		/* movementType         */ MOVEMENT_FOOT,
+		/* animationSpeed       */ 15,
+		/* movingSpeedFactor    */ 15,
+		/* turningSpeed         */ 3,
+		/* groundSpriteID       */ 341,
+		/* turretSpriteID       */ -1,
+		/* actionAI             */ ACTION_HUNT,
+		/* displayMode          */ DISPLAYMODE_INFANTRY_4_FRAMES,
+		/* destroyedSpriteID    */ 0,
+		/* fireDelay            */ 50,
+		/* fireDistance         */ 6,
+		/* damage               */ 5,
+		/* explosionType        */ EXPLOSION_IMPACT_SMALL,
+		/* bulletType           */ UNIT_BULLET,
+		/* bulletSound          */ SOUND_MACHINE_GUN
+	},
 };
 
 UnitInfo g_table_unitInfo[UNIT_MAX];

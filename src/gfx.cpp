@@ -204,7 +204,7 @@ void GFX_DrawSprite(uint16 spriteID, uint16 x, uint16 y, uint8 houseID)
 	{
 		uint8 color = *iconRPAL++;
 		if (color >= 0x90 && color <= 0x96)
-			color += houseID << 4;
+			color += g_table_houseInfo[houseID].spriteColor << 4;
 
 		palette[i] = color;
 	}

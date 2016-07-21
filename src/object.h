@@ -53,7 +53,7 @@ struct Object
 {
 	uint16 index; /*!< The index of the Structure/Unit in the array. */
 	uint8 type; /*!< Type of Structure/Unit. */
-	uint8 linkedID; /*!< Structure/Unit we are linked to, or 0xFF if we are not linked to a Structure/Unit. */
+	uint16 linkedID; /*!< Structure/Unit we are linked to, or 0xFFFF if we are not linked to a Structure/Unit. */
 	ObjectFlags flags; /*!< General flags of the Structure/Unit. */
 	uint8 houseID; /*!< House of Structure. */
 	uint8 seenByHouses; /*!< Bitmask of which houses have seen this object. */

@@ -138,7 +138,7 @@ uint16 Script_Unit_TransportDeliver(ScriptEngine* script)
 
 	u = g_scriptCurrentUnit;
 
-	if (u->o.linkedID == 0xFF)
+	if (u->o.linkedID == 0xFFFF)
 		return 0;
 	if (Tools_Index_GetType(u->targetMove) == IT_UNIT)
 		return 0;
@@ -158,46 +158,35 @@ uint16 Script_Unit_TransportDeliver(ScriptEngine* script)
 			if (s->state == STRUCTURE_STATE_BUSY)
 			{
 				s->o.linkedID = u->o.linkedID;
-				u->o.linkedID = 0xFF;
+				u->o.linkedID = 0xFFFF;
 				u->o.flags.s.inTransport = false;
 				u->amount = 0;
-
 				Unit_UpdateMap(2, u);
-
 				Audio_PlaySoundAtTile(SOUND_DROP_LOAD, u->o.position);
-
 				Structure_SetState(s, STRUCTURE_STATE_READY);
-
 				ret = 1;
 			}
 
 			Object_Script_Variable4_Clear(&u->o);
 			u->targetMove = 0;
-
 			return ret;
 		}
 
-		if ((s->state == STRUCTURE_STATE_IDLE || (si->o.flags.busyStateIsIncoming && s->state == STRUCTURE_STATE_BUSY)) && s->o.linkedID == 0xFF)
+		if ((s->state == STRUCTURE_STATE_IDLE || (si->o.flags.busyStateIsIncoming && s->state == STRUCTURE_STATE_BUSY)) && s->o.linkedID == 0xFFFF)
 		{
 			Audio_PlaySoundAtTile(SOUND_DROP_LOAD, u->o.position);
-
 			Unit_EnterStructure(Unit_Get_ByIndex(u->o.linkedID), s);
-
 			Object_Script_Variable4_Clear(&u->o);
 			u->targetMove = 0;
-
-			u->o.linkedID = 0xFF;
+			u->o.linkedID = 0xFFFF;
 			u->o.flags.s.inTransport = false;
 			u->amount = 0;
-
 			Unit_UpdateMap(2, u);
-
 			return 1;
 		}
 
 		Object_Script_Variable4_Clear(&u->o);
 		u->targetMove = 0;
-
 		return 0;
 	}
 
@@ -219,9 +208,9 @@ uint16 Script_Unit_TransportDeliver(ScriptEngine* script)
 	Unit_SetSpeed(u2, 0);
 
 	u->o.linkedID = u2->o.linkedID;
-	u2->o.linkedID = 0xFF;
+	u2->o.linkedID = 0xFFFF;
 
-	if (u->o.linkedID != 0xFF)
+	if (u->o.linkedID != 0xFFFF)
 		return 1;
 
 	u->o.flags.s.inTransport = false;
@@ -248,7 +237,7 @@ uint16 Script_Unit_Pickup(ScriptEngine* script)
 
 	u = g_scriptCurrentUnit;
 
-	if (u->o.linkedID != 0xFF)
+	if (u->o.linkedID != 0xFFFF)
 		return 0;
 
 	switch (Tools_Index_GetType(u->targetMove))
@@ -269,18 +258,16 @@ uint16 Script_Unit_Pickup(ScriptEngine* script)
 			}
 
 			u->o.flags.s.inTransport = true;
-
 			Object_Script_Variable4_Clear(&u->o);
 			u->targetMove = 0;
-
 			u2 = Unit_Get_ByIndex(s->o.linkedID);
 
 			/* Pickup the unit */
-			u->o.linkedID = u2->o.index & 0xFF;
+			u->o.linkedID = u2->o.index;
 			s->o.linkedID = u2->o.linkedID;
-			u2->o.linkedID = 0xFF;
+			u2->o.linkedID = 0xFFFF;
 
-			if (s->o.linkedID == 0xFF)
+			if (s->o.linkedID == 0xFFFF)
 				Structure_SetState(s, STRUCTURE_STATE_IDLE);
 
 			/* ENHANCEMENT -- Units can be ejected from the repair bay. */
@@ -289,24 +276,17 @@ uint16 Script_Unit_Pickup(ScriptEngine* script)
 				const UnitInfo* ui = &g_table_unitInfo[u2->o.type];
 				int new_hitpoints = ui->o.hitpoints - (s->countDown * ui->o.hitpoints + (ui->o.buildTime << 6) - 1) / (ui->o.buildTime << 6);
 				new_hitpoints = clamp(u2->o.hitpoints, new_hitpoints, ui->o.hitpoints);
-
 				u2->o.hitpoints = new_hitpoints;
-
 				s->countDown = 0;
 			}
 
 			/* Check if the unit has a return-to position or try to find spice in case of a harvester */
 			if (u2->targetLast.x != 0 || u2->targetLast.y != 0)
-			{
 				u->targetMove = Tools_Index_Encode(Tile_PackTile(u2->targetLast), IT_TILE);
-			}
 			else if (u2->o.type == UNIT_HARVESTER && Unit_GetHouseID(u2) != g_playerHouseID)
-			{
 				u->targetMove = Tools_Index_Encode(Map_SearchSpice(Tile_PackTile(u->o.position), 20), IT_TILE);
-			}
 
 			Unit_UpdateMap(2, u);
-
 			return 1;
 		}
 
@@ -365,7 +345,7 @@ uint16 Script_Unit_Pickup(ScriptEngine* script)
 			Unit_Unselect(u2);
 
 			/* Pickup the unit */
-			u->o.linkedID = u2->o.index & 0xFF;
+			u->o.linkedID = u2->o.index;
 			u->o.flags.s.inTransport = true;
 
 			Unit_UpdateMap(0, u2);
@@ -695,9 +675,12 @@ uint16 Script_Unit_Fire(ScriptEngine* script)
 	typeID = (UnitType)ui->bulletType;
 
 	fireTwice = ui->flags.firesTwice && u->o.hitpoints > ui->o.hitpoints / 2;
+	/* FIXME: This is hardcoded override, allow specifying in the config */
+	if (u->o.type == UNIT_SARDAUKAR)
+		fireTwice = true;
 
-	/* FIXME: This is hardcoded override, allow specifying secondary fire in the config */
-	if ((u->o.type == UNIT_TROOPERS || u->o.type == UNIT_TROOPER) && (int16)distance > 512)
+	/* FIXME: This is hardcoded override, allow specifying in the config */
+	if ((u->o.type == UNIT_SARDAUKAR || u->o.type == UNIT_TROOPERS || u->o.type == UNIT_TROOPER) && (int16)distance > 512)
 		typeID = UNIT_MISSILE_TROOPER;
 
 	switch (typeID)
@@ -750,14 +733,10 @@ uint16 Script_Unit_Fire(ScriptEngine* script)
 			bullet->originEncoded = Tools_Index_Encode(u->o.index, IT_UNIT);
 
 			/* Play trooper missile sound. */
-			if ((u->o.type == UNIT_TROOPERS || u->o.type == UNIT_TROOPER) && (typeID == UNIT_MISSILE_TROOPER))
-			{
+			if ((u->o.type == UNIT_SARDAUKAR ||  u->o.type == UNIT_TROOPERS || u->o.type == UNIT_TROOPER) && (typeID == UNIT_MISSILE_TROOPER))
 				Audio_PlaySoundAtTile(SOUND_MINI_ROCKET, u->o.position);
-			}
 			else
-			{
 				Audio_PlaySoundAtTile((SoundID)ui->bulletSound, u->o.position);
-			}
 
 			Unit_Deviation_Decrease(u, 20);
 		}
@@ -1243,6 +1222,7 @@ static bool Script_Unit_Pathfinder_Connect(uint16 packedDst, Pathfinder_Data* da
 	packedCur = data->packed;
 	buffer = data->buffer;
 	bufferSize = 0;
+	int depth = 0;
 
 	while (bufferSize < 100)
 	{
@@ -1271,6 +1251,11 @@ static bool Script_Unit_Pathfinder_Connect(uint16 packedDst, Pathfinder_Data* da
 				if (Script_Unit_Pathfind_GetScore(packedNext, direction) <= 255)
 					break;
 			}
+
+			/* Make sure it's not an infinite loop */
+			depth++;
+			if (depth >= 256)
+				return false;
 		}
 
 		*buffer++ = direction;
@@ -1352,6 +1337,7 @@ static Pathfinder_Data Script_Unit_Pathfinder(uint16 packedSrc, uint16 packedDst
 			Pathfinder_Data routes[2];
 			uint8 routesBuffer[2][102];
 			Pathfinder_Data* bestRoute;
+			int depth = 0;
 
 			while (true)
 			{
@@ -1362,7 +1348,16 @@ static Pathfinder_Data Script_Unit_Pathfinder(uint16 packedSrc, uint16 packedDst
 				dir = Tile_GetDirectionPacked(packedNext, packedDst) / 32;
 				packedNext += s_mapDirection[dir];
 				if (Script_Unit_Pathfind_GetScore(packedNext, dir) > 255)
+				{
+					if (depth >= 256)
+					{
+						//Abort
+						packedNext = packedDst;
+						break;
+					}
+					depth++;
 					continue;
+				}
 
 				/* Try to find a connection between our last valid tile and the new valid tile */
 				routes[1].packed = packedCur;
@@ -1389,6 +1384,14 @@ static Pathfinder_Data Script_Unit_Pathfinder(uint16 packedSrc, uint16 packedDst
 					packedNext += s_mapDirection[dir];
 				}
 				while (Script_Unit_Pathfind_GetScore(packedNext, dir) <= 255);
+
+				if (depth >= 256)
+				{
+					//Abort
+					packedNext = packedDst;
+					break;
+				}
+				depth++;
 			}
 
 			if (foundCounterclockwise || foundClockwise)
@@ -1622,7 +1625,7 @@ uint16 Script_Unit_MoveToStructure(ScriptEngine* script)
 
 	u = g_scriptCurrentUnit;
 
-	if (u->o.linkedID != 0xFF)
+	if (u->o.linkedID != 0xFFFF)
 	{
 		Structure* s;
 
@@ -1688,7 +1691,7 @@ uint16 Script_Unit_GetAmount(ScriptEngine* script)
 
 	u = g_scriptCurrentUnit;
 
-	if (u->o.linkedID == 0xFF)
+	if (u->o.linkedID == 0xFFFF)
 		return u->amount;
 
 	return Unit_Get_ByIndex(u->o.linkedID)->amount;
@@ -1847,7 +1850,7 @@ uint16 Script_Unit_FindStructure(ScriptEngine* script)
 			break;
 		if (s->state != STRUCTURE_STATE_IDLE)
 			continue;
-		if (s->o.linkedID != 0xFF)
+		if (s->o.linkedID != 0xFFFF)
 			continue;
 		if (s->o.script.variables[4] != 0)
 			continue;
@@ -1875,7 +1878,7 @@ uint16 Script_Unit_DisplayDestroyedText(ScriptEngine* script)
 
 	u = g_scriptCurrentUnit;
 	ui = &g_table_unitInfo[u->o.type];
-	GUI_DisplayText(String_Get_ByIndex(STR_S_S_DESTROYED), 0, g_table_houseInfo[Unit_GetHouseID(u)].name, String_Get_ByIndex(ui->o.stringID_abbrev));
+	GUI_DisplayText(String_Get_ByIndex(STR_DESTROYED), 0, g_table_houseInfo[Unit_GetHouseID(u)].name, String_Get_ByIndex(ui->o.stringID_abbrev));
 	return 0;
 }
 
@@ -1979,7 +1982,7 @@ uint16 Script_Unit_IsValidDestination(ScriptEngine* script)
 	case IT_TILE:
 		if (!Map_IsValidPosition(index))
 			return 1;
-		if (u->o.linkedID == 0xFF)
+		if (u->o.linkedID == 0xFFFF)
 			return 1;
 		u2 = Unit_Get_ByIndex(u->o.linkedID);
 		u2->o.position = Tools_Index_GetTile(encoded);
@@ -1996,7 +1999,7 @@ uint16 Script_Unit_IsValidDestination(ScriptEngine* script)
 			s = Structure_Get_ByIndex(index);
 			if (s->o.houseID == Unit_GetHouseID(u))
 				return 0;
-			if (u->o.linkedID == 0xFF)
+			if (u->o.linkedID == 0xFFFF)
 				return 1;
 			u2 = Unit_Get_ByIndex(u->o.linkedID);
 			return Unit_IsValidMovementIntoStructure(u2, s) != 0 ? 1 : 0;
@@ -2102,7 +2105,7 @@ uint16 Script_Unit_GoToClosestStructure(ScriptEngine* script)
 			break;
 		if (s2->state != STRUCTURE_STATE_IDLE)
 			continue;
-		if (s2->o.linkedID != 0xFF)
+		if (s2->o.linkedID != 0xFFFF)
 			continue;
 		if (s2->o.script.variables[4] != 0)
 			continue;
@@ -2167,7 +2170,7 @@ uint16 Script_Unit_MCVDeploy(ScriptEngine* script)
 
 	if (Unit_GetHouseID(u) == g_playerHouseID)
 	{
-		GUI_DisplayText(String_Get_ByIndex(STR_UNIT_IS_UNABLE_TO_DEPLOY_HERE), 0);
+		GUI_DisplayText(String_Get_ByIndex(STR_UNABLE_TO_DEPLOY), 0);
 	}
 
 	Unit_UpdateMap(1, u);

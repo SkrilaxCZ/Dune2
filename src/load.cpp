@@ -107,7 +107,7 @@ static bool Load_Main(FILE* fp)
 		if (!House_LoadOld(fp, length))
 			return false;
 
-		GUI_DisplayModalMessage(String_Get_ByIndex(STR_WARNING_ORIGINAL_SAVED_GAMES_ARE_INCOMPATIBLE_WITH_THE_NEW_VERSION_THE_BATTLE_WILL_BE_RESTARTED), 0xFFFF);
+		GUI_DisplayModalMessage(String_Get_ByIndex(STR_WARNING_OLD_SAVE), 0xFFFF);
 
 		return true;
 	}
@@ -250,7 +250,7 @@ bool LoadFile(const char* filename)
 
 	Game_Init();
 
-	fp = File_Open_CaseInsensitive(SEARCHDIR_PERSONAL_DATA_DIR, filename, "rb");
+	fp = File_Open_CaseInsensitive(SEARCHDIR_SAVE_DIR, filename, "rb");
 	if (fp == NULL)
 	{
 		Error("Failed to open file '%s' for reading.\n", filename);

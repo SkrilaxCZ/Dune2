@@ -29,10 +29,8 @@
 #ifndef SOUND_SOFTSYNTH_OPL_DOSBOX_H
 #define SOUND_SOFTSYNTH_OPL_DOSBOX_H
 
-#ifndef DISABLE_DOSBOX_OPL
-
+#include <cstdint>
 #include "fmopl.h"
-#include "types.h"
 
 namespace OPL
 {
@@ -45,7 +43,7 @@ namespace OPL
 			double startTime;
 			double delay;
 			bool enabled, overflow, masked;
-			uint8 counter;
+			uint8_t counter;
 
 			Timer();
 
@@ -65,9 +63,9 @@ namespace OPL
 			//Last selected register
 			Timer timer[2];
 			//Check for it being a write to the timer
-			bool write(uint32 addr, uint8 val);
+			bool write(uint32_t addr, uint8_t val);
 			//Read the current timer state, will use current double
-			uint8 read();
+			uint8_t read();
 		};
 
 		class Handler
@@ -78,32 +76,32 @@ namespace OPL
 			}
 
 			// Write an address to a chip, returns the address the chip sets
-			virtual uint32 writeAddr(uint32 port, uint8 val) = 0;
+			virtual uint32_t writeAddr(uint32_t port, uint8_t val) = 0;
 			// Write to a specific register in the chip
-			virtual void writeReg(uint32 addr, uint8 val) = 0;
+			virtual void writeReg(uint32_t addr, uint8_t val) = 0;
 			// Generate a certain amount of samples
-			virtual void generate(int16* chan, uint samples) = 0;
+			virtual void generate(int16_t* chan, unsigned int samples) = 0;
 			// Initialize at a specific sample rate and mode
-			virtual void init(uint rate) = 0;
+			virtual void init(unsigned int rate) = 0;
 		};
 
 		class OPL : public ::OPL::OPL
 		{
 		private:
 			Config::OplType _type;
-			uint _rate;
+			unsigned int _rate;
 
 			Handler* _handler;
 			Chip _chip[2];
 
 			union
 			{
-				uint16 normal;
-				uint8 dual[2];
+				uint16_t normal;
+				uint8_t dual[2];
 			} _reg;
 
 			void free();
-			void dualWrite(uint8 index, uint8 reg, uint8 val);
+			void dualWrite(uint8_t index, uint8_t reg, uint8_t val);
 		public:
 			OPL(Config::OplType type);
 			~OPL();
@@ -112,11 +110,11 @@ namespace OPL
 			void reset() override;
 
 			void write(int a, int v) override;
-			uint8 read(int a) override;
+			uint8_t read(int a) override;
 
 			void writeReg(int r, int v) override;
 
-			void readBuffer(int16* buffer, int length) override;
+			void readBuffer(int16_t* buffer, int length) override;
 
 			bool isStereo() const override
 			{
@@ -125,7 +123,5 @@ namespace OPL
 		};
 	} // End of namespace DOSBox
 } // End of namespace OPL
-
-#endif // !DISABLE_DOSBOX_OPL
 
 #endif

@@ -481,7 +481,7 @@ static void MainMenu_Initialise(Widget* w)
 
 static void MainMenu_Draw(Widget* widget)
 {
-	Video_DrawCPS(SEARCHDIR_GLOBAL_DATA_DIR, String_GenerateFilename("TITLE"));
+	Video_DrawCPS(SEARCHDIR_DATA_DIR, String_GenerateFilename("TITLE"));
 
 	Font_Select(g_fontIntro);
 	g_fontCharOffset = 0;
@@ -604,7 +604,7 @@ static void PickHouse_Initialise()
 
 static void PickHouse_Draw()
 {
-	Video_DrawCPS(SEARCHDIR_GLOBAL_DATA_DIR, String_GenerateFilename("HERALD"));
+	Video_DrawCPS(SEARCHDIR_DATA_DIR, String_GenerateFilename("HERALD"));
 
 	const Widget* w = GUI_Widget_Get_ByIndex(pick_house_widgets, 10);
 	uint8 fg = (w->state.hover1) ? 130 : 133;
@@ -732,8 +732,8 @@ static void Briefing_Draw(MenuAction curr_menu, MentatState* mentat)
 			const char* misc = String_GenerateFilename("MISC");
 			const int offset = g_table_houseInfo[g_playerHouseID].miscCps;
 
-			Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, misc, 0, 0, 0, 0, 26 * 8, 24);
-			Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, misc, 0, 24 * (offset + 1), 26 * 8, 0, 13 * 8, 24);
+			Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, misc, 0, 0, 0, 0, 26 * 8, 24);
+			Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, misc, 0, 24 * (offset + 1), 26 * 8, 0, 13 * 8, 24);
 
 			GUI_Widget_DrawAll(briefing_yes_no_widgets);
 		}
@@ -1224,7 +1224,7 @@ static void PickGallery_Initialise()
 	ws->itemHeight = 8;
 
 	/* Note: Use Harkonnen list which contains the Sardaukar and Frigate entries. */
-	Mentat_LoadHelpSubjects(w, true, SEARCHDIR_GLOBAL_DATA_DIR, HOUSE_HARKONNEN, 9, true);
+	Mentat_LoadHelpSubjects(w, true, SEARCHDIR_DATA_DIR, HOUSE_HARKONNEN, 9, true);
 
 	g_mentat_state.wsa = NULL;
 }
@@ -1333,7 +1333,7 @@ static MenuAction PickGallery_Loop(MentatState* mentat, int widgetID)
 
 	if (perform_selection)
 	{
-		GUI_Mentat_ShowHelp(w, SEARCHDIR_GLOBAL_DATA_DIR, HOUSE_HARKONNEN, 9);
+		GUI_Mentat_ShowHelp(w, SEARCHDIR_DATA_DIR, HOUSE_HARKONNEN, 9);
 
 		if (mentat->wsa != NULL)
 		{
@@ -1760,11 +1760,11 @@ static void Extras_DrawRadioButton(Widget* w)
 
 static void Extras_Draw(MentatState* mentat)
 {
-	Video_DrawCPS(SEARCHDIR_GLOBAL_DATA_DIR, "CHOAM.CPS");
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "CHOAM.CPS", 56, 104, 56, 136, 64, 64);
+	Video_DrawCPS(SEARCHDIR_DATA_DIR, "CHOAM.CPS");
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "CHOAM.CPS", 56, 104, 56, 136, 64, 64);
 
 	if (extras_page != EXTRASMENU_SKIRMISH)
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "FAME.CPS", 90, 32, 150, 168, 140, 32);
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "FAME.CPS", 90, 32, 150, 168, 140, 32);
 
 	/* Credits label may need to be replaced for other languages. */
 	Shape_Draw(SHAPE_CREDITS_LABEL, SCREEN_WIDTH - 128, 0, (WindowID)0, 0);

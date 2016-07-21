@@ -6,21 +6,21 @@
 #include "structure.h"
 #include "unit.h"
 
-extern bool AI_IsBrutalAI(HouseType houseID);
+bool AI_IsBrutalAI(HouseType houseID);
 
-extern uint16 StructureAI_PickNextToBuild(const Structure* s);
+uint16 StructureAI_PickNextToBuild(const Structure* s);
 
-extern bool UnitAI_CallCarryallToEvadeSandworm(const Unit* harvester);
-extern uint16 UnitAI_GetAnyEnemyInRange(const Unit* unit);
-extern bool UnitAI_ShouldDestructDevastator(const Unit* devastator);
+bool UnitAI_CallCarryallToEvadeSandworm(const Unit* harvester);
+uint16 UnitAI_GetAnyEnemyInRange(const Unit* unit);
+bool UnitAI_ShouldDestructDevastator(const Unit* devastator);
 
 void UnitAI_ClearSquads();
 void UnitAI_DetachFromSquad(Unit* unit);
 void UnitAI_AbortMission(Unit* unit, uint16 enemy);
-extern uint16 UnitAI_GetSquadDestination(Unit* unit, uint16 destination);
+uint16 UnitAI_GetSquadDestination(Unit* unit, uint16 destination);
 void UnitAI_SquadLoop();
 
-extern bool BrutalAI_Load(FILE* fp, uint32 length);
-extern bool BrutalAI_Save(FILE* fp);
+bool BrutalAI_Load(FILE* fp, uint32 length);
+bool BrutalAI_Save(FILE* fp);
 
 #endif

@@ -261,10 +261,8 @@ static void Viewport_Target(Unit* u, UnitActionType action, bool command_button,
 	 * (e.g. no attack for saboteurs).
 	 */
 	const UnitInfo* ui = &g_table_unitInfo[u->o.type];
-	if ((action != ui->o.actionsPlayer[0]) &&
-		(action != ui->o.actionsPlayer[1]) &&
-		(action != ui->o.actionsPlayer[2]) &&
-		(action != ui->o.actionsPlayer[3]))
+	if ((action != ui->o.actionsPlayer[0]) && (action != ui->o.actionsPlayer[1]) &&
+		(action != ui->o.actionsPlayer[2]) && (action != ui->o.actionsPlayer[3]))
 	{
 		return;
 	}
@@ -276,9 +274,7 @@ static void Viewport_Target(Unit* u, UnitActionType action, bool command_button,
 			return;
 	}
 	else
-	{
 		u->deviationDecremented = false;
-	}
 
 	if (action == ACTION_SABOTAGE)
 	{
@@ -286,9 +282,7 @@ static void Viewport_Target(Unit* u, UnitActionType action, bool command_button,
 		action = ACTION_MOVE;
 	}
 	else
-	{
 		u->detonateAtTarget = false;
-	}
 
 	Object_Script_Variable4_Clear(&u->o);
 	u->targetAttack = 0;
@@ -296,13 +290,9 @@ static void Viewport_Target(Unit* u, UnitActionType action, bool command_button,
 	u->route[0] = 0xFF;
 
 	if (action != ACTION_MOVE && action != ACTION_HARVEST)
-	{
 		encoded = Tools_Index_Encode(Unit_FindTargetAround(packed), IT_TILE);
-	}
 	else
-	{
 		encoded = Tools_Index_Encode(packed, IT_TILE);
-	}
 
 	Unit_SetAction(u, action);
 
@@ -311,18 +301,10 @@ static void Viewport_Target(Unit* u, UnitActionType action, bool command_button,
 		Unit_SetDestination(u, encoded);
 
 		if (u->detonateAtTarget)
-		{
 			target = Tools_Index_GetUnit(u->targetMove);
-		}
-		else if (enhancement_permanent_follow_mode)
-		{
-			u->permanentFollow = command_button;
-		}
 	}
 	else if (action == ACTION_HARVEST)
-	{
 		u->targetMove = encoded;
-	}
 	else
 	{
 		Unit_SetTarget(u, encoded);
@@ -394,7 +376,7 @@ static void Viewport_Place()
 		{
 			if ((h->structuresBuilt & FLAG_STRUCTURE_OUTPOST) != 0)
 			{
-				GUI_DisplayText(String_Get_ByIndex(STR_NOT_ENOUGH_POWER_FOR_RADAR_BUILD_WINDTRAPS), 3);
+				GUI_DisplayText(String_Get_ByIndex(STR_NOT_ENOUGH_POWER), 3);
 			}
 		}
 
@@ -409,8 +391,8 @@ static void Viewport_Place()
 	}
 	else
 	{
-		GUI_DisplayHint(STR_HINT_STRUCTURES_MUST_BE_PLACED_ON_CLEAR_ROCK_OR_CONCRETE_AND_ADJACENT_TO_ANOTHER_FRIENDLY_STRUCTURE, 0xFFFF);
-		GUI_DisplayText(String_Get_ByIndex(STR_CAN_NOT_PLACE_S_HERE), 2, String_Get_ByIndex(si->o.stringID_abbrev));
+		GUI_DisplayHint(STR_HINT_STRUCTURES_PLACEMENT, 0xFFFF);
+		GUI_DisplayText(String_Get_ByIndex(STR_CAN_NOT_PLACE_SMTH_HERE), 2, String_Get_ByIndex(si->o.stringID_abbrev));
 	}
 }
 

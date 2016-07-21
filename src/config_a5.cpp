@@ -3,6 +3,8 @@
 #include <allegro5/allegro.h>
 #include <cctype>
 #include <cstdio>
+#include <Windows.h>
+
 #include "os/math.h"
 
 #include "config.h"
@@ -42,7 +44,11 @@ struct GameOption
 static ALLEGRO_CONFIG* s_configFile;
 
 GameCfg g_gameConfig = {
+#ifdef DEBUG
+	WM_WINDOWED,
+#else
 	WM_FULLSCREEN,
+#endif
 	2, /* gameSpeed */
 	true, /* hints */
 	true, /* autoScroll */
@@ -202,6 +208,12 @@ static void Config_SetInt(ALLEGRO_CONFIG* config, const char* section, const cha
 
 static void Config_GetWindowMode(const char* str, WindowMode* value)
 {
+#ifdef DEBUG
+	/* Allow only windowed mode for debugging */
+	*value = WM_WINDOWED;
+	return;
+#else
+
 	/* Anything that's not 'fullscreen': win, window, windowed, etc. */
 	if (str[0] != 'f' && str[0] != 'F')
 	{
@@ -225,82 +237,55 @@ static void Config_GetWindowMode(const char* str, WindowMode* value)
 
 		str++;
 	}
+#endif
 }
 
 static void Config_SetWindowMode(ALLEGRO_CONFIG* config, const char* section, const char* key, WindowMode value)
 {
+#ifndef DEBUG
 	const char* str[] = {"windowed", "fullscreen", "fullscreenwindow"};
 
 	if (value > WM_FULLSCREEN_WINDOW)
 		value = WM_WINDOWED;
 
 	al_set_config_value(config, section, key, str[value]);
+#endif
 }
 
 /*--------------------------------------------------------------*/
 
 static void ConfigA5_InitDataDirectoriesAndLoadConfigFile()
 {
+#ifndef DEBUG
 	ALLEGRO_PATH* dune_data_path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
-	ALLEGRO_PATH* user_data_path = al_get_standard_path(ALLEGRO_USER_DATA_PATH);
-	ALLEGRO_PATH* user_settings_path = al_get_standard_path(ALLEGRO_USER_SETTINGS_PATH);
 	const char* dune_data_cstr = al_path_cstr(dune_data_path, ALLEGRO_NATIVE_PATH_SEP);
+#else
+	/* The executable is not in the global data directory */
+	char dune_data_cstr[1024];
+	GetCurrentDirectoryA(sizeof(dune_data_cstr), dune_data_cstr);
+#endif
+	ALLEGRO_PATH* user_data_path = al_get_standard_path(ALLEGRO_USER_DATA_PATH);
 	const char* user_data_cstr = al_path_cstr(user_data_path, ALLEGRO_NATIVE_PATH_SEP);
+
+	ALLEGRO_PATH* user_settings_path = al_get_standard_path(ALLEGRO_USER_SETTINGS_PATH);
 	const char* user_settings_cstr = al_path_cstr(user_settings_path, ALLEGRO_NATIVE_PATH_SEP);
 	char filename[1024];
 	FILE* fp;
 
 	snprintf(g_dune_data_dir, sizeof(g_dune_data_dir), "%s", dune_data_cstr);
-	snprintf(g_personal_data_dir, sizeof(g_personal_data_dir), "%s", dune_data_cstr);
-
-	/* Find global data directory.  Test we can read DUNE.PAK. */
-
-	/* 1. Try current executable directory/data/DUNE.PAK. */
-	fp = File_Open_CaseInsensitive(SEARCHDIR_GLOBAL_DATA_DIR, "DUNE.PAK", "rb");
-
-	/* 2. Try ~/.local/share/dunedynasty/data/DUNE.PAK. */
-	if (fp == NULL)
-	{
-		snprintf(g_dune_data_dir, sizeof(g_dune_data_dir), "%s", user_data_cstr);
-		fp = File_Open_CaseInsensitive(SEARCHDIR_GLOBAL_DATA_DIR, "DUNE.PAK", "rb");
-	}
-
-	/* 3. If /something/bin/dunedynasty, try /something/share/dunedynasty/data/DUNE.PAK. */
-	if (fp == NULL)
-	{
-		if (strcmp(al_get_path_tail(dune_data_path), "bin") == 0)
-		{
-			al_replace_path_component(dune_data_path, -1, "share/dunedynasty");
-			dune_data_cstr = al_path_cstr(dune_data_path, ALLEGRO_NATIVE_PATH_SEP);
-			snprintf(g_dune_data_dir, sizeof(g_dune_data_dir), "%s", dune_data_cstr);
-			fp = File_Open_CaseInsensitive(SEARCHDIR_GLOBAL_DATA_DIR, "DUNE.PAK", "rb");
-		}
-	}
 
 	/* Find personal directory, and create subdirectories. */
 
 	/* 1. Try current executable directory/dunedynasty.cfg. */
-	snprintf(filename, sizeof(filename), "%s/%s", g_personal_data_dir, CONFIG_FILENAME);
+	snprintf(filename, sizeof(filename), "%s/%s", g_dune_data_dir, CONFIG_FILENAME);
 	s_configFile = al_load_config_file(filename);
 
-	/* 2. Try ~/.config/dunedynasty/dunedynasty.cfg. */
-	if (s_configFile == NULL)
-	{
-		snprintf(g_personal_data_dir, sizeof(g_personal_data_dir), "%s", user_settings_cstr);
-		snprintf(filename, sizeof(filename), "%s/%s", g_personal_data_dir, CONFIG_FILENAME);
-		s_configFile = al_load_config_file(filename);
-	}
-
-	if (!al_make_directory(g_personal_data_dir))
-	{
-		fprintf(stderr, "Could not create %s!\n", filename);
-	}
-
+#ifndef DEBUG
 	al_destroy_path(dune_data_path);
+#endif
 	al_destroy_path(user_data_path);
 	al_destroy_path(user_settings_path);
 	fprintf(stdout, "Dune data directory: %s\n", g_dune_data_dir);
-	fprintf(stdout, "Personal data directory: %s\n", g_personal_data_dir);
 }
 
 void GameOptions_Load()
@@ -420,6 +405,6 @@ void GameOptions_Save()
 		}
 	}
 
-	snprintf(filename, sizeof(filename), "%s/%s", g_personal_data_dir, CONFIG_FILENAME);
+	snprintf(filename, sizeof(filename), "%s/%s", g_dune_data_dir, CONFIG_FILENAME);
 	al_save_config_file(filename, s_configFile);
 }

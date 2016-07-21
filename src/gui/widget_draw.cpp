@@ -465,7 +465,7 @@ void GUI_Widget_ActionPanel_Draw(bool forceDraw)
 				((g_productionStringID == STR_PLACE_IT) ||
 					(s->o.type == STRUCTURE_PALACE && s->countDown == 0) ||
 					(s->o.type == STRUCTURE_STARPORT && !BuildQueue_IsEmpty(&s->queue)) ||
-					(s->o.type == STRUCTURE_REPAIR && s->o.linkedID != 0xFF)))
+					(s->o.type == STRUCTURE_REPAIR && s->o.linkedID != 0xFFFF)))
 			{
 				GUI_Widget_MakeVisible(widget28);
 			}
@@ -581,12 +581,12 @@ void GUI_Widget_ActionPanel_Draw(bool forceDraw)
 
 			case 4: /* Attack */
 				GUI_Widget_MakeVisible(widget30);
-				ActionPanel_DrawActionDescription(STR_SELECTTARGET, 19, 36, g_curWidgetFGColourBlink);
+				ActionPanel_DrawActionDescription(STR_SELECT_TARGET, 19, 36, g_curWidgetFGColourBlink);
 				break;
 
 			case 5: /* Movement */
 				GUI_Widget_MakeVisible(widget30);
-				ActionPanel_DrawActionDescription(STR_SELECTDESTINATION, 19, 36, g_curWidgetFGColourBlink);
+				ActionPanel_DrawActionDescription(STR_SELECT_DESTINATION, 19, 36, g_curWidgetFGColourBlink);
 				break;
 
 			case 6: /* Harvest */
@@ -596,7 +596,7 @@ void GUI_Widget_ActionPanel_Draw(bool forceDraw)
 
 			case 7: /* Placement */
 				GUI_Widget_MakeVisible(widget30);
-				ActionPanel_DrawActionDescription(STR_SELECTLOCATION_TOBUILD, 19, 44, g_curWidgetFGColourBlink);
+				ActionPanel_DrawActionDescription(STR_LOCATION_TO_BUILD, 19, 44, g_curWidgetFGColourBlink);
 				break;
 
 			case 8: /* House Missile */

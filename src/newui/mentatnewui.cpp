@@ -70,7 +70,7 @@ static void GUI_Mentat_HelpListLoop(int key)
 		case SCANCODE_ENTER:
 		case SCANCODE_KEYPAD_5:
 		case SCANCODE_SPACE:
-			GUI_Mentat_ShowHelp(w, SEARCHDIR_GLOBAL_DATA_DIR, g_playerHouseID, g_campaignID);
+			GUI_Mentat_ShowHelp(w, SEARCHDIR_DATA_DIR, g_playerHouseID, g_campaignID);
 			break;
 
 		default: break;
@@ -202,7 +202,7 @@ void Mentat_DrawBackground(MentatID mentatID)
 	assert(mentatID < MENTAT_MAX);
 
 	const HouseType houseID = (mentatID == MENTAT_BENE_GESSERIT) ? HOUSE_MERCENARY : (HouseType)mentatID;
-	Video_DrawCPS(SEARCHDIR_GLOBAL_DATA_DIR, background[houseID]);
+	Video_DrawCPS(SEARCHDIR_DATA_DIR, background[houseID]);
 }
 
 static void Mentat_DrawEyes(MentatID mentatID)
@@ -355,7 +355,7 @@ void MentatBriefing_InitWSA(HouseType houseID, int scenarioID, BriefingEntry ent
 		/* Be careful here because Fremen, Sardaukar, and Mercenaries
 		 * don't have house WSAs in Dune II.
 		 */
-		if (!File_Exists_Ex(SEARCHDIR_GLOBAL_DATA_DIR, wsaFilename))
+		if (!File_Exists_Ex(SEARCHDIR_DATA_DIR, wsaFilename))
 			wsaFilename = House_GetWSAHouseFilename(g_table_houseRemap6to3[houseID]);
 
 		mentat->wsa = WSA_LoadFile(wsaFilename, GFX_Screen_Get_ByIndex(SCREEN_2), GFX_Screen_GetSize_ByIndex(SCREEN_2), false);
@@ -365,7 +365,7 @@ void MentatBriefing_InitWSA(HouseType houseID, int scenarioID, BriefingEntry ent
 		char filename[16];
 		snprintf(filename, sizeof(filename), "SCEN%c%03d.INI", g_table_houseInfo[houseID].name[0], scenarioID);
 
-		char* buf = (char*)File_ReadWholeFile_Ex(SEARCHDIR_GLOBAL_DATA_DIR, filename);
+		char* buf = (char*)File_ReadWholeFile_Ex(SEARCHDIR_DATA_DIR, filename);
 		if (buf == NULL)
 		{
 			mentat->wsa = NULL;

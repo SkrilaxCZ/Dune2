@@ -98,7 +98,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\include;..\allegro\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;..\allegro\include;..\adlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>allegro\win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -110,7 +111,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\include;..\allegro\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;..\allegro\include;..\adlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;DEBUG;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\allegro\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -124,7 +126,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\include;..\allegro\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;..\allegro\include;..\adlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -140,7 +142,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\include;..\allegro\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;..\allegro\include;..\adlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -152,12 +154,9 @@
   <ItemGroup>
     <ClCompile Include="ai.cpp" />
     <ClCompile Include="animation.cpp" />
-    <ClCompile Include="audio\adl\fmopl.cpp" />
-    <ClCompile Include="audio\adl\opl_dosbox.cpp" />
-    <ClCompile Include="audio\adl\opl_mame.cpp" />
-    <ClCompile Include="audio\adl\sound_adlib.cpp" />
     <ClCompile Include="audio\audio.cpp" />
     <ClCompile Include="audio\audio_a5.cpp" />
+    <ClCompile Include="audio\sound_adlib.cpp" />
     <ClCompile Include="binheap.cpp" />
     <ClCompile Include="buildqueue.cpp" />
     <ClCompile Include="codec\format40.cpp" />
@@ -261,14 +260,9 @@
   <ItemGroup>
     <ClInclude Include="ai.h" />
     <ClInclude Include="animation.h" />
-    <ClInclude Include="audio\adl\fmopl.h" />
-    <ClInclude Include="audio\adl\opl_dosbox.h" />
-    <ClInclude Include="audio\adl\opl_impl.h" />
-    <ClInclude Include="audio\adl\opl_inc.h" />
-    <ClInclude Include="audio\adl\opl_mame.h" />
-    <ClInclude Include="audio\adl\sound_adlib.h" />
     <ClInclude Include="audio\audio.h" />
     <ClInclude Include="audio\audio_a5.h" />
+    <ClInclude Include="audio\sound_adlib.h" />
     <ClInclude Include="binheap.h" />
     <ClInclude Include="buildqueue.h" />
     <ClInclude Include="codec\format40.h" />
@@ -362,6 +356,11 @@
     <None Include="video\dune2_16x16.xpm" />
     <None Include="video\dune2_32x32.xpm" />
     <None Include="video\dune2_32x32a.xpm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\adlib\adlib.vcxproj">
+      <Project>{7667b235-ede2-46d9-ac9d-b1faf3c0ec3f}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

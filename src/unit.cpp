@@ -644,7 +644,7 @@ Unit* Unit_Create(uint16 index, uint8 typeID, uint8 houseID, tile32 position, in
 		u->targetPreLast = position;
 	}
 
-	u->o.linkedID = 0xFF;
+	u->o.linkedID = 0xFFFF;
 	u->o.script.delay = 0;
 	u->actionID = ACTION_GUARD;
 	u->nextActionID = ACTION_INVALID;
@@ -956,7 +956,7 @@ uint16 Unit_IsValidMovementIntoStructure(Unit* unit, Structure* s)
 		return 2;
 
 	/* Enter only if structure not linked to any other unit already. */
-	return s->o.linkedID == 0xFF ? 1 : 0;
+	return s->o.linkedID == 0xFFFF ? 1 : 0;
 }
 
 /**
@@ -1084,17 +1084,12 @@ uint16 Unit_GetTargetUnitPriority(Unit* unit, Unit* target)
 		if (was_ally)
 		{
 			if (g_table_unitInfo[unit->o.type].damage >= target->o.hitpoints)
-			{
 				return 0;
-			}
-			else if (g_table_unitInfo[unit->o.type].damage <= 10)
-			{
+
+			if (g_table_unitInfo[unit->o.type].damage <= 10)
 				priority += 100;
-			}
 			else
-			{
 				priority = 1;
-			}
 		}
 	}
 
@@ -1466,15 +1461,7 @@ bool Unit_StartMovement(Unit* unit)
 	unit->o.flags.s.isSmoking = false;
 
 	/* ENHANCEMENT -- the flag is never set to false in original Dune2; in result, once the wobbling starts, it never stops. */
-	if (enhancement_fix_everlasting_unit_wobble)
-	{
-		unit->o.flags.s.isWobbling = g_table_landscapeInfo[type].letUnitWobble;
-	}
-	else
-	{
-		if (g_table_landscapeInfo[type].letUnitWobble)
-			unit->o.flags.s.isWobbling = true;
-	}
+	unit->o.flags.s.isWobbling = g_table_landscapeInfo[type].letUnitWobble;
 
 	if ((ui->o.hitpoints / 2) > unit->o.hitpoints && ui->movementType != MOVEMENT_WINGER)
 		speed -= speed / 4;
@@ -1737,7 +1724,7 @@ bool Unit_Move(Unit* unit, uint16 distance)
 			return true;
 		}
 
-		if (unit->o.flags.s.byScenario && unit->o.linkedID == 0xFF && unit->o.script.variables[4] == 0)
+		if (unit->o.flags.s.byScenario && unit->o.linkedID == 0xFFFF && unit->o.script.variables[4] == 0)
 		{
 			Unit_Remove(unit);
 			return true;
@@ -2069,13 +2056,9 @@ bool Unit_Damage(Unit* unit, uint16 damage, uint16 range)
 		alive = true;
 
 	if (unit->o.hitpoints >= damage)
-	{
 		unit->o.hitpoints -= damage;
-	}
 	else
-	{
 		unit->o.hitpoints = 0;
-	}
 
 	Unit_Deviation_Decrease(unit, 0);
 
@@ -2363,7 +2346,6 @@ Unit* Unit_CreateWrapper(uint8 houseID, UnitType typeID, uint16 destination)
 	Unit* carryall;
 
 	tile = Tile_UnpackTile(Map_FindLocationTile(Tools_Random_256() & 3, houseID));
-
 	h = House_Get_ByIndex(houseID);
 
 	{
@@ -2385,9 +2367,7 @@ Unit* Unit_CreateWrapper(uint8 houseID, UnitType typeID, uint16 destination)
 		unit->o.flags.s.byScenario = true;
 
 		if (destination != 0)
-		{
 			Unit_SetDestination(unit, destination);
-		}
 
 		return unit;
 	}
@@ -2404,9 +2384,7 @@ Unit* Unit_CreateWrapper(uint8 houseID, UnitType typeID, uint16 destination)
 	}
 
 	if (House_AreAllied(houseID, g_playerHouseID) || Unit_IsTypeOnMap(houseID, UNIT_CARRYALL))
-	{
 		carryall->o.flags.s.byScenario = true;
-	}
 
 	tile.x = 0xFFFF;
 	tile.y = 0xFFFF;
@@ -2424,14 +2402,12 @@ Unit* Unit_CreateWrapper(uint8 houseID, UnitType typeID, uint16 destination)
 	}
 
 	carryall->o.flags.s.inTransport = true;
-	carryall->o.linkedID = unit->o.index & 0xFF;
+	carryall->o.linkedID = unit->o.index;
 	if (typeID == UNIT_HARVESTER)
 		unit->amount = 1;
 
 	if (destination != 0)
-	{
 		Unit_SetDestination(carryall, destination);
-	}
 
 	return unit;
 }
@@ -2691,25 +2667,25 @@ void Unit_DisplayStatusText(const Unit* unit)
 	{
 		uint16 stringID;
 
-		stringID = STR_IS_D_PERCENT_FULL;
+		stringID = STR_PCT_FULL;
 
 		if (unit->actionID == ACTION_HARVEST && unit->amount < 100)
 		{
 			uint16 type = Map_GetLandscapeType(Tile_PackTile(unit->o.position));
 
 			if (type == LST_SPICE || type == LST_THICK_SPICE)
-				stringID = STR_IS_D_PERCENT_FULL_AND_HARVESTING;
+				stringID = STR_PCT_FULL_AND_HARVESTING;
 		}
 
 		if (unit->actionID == ACTION_MOVE && Tools_Index_GetStructure(unit->targetMove) != NULL)
 		{
-			stringID = STR_IS_D_PERCENT_FULL_AND_HEADING_BACK;
+			stringID = STR_PCT_FULL_AND_HEADING_BACK;
 		}
 		else
 		{
 			if (unit->o.script.variables[4] != 0)
 			{
-				stringID = STR_IS_D_PERCENT_FULL_AND_AWAITING_PICKUP;
+				stringID = STR_PCT_FULL_AND_AWAITING_PICKUP;
 			}
 		}
 
@@ -2812,7 +2788,7 @@ Unit* Unit_CallUnitByType(UnitType type, uint8 houseID, uint16 target, bool crea
 		u = Unit_Find(&find);
 		if (u == NULL)
 			break;
-		if (u->o.linkedID != 0xFF)
+		if (u->o.linkedID != 0xFFFF)
 			continue;
 		if (u->targetMove != 0)
 			continue;
@@ -2897,7 +2873,7 @@ void Unit_EnterStructure(Unit* unit, Structure* s)
 			unit->spriteOffset = 0;
 		}
 		unit->o.linkedID = s->o.linkedID;
-		s->o.linkedID = unit->o.index & 0xFF;
+		s->o.linkedID = unit->o.index;
 		return;
 	}
 
@@ -2929,7 +2905,7 @@ void Unit_EnterStructure(Unit* unit, Structure* s)
 		h->structuresBuilt = Structure_GetStructuresBuilt(h);
 		g_factoryWindowTotal = -1;
 
-		if (s->o.linkedID != 0xFF)
+		if (s->o.linkedID != 0xFFFF)
 		{
 			Unit* u = Unit_Get_ByIndex(s->o.linkedID);
 			if (u != NULL)
@@ -3498,8 +3474,8 @@ void Unit_HouseUnitCount_Add(Unit* unit, uint8 houseID)
 				 */
 				{
 					const int hint
-						= STR_HINT_WARNING_SANDWORMS_SHAIHULUD_ROAM_DUNE_DEVOURING_ANYTHING_ON_THE_SAND
-						- STR_HINT_YOU_MUST_BUILD_A_WINDTRAP_TO_PROVIDE_POWER_TO_YOUR_BASE_WITHOUT_POWER_YOUR_STRUCTURES_WILL_DECAY;
+						= STR_HINT_WARNING_SANDWORM
+						- STR_HINT_BUILD_WINDTRAP;
 					assert(hint == 27);
 
 					const int mask = (1 << hint);
@@ -3509,7 +3485,7 @@ void Unit_HouseUnitCount_Add(Unit* unit, uint8 houseID)
 						Audio_PlayVoice(VOICE_WARNING_WORM_SIGN);
 				}
 
-				GUI_DisplayHint(STR_HINT_WARNING_SANDWORMS_SHAIHULUD_ROAM_DUNE_DEVOURING_ANYTHING_ON_THE_SAND, 105);
+				GUI_DisplayHint(STR_HINT_WARNING_SANDWORM, 105);
 				hp->timerSandwormAttack = 8;
 			}
 		}

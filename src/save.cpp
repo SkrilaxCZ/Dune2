@@ -220,7 +220,7 @@ bool SaveFile(const char* filename, const char* description)
 		}
 	}
 
-	fp = File_Open_CaseInsensitive(SEARCHDIR_PERSONAL_DATA_DIR, filename, "wb");
+	fp = File_Open_CaseInsensitive(SEARCHDIR_SAVE_DIR, filename, "wb");
 	if (fp == NULL)
 	{
 		GUI_DisplayModalMessage("Failed to open file '%s' for writing.", SHAPE_INVALID, filename);

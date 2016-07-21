@@ -29,32 +29,28 @@
 #include "../video/video.h"
 #include "types.h"
 
-enum
-{
-	SMALL_PRODUCTION_ICON_WIDTH = 32,
-	SMALL_PRODUCTION_ICON_HEIGHT = 24,
-	SMALL_PRODUCTION_ICON_MIN_STRIDE = 34,
-	SMALL_PRODUCTION_ICON_MAX_STRIDE = 43,
-	LARGE_PRODUCTION_ICON_WIDTH = 52,
-	LARGE_PRODUCTION_ICON_HEIGHT = 39,
-	LARGE_PRODUCTION_ICON_MIN_STRIDE = 52,
-	LARGE_PRODUCTION_ICON_MAX_STRIDE = 58,
-	SCROLL_BUTTON_WIDTH = 24,
-	SCROLL_BUTTON_HEIGHT = 15,
-	SCROLL_BUTTON_MARGIN = 5,
-	SEND_ORDER_BUTTON_MARGIN= 2,
-};
+const int SMALL_PRODUCTION_ICON_WIDTH = 32;
+const int SMALL_PRODUCTION_ICON_HEIGHT = 24;
+const int SMALL_PRODUCTION_ICON_MIN_STRIDE = 34;
+const int SMALL_PRODUCTION_ICON_MAX_STRIDE = 43;
+const int LARGE_PRODUCTION_ICON_WIDTH = 52;
+const int LARGE_PRODUCTION_ICON_HEIGHT = 39;
+const int LARGE_PRODUCTION_ICON_MIN_STRIDE = 52;
+const int LARGE_PRODUCTION_ICON_MAX_STRIDE = 58;
+const int SCROLL_BUTTON_WIDTH = 24;
+const int SCROLL_BUTTON_HEIGHT = 15;
+const int SCROLL_BUTTON_MARGIN = 5;
+const int SEND_ORDER_BUTTON_MARGIN = 2;
 
 enum FactoryPanelLayout
 {
+	FACTORYPANEL_SMALL_ICONS_WITHOUT_SCROLL = 0x00,
 	FACTORYPANEL_LARGE_ICON_FLAG = 0x01,
 	FACTORYPANEL_SCROLL_FLAG = 0x02,
 	FACTORYPANEL_STARPORT_FLAG = 0x04,
-
-	FACTORYPANEL_SMALL_ICONS_WITHOUT_SCROLL = 0x00,
 };
 
-ENUM_FLAG_OPERATORS(FactoryPanelLayout) ;
+ENUM_FLAG_OPERATORS(FactoryPanelLayout)
 
 FactoryWindowItem g_factoryWindowItems[MAX_FACTORY_WINDOW_ITEMS];
 int g_factoryWindowTotal;
@@ -221,7 +217,7 @@ void ActionPanel_DrawStructureDescription(Structure* s)
 			uint8 fg = (powerOutput >= powerAverage) ? 29 : 6;
 
 			Prim_Hline(21, y + 15, 72, 16);
-			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_POWER_INFONEEDEDOUTPUT), 18, y + 8, 29, 0, 0x11);
+			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_POWER_INFO), 18, y + 8, 29, 0, 0x11);
 			GUI_DrawText_Wrapper("%d", 62, y + 2 * g_fontCurrent->height, 29, 0, 0x11, powerAverage);
 			GUI_DrawText_Wrapper("%d", 62, y + 3 * g_fontCurrent->height, fg, 0, 0x11, powerOutput);
 		}
@@ -229,13 +225,7 @@ void ActionPanel_DrawStructureDescription(Structure* s)
 
 	case STRUCTURE_STARPORT:
 		if (h->starportLinkedID != 0xFFFF)
-		{
-			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_FRIGATEARRIVAL_INTMINUS_D), 18, y + 8, 29, 0, 0x11, h->starportTimeLeft);
-		}
-		else
-		{
-			/* GUI_DrawText_Wrapper(String_Get_ByIndex(STR_FRIGATE_INORBIT_ANDAWAITINGORDER), 18, y + 8, 29, 0, 0x11); */
-		}
+			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_FRIGATE_ARRIVAL), 18, y + 8, 29, 0, 0x11, h->starportTimeLeft);
 		break;
 
 	case STRUCTURE_REFINERY:
@@ -248,14 +238,14 @@ void ActionPanel_DrawStructureDescription(Structure* s)
 				creditsStored = si->creditsStorage;
 
 			Prim_Hline(21, y + 15, 72, 16);
-			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_SPICEHOLDS_4DMAX_4D), 18, y + 8, 29, 0, 0x11, creditsStored, (si->creditsStorage <= 1000) ? si->creditsStorage : 1000);
+			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_SPICE_HOLDS), 18, y + 8, 29, 0, 0x11, creditsStored, (si->creditsStorage <= 1000) ? si->creditsStorage : 1000);
 		}
 		break;
 
 	case STRUCTURE_OUTPOST:
 		{
 			Prim_Hline(21, y + 15, 72, 16);
-			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_RADAR_SCANFRIEND_2DENEMY_2D), 18, y + 8, 29, 0, 0x11, h->unitCountAllied, h->unitCountEnemy);
+			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_RADAR_SCAN), 18, y + 8, 29, 0, 0x11, h->unitCountAllied, h->unitCountEnemy);
 		}
 		break;
 	}
@@ -271,7 +261,7 @@ void ActionPanel_DrawMissileCountdown(uint8 fg, int count)
 	if (count <= 0)
 		count = 0;
 
-	GUI_DrawText_Wrapper(String_Get_ByIndex(STR_PICK_TARGETTMINUS_D), 19, 44, fg, 0, 0x11, count);
+	GUI_DrawText_Wrapper(String_Get_ByIndex(STR_PICK_TARGET), 19, 44, fg, 0, 0x11, count);
 }
 
 /*--------------------------------------------------------------*/
@@ -423,7 +413,7 @@ void ActionPanel_BeginPlacementMode(Structure* construction_yard)
 	g_structureActiveType = construction_yard->objectType;
 	g_selectionState = Structure_IsValidBuildLocation(g_selectionRectanglePosition, (StructureType)g_structureActiveType);
 	g_structureActivePosition = g_selectionPosition;
-	construction_yard->o.linkedID = STRUCTURE_INVALID;
+	construction_yard->o.linkedID = 0xFFFF;
 
 	GUI_ChangeSelectionType(SELECTIONTYPE_PLACE);
 }
@@ -524,13 +514,9 @@ bool ActionPanel_ClickFactory(const Widget* widget, Structure* s)
 				s->objectType = g_factoryWindowItems[item].objectType;
 
 				if (g_factoryWindowItems[item].available > 0)
-				{
 					action_successful = Structure_BuildObject(s, s->objectType);
-				}
 				else
-				{
 					action_successful = false;
-				}
 			}
 			break;
 
@@ -539,18 +525,12 @@ bool ActionPanel_ClickFactory(const Widget* widget, Structure* s)
 			if (lmb)
 			{
 				if (g_factoryWindowItems[item].available > 0)
-				{
 					BuildQueue_Add(&s->queue, clicked_type, 0);
-				}
 				else
-				{
 					action_successful = false;
-				}
 			}
 			else if (rmb && (g_productionStringID == STR_D_DONE))
-			{
 				s->o.flags.s.onHold = true;
-			}
 			break;
 
 		default:
@@ -562,24 +542,16 @@ bool ActionPanel_ClickFactory(const Widget* widget, Structure* s)
 		if (lmb)
 		{
 			if (g_factoryWindowItems[item].available > 0)
-			{
 				BuildQueue_Add(&s->queue, clicked_type, 0);
-			}
 			else
-			{
 				action_successful = false;
-			}
 		}
 		else if (rmb)
-		{
 			BuildQueue_RemoveTail(&s->queue, clicked_type, NULL);
-		}
 	}
 
 	if (!action_successful)
-	{
 		Audio_PlaySound(EFFECT_ERROR_OCCURRED);
-	}
 
 	return false;
 }
@@ -623,7 +595,7 @@ void ActionPanel_ClickStarportOrder(Structure* s)
 		if (h->starportTimeLeft == 0)
 			h->starportTimeLeft = g_table_houseInfo[h->index].starportDeliveryTime;
 
-		u->o.linkedID = h->starportLinkedID & 0xFF;
+		u->o.linkedID = h->starportLinkedID;
 		h->starportLinkedID = u->o.index;
 	}
 }

@@ -473,9 +473,7 @@ void Map_MakeExplosion(uint16 type, tile32 position, uint16 hitpoints, uint16 un
 				continue;
 
 			if (u->actionID == ACTION_GUARD && u->o.flags.s.byScenario)
-			{
 				Unit_SetAction(u, ACTION_HUNT);
-			}
 
 			if (u->targetAttack != 0 && u->actionID != ACTION_HUNT)
 				continue;

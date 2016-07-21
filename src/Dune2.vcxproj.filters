@@ -4,18 +4,6 @@
     <ClCompile Include="audio\audio_a5.cpp">
       <Filter>audio</Filter>
     </ClCompile>
-    <ClCompile Include="audio\adl\fmopl.cpp">
-      <Filter>audio\adl</Filter>
-    </ClCompile>
-    <ClCompile Include="audio\adl\opl_dosbox.cpp">
-      <Filter>audio\adl</Filter>
-    </ClCompile>
-    <ClCompile Include="audio\adl\opl_mame.cpp">
-      <Filter>audio\adl</Filter>
-    </ClCompile>
-    <ClCompile Include="audio\adl\sound_adlib.cpp">
-      <Filter>audio\adl</Filter>
-    </ClCompile>
     <ClCompile Include="audio\audio.cpp">
       <Filter>audio</Filter>
     </ClCompile>
@@ -268,6 +256,9 @@
     <ClCompile Include="script\generalscript.cpp">
       <Filter>script</Filter>
     </ClCompile>
+    <ClCompile Include="audio\sound_adlib.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ai.h" />
@@ -302,21 +293,6 @@
     </ClInclude>
     <ClInclude Include="audio\audio_a5.h">
       <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="audio\adl\fmopl.h">
-      <Filter>audio\adl</Filter>
-    </ClInclude>
-    <ClInclude Include="audio\adl\opl_dosbox.h">
-      <Filter>audio\adl</Filter>
-    </ClInclude>
-    <ClInclude Include="audio\adl\opl_inc.h">
-      <Filter>audio\adl</Filter>
-    </ClInclude>
-    <ClInclude Include="audio\adl\opl_mame.h">
-      <Filter>audio\adl</Filter>
-    </ClInclude>
-    <ClInclude Include="audio\adl\sound_adlib.h">
-      <Filter>audio\adl</Filter>
     </ClInclude>
     <ClInclude Include="codec\format40.h">
       <Filter>codec</Filter>
@@ -462,9 +438,6 @@
     <ClInclude Include="include\types.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="audio\adl\opl_impl.h">
-      <Filter>audio\adl</Filter>
-    </ClInclude>
     <ClInclude Include="newui\mentatnewui.h">
       <Filter>newui</Filter>
     </ClInclude>
@@ -492,13 +465,13 @@
     <ClInclude Include="table\tilediff.h">
       <Filter>table</Filter>
     </ClInclude>
+    <ClInclude Include="audio\sound_adlib.h">
+      <Filter>audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="audio">
       <UniqueIdentifier>{2b595f47-32d1-4631-a825-8745508f4697}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="audio\adl">
-      <UniqueIdentifier>{37ec5d36-7aa2-44fc-91bb-e974ca52a038}</UniqueIdentifier>
     </Filter>
     <Filter Include="codec">
       <UniqueIdentifier>{ee95887c-21dc-416f-8279-d10f310e2549}</UniqueIdentifier>

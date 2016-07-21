@@ -247,7 +247,7 @@ bool GUI_Widget_Cancel_Click(Widget* w)
 
 		if (s != NULL)
 		{
-			s->o.linkedID = s2->o.index & 0xFF;
+			s->o.linkedID = s2->o.index;
 		}
 		else
 		{
@@ -303,7 +303,7 @@ bool GUI_Widget_Picture_Click(Widget* w)
 	{
 		ActionPanel_ClickStarportOrder(s);
 	}
-	else if ((s->o.type == STRUCTURE_REPAIR) && (s->o.linkedID != 0xFF))
+	else if ((s->o.type == STRUCTURE_REPAIR) && (s->o.linkedID != 0xFFFF))
 	{
 		Structure_SetState(s, STRUCTURE_STATE_READY);
 	}
@@ -467,8 +467,8 @@ int GUI_Widget_HOF_ClearList_Click(Widget* w)
 
 		memset(data, 0, 128);
 
-		if (File_Exists_Personal("SAVEFAME.DAT"))
-			File_Delete_Personal("SAVEFAME.DAT");
+		if (File_Exists_Ex(SEARCHDIR_SAVE_DIR, "SAVEFAME.DAT"))
+			File_Delete_Ex(SEARCHDIR_SAVE_DIR, "SAVEFAME.DAT");
 		GUI_Widget_MakeNormal(w, false);
 		return 1;
 	}

@@ -21,21 +21,21 @@
 #include "../tools/random_general.h"
 #include "../tools/random_lcg.h"
 
-typedef struct
+struct BuildableTile
 {
 	int x, y;
 	uint16 packed;
 	int parent;
-} BuildableTile;
+};
 
-typedef struct
+struct Island
 {
 	int start;
 	int end;
 	bool used;
-} Island;
+};
 
-typedef struct
+struct SkirmishData
 {
 	/* List of buildable tiles. */
 	BuildableTile buildable[MAP_SIZE_MAX * MAP_SIZE_MAX];
@@ -46,73 +46,72 @@ typedef struct
 	int nislands;
 	int nislands_unused;
 	Island* island;
-} SkirmishData;
+};
 
-typedef struct
+struct SkirmishBuildOrder
 {
 	StructureType type;
 	int priority; /* low priority is better! */
-	bool availableToAlly;
 	uint8 availableHouse;
-} SkirmishBuildOrder;
+};
 
 static const SkirmishBuildOrder buildorder[] = {
 	/* tech level 1: refinery. */
-	{STRUCTURE_CONSTRUCTION_YARD, 1, true, 0xFF},
-	{STRUCTURE_WINDTRAP, 2, true, 0xFF},
-	{STRUCTURE_REFINERY, 3, true, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_CONSTRUCTION_YARD, 1, 0xFF},
+	{STRUCTURE_WINDTRAP, 2, 0xFF},
+	{STRUCTURE_REFINERY, 3, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 
 	/* tech level 2: light factory. */
-	{STRUCTURE_REFINERY, 13, false, 0xFF},
-	{STRUCTURE_LIGHT_VEHICLE, 4, true, 0xFF},
-	{STRUCTURE_WINDTRAP, 16, false, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_REFINERY, 13, 0xFF},
+	{STRUCTURE_LIGHT_VEHICLE, 4, 0xFF},
+	{STRUCTURE_WINDTRAP, 16, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 
 	/* tech level 3: quads. */
-	{STRUCTURE_SILO, 98, false, 0xFF},
-	{STRUCTURE_OUTPOST, 5, true, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_SILO, 98, 0xFF},
+	{STRUCTURE_OUTPOST, 5, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 
 	/* tech level 4: tank. */
-	{STRUCTURE_WINDTRAP, 9, true, 0xFF},
-	{STRUCTURE_HEAVY_VEHICLE, 6, true, 0xFF},
-	{STRUCTURE_TURRET, 10, true, 0xFF},
-	{STRUCTURE_TURRET, 21, false, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_WINDTRAP, 9, 0xFF},
+	{STRUCTURE_HEAVY_VEHICLE, 6, 0xFF},
+	{STRUCTURE_TURRET, 10, 0xFF},
+	{STRUCTURE_TURRET, 21, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 
 	/* tech level 5: launcher. */
-	{STRUCTURE_WINDTRAP, 22, false, 0xFF},
-	{STRUCTURE_HIGH_TECH, 7, true, 0xFF},
-	{STRUCTURE_ROCKET_TURRET, 11, true, 0xFF},
-	{STRUCTURE_ROCKET_TURRET, 12, false, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_WINDTRAP, 22, 0xFF},
+	{STRUCTURE_HIGH_TECH, 7, 0xFF},
+	{STRUCTURE_ROCKET_TURRET, 11, 0xFF},
+	{STRUCTURE_ROCKET_TURRET, 12, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 
 	/* tech level 6: siege tank. */
-	{STRUCTURE_HEAVY_VEHICLE, 14, false, 0xFF},
-	{STRUCTURE_TURRET, 23, false, 0xFF},
-	{STRUCTURE_ROCKET_TURRET, 15, false, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_HEAVY_VEHICLE, 14, 0xFF},
+	{STRUCTURE_TURRET, 23, 0xFF},
+	{STRUCTURE_ROCKET_TURRET, 15, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 
 	/* tech level 7: ix tank. */
-	{STRUCTURE_WINDTRAP, 18, true, 0xFF},
-	{STRUCTURE_HOUSE_OF_IX, 8, true, 0xFF},
-	{STRUCTURE_TURRET, 24, false, 0xFF},
-	{STRUCTURE_ROCKET_TURRET, 17, true, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_WINDTRAP, 18, 0xFF},
+	{STRUCTURE_HOUSE_OF_IX, 8, 0xFF},
+	{STRUCTURE_TURRET, 24, 0xFF},
+	{STRUCTURE_ROCKET_TURRET, 17, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 
 	/* tech level 8: palace. */
-	{STRUCTURE_WINDTRAP, 25, false, 0xFF},
-	{STRUCTURE_PALACE, 19, true, 0xFF},
-	{STRUCTURE_ROCKET_TURRET, 26, false, 0xFF},
-	{STRUCTURE_ROCKET_TURRET, 27, false, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_WINDTRAP, 25, 0xFF},
+	{STRUCTURE_PALACE, 19, 0xFF},
+	{STRUCTURE_ROCKET_TURRET, 26, 0xFF},
+	{STRUCTURE_ROCKET_TURRET, 27, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 
 	/* tech level 9: harder. */
-	{STRUCTURE_CONSTRUCTION_YARD, 20, false, 0xFF},
-	{STRUCTURE_ROCKET_TURRET, 28, false, 0xFF},
-	{STRUCTURE_ROCKET_TURRET, 29, false, 0xFF},
-	{STRUCTURE_INVALID, 99, false, 0},
+	{STRUCTURE_CONSTRUCTION_YARD, 20, 0xFF},
+	{STRUCTURE_ROCKET_TURRET, 28, 0xFF},
+	{STRUCTURE_ROCKET_TURRET, 29, 0xFF},
+	{STRUCTURE_INVALID, 99, 0},
 };
 
 /*--------------------------------------------------------------*/
@@ -500,19 +499,9 @@ static bool Skirmish_GenStructuresAI(HouseType houseID, SkirmishData* sd)
 	for (structure = 0; (structure < lengthof(buildorder)) && (tech_level <= g_campaignID); structure++)
 	{
 		if (buildorder[structure].type == STRUCTURE_INVALID)
-		{
 			tech_level++;
-		}
-		else if (!buildorder[structure].availableToAlly && (g_skirmish.brain[houseID] == BRAIN_CPU_ALLY))
-		{
-		}
-		else if ((buildorder[structure].availableHouse & (1 << houseID)) == 0)
-		{
-		}
-		else
-		{
+		else if ((buildorder[structure].availableHouse & (1 << houseID)) != 0)
 			structure_count++;
-		}
 	}
 
 	if (structure_count > max_structure_count)
@@ -574,13 +563,8 @@ static bool Skirmish_GenStructuresAI(HouseType houseID, SkirmishData* sd)
 				structure++;
 				continue;
 			}
-			else if (!buildorder[structure].availableToAlly && (g_skirmish.brain[houseID] == BRAIN_CPU_ALLY))
-			{
-				structure++;
-				structure_count--;
-				continue;
-			}
-			else if (buildorder[structure].priority >= structure_threshold)
+
+			if (buildorder[structure].priority >= structure_threshold)
 			{
 				structure++;
 				continue;
@@ -711,12 +695,28 @@ static bool Skirmish_GenUnitsHuman(HouseType houseID, SkirmishData* sd)
 	if (r < 0)
 		return false;
 
+	bool mcvPlaced = false;
+
 	for (int i = 0; i < 7; i++)
 	{
 		const uint16 packed = sd->buildable[r].packed + delta[i];
 		const tile32 position = Tile_UnpackTile(packed);
 
-		UnitType type = (i == 0) ? UNIT_MCV : House_GetLightVehicle(houseID);
+		UnitType type;
+		
+		if (!mcvPlaced)
+			type = UNIT_MCV;
+		else if (i >= 0 && i < 3)
+			type = UNIT_SIEGE_TANK;
+		else if (i >= 3 && i < 4)
+			type = House_GetIXVehicle(houseID);
+		else if (i >= 4 && i < 5)
+			type = House_GetMediumVehicle(houseID);
+		else if (i >= 5 && i < 6)
+			type = UNIT_QUAD;
+		else if (i >= 6)
+			type = House_GetInfantrySquad(houseID);
+		
 		const LandscapeType lst = (const LandscapeType)Map_GetLandscapeType(packed);
 
 		/* If there's a structure or a bloom here, tough luck. */
@@ -728,6 +728,9 @@ static bool Skirmish_GenUnitsHuman(HouseType houseID, SkirmishData* sd)
 			type = House_GetInfantrySquad(houseID);
 
 		Scenario_Create_Unit(houseID, type, 256, position, 127, (UnitActionType)g_table_unitInfo[type].o.actionsPlayer[3]);
+
+		if (type == UNIT_MCV)
+			mcvPlaced = true;
 	}
 
 	return true;
@@ -959,10 +962,10 @@ static bool Skirmish_GenerateMapInner(bool generate_houses, SkirmishData* sd)
 			continue;
 
 		if (g_skirmish.brain[houseID] == BRAIN_HUMAN)
-			Scenario_Create_House(houseID, g_skirmish.brain[houseID], 1500, 0, 25);
+			Scenario_Create_House(houseID, g_skirmish.brain[houseID], 1500, 0, 250);
 		else
 		{
-			House* h = Scenario_Create_House(houseID, g_skirmish.brain[houseID], 1000, 0, 25);
+			House* h = Scenario_Create_House(houseID, g_skirmish.brain[houseID], 1000, 0, 250);
 
 			h->flags.isAIActive = true;
 
@@ -991,18 +994,6 @@ static bool Skirmish_GenerateMapInner(bool generate_houses, SkirmishData* sd)
 	Skirmish_GenSandworms();
 	Skirmish_GenReinforcements();
 	Skirmish_GenCHOAM();
-
-#if 0
-	/* Debugging. */
-	for (int island = 0; island < sd.nislands; island++) {
-		if (sd.island[island].used)
-			continue;
-
-		for (int i = sd.island[island].start; i < sd.island[island].end; i++) {
-			g_map[sd.buildable[i].packed].groundSpriteID = g_veiledSpriteID;
-		}
-	}
-#endif
 
 	Game_Prepare();
 	GUI_ChangeSelectionType(SELECTIONTYPE_STRUCTURE);

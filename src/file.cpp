@@ -18,8 +18,9 @@
 
 #define HASH_SIZE 4093
 
-#define DUNE2_DATA_PREFIX       "data"
-#define DUNE2_SAVE_PREFIX       "save"
+#define DUNE2_DATA_PREFIX           "data"
+#define DUNE2_SCENARIO_PREFIX       "scenario"
+#define DUNE2_SAVE_PREFIX           "save"
 
 /**
  * Static information about opened files.
@@ -36,7 +37,6 @@ static File s_file[FILE_MAX];
 static FileInfo s_hash_file[HASH_SIZE];
 
 char g_dune_data_dir[1024];
-char g_personal_data_dir[1024];
 
 /*--------------------------------------------------------------*/
 /* Simple Hash table. */
@@ -165,10 +165,12 @@ void File_MakeCompleteFilename(char* buf, size_t len, SearchDirectory dir, const
 {
 	int i = 0;
 
-	if (dir == SEARCHDIR_GLOBAL_DATA_DIR)
+	if (dir == SEARCHDIR_DATA_DIR)
 		i = snprintf(buf, len, "%s/%s/", g_dune_data_dir, DUNE2_DATA_PREFIX);
-	else if (dir == SEARCHDIR_PERSONAL_DATA_DIR)
-		i = snprintf(buf, len, "%s/%s/", g_personal_data_dir, DUNE2_SAVE_PREFIX);
+	else if (dir == SEARCHDIR_SCENARIO_DIR)
+		i = snprintf(buf, len, "%s/%s/", g_dune_data_dir, DUNE2_SCENARIO_PREFIX);
+	else if (dir == SEARCHDIR_SAVE_DIR)
+		i = snprintf(buf, len, "%s/%s/", g_dune_data_dir, DUNE2_SAVE_PREFIX);
 
 	strncpy(buf + i, filename, len - i);
 	buf[len - 1] = '\0';
@@ -192,7 +194,7 @@ FILE* File_Open_CaseInsensitive(SearchDirectory dir, const char* filename, const
 	FILE* fp;
 
 	/* Create directories. */
-	if (dir == SEARCHDIR_PERSONAL_DATA_DIR && mode[0] == 'w')
+	if (dir == SEARCHDIR_SAVE_DIR && mode[0] == 'w')
 	{
 		File_MakeCompleteFilename(buf, sizeof(buf), dir, "", false);
 		if (!al_make_directory(buf))
@@ -568,15 +570,18 @@ uint32 File_GetSize(uint8 index)
  *
  * @param filename The filename to remove.
  */
-void File_Delete_Personal(const char* filename)
+void File_Delete_Ex(SearchDirectory dir, const char* filename)
 {
 	char filenameComplete[1024];
 
-	File_MakeCompleteFilename(filenameComplete, sizeof(filenameComplete), SEARCHDIR_PERSONAL_DATA_DIR, filename, false);
+	if (dir != SEARCHDIR_SAVE_DIR)
+		return;
+
+	File_MakeCompleteFilename(filenameComplete, sizeof(filenameComplete), SEARCHDIR_SAVE_DIR, filename, false);
 	if (unlink(filenameComplete) == 0)
 		return;
 
-	File_MakeCompleteFilename(filenameComplete, sizeof(filenameComplete), SEARCHDIR_PERSONAL_DATA_DIR, filename, true);
+	File_MakeCompleteFilename(filenameComplete, sizeof(filenameComplete), SEARCHDIR_SAVE_DIR, filename, true);
 	unlink(filenameComplete);
 }
 

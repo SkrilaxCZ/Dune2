@@ -111,7 +111,7 @@ static bool String_IsOverridable(int stringID)
 		return true;
 
 	if ((stringID == STR_PICK_ANOTHER_HOUSE) ||
-		(stringID == STR_ARE_YOU_SURE_YOU_WISH_TO_PICK_A_NEW_HOUSE))
+		(stringID == STR_SURE_TO_PICK_A_NEW_HOUSE))
 		return true;
 
 	return false;
@@ -177,7 +177,7 @@ static void String_Load(SearchDirectory dir, const char* filename, bool compress
 
 static void String_LoadCampaignStrings()
 {
-	String_Load(SEARCHDIR_GLOBAL_DATA_DIR, "DUNE", false, 1, 339);
+	String_Load(SEARCHDIR_DATA_DIR, "DUNE", false, 1, 339);
 
 	for (HouseType houseID = HOUSE_HARKONNEN; houseID < HOUSE_MAX; houseID++)
 	{
@@ -201,13 +201,13 @@ static void String_LoadCampaignStrings()
  */
 void String_Init()
 {
-	String_Load(SEARCHDIR_GLOBAL_DATA_DIR, "DUNE", false, 1, 339);
-	String_Load(SEARCHDIR_GLOBAL_DATA_DIR, "MESSAGE", false, 340, 367);
-	String_Load(SEARCHDIR_GLOBAL_DATA_DIR, "INTRO", false, 368, 404);
-	String_Load(SEARCHDIR_GLOBAL_DATA_DIR, "TEXTH", true, 405, 444);
-	String_Load(SEARCHDIR_GLOBAL_DATA_DIR, "TEXTA", true, 445, 484);
-	String_Load(SEARCHDIR_GLOBAL_DATA_DIR, "TEXTO", true, 485, 524);
-	String_Load(SEARCHDIR_GLOBAL_DATA_DIR, "PROTECT", true, 525, -1);
+	String_Load(SEARCHDIR_DATA_DIR, "DUNE", false, 1, 339);
+	String_Load(SEARCHDIR_DATA_DIR, "MESSAGE", false, 340, 367);
+	String_Load(SEARCHDIR_DATA_DIR, "INTRO", false, 368, 404);
+	String_Load(SEARCHDIR_DATA_DIR, "TEXTH", true, 405, 444);
+	String_Load(SEARCHDIR_DATA_DIR, "TEXTA", true, 445, 484);
+	String_Load(SEARCHDIR_DATA_DIR, "TEXTO", true, 485, 524);
+	String_Load(SEARCHDIR_DATA_DIR, "PROTECT", true, 525, -1);
 	String_LoadCampaignStrings();
 
 	/* EU version has one more string in DUNE langfile. */

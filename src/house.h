@@ -163,6 +163,7 @@ const char* House_GetWSAHouseFilename(uint8 houseID);
 
 UnitType House_GetInfantrySquad(HouseType houseID);
 UnitType House_GetLightVehicle(HouseType houseID);
+UnitType House_GetMediumVehicle(HouseType houseID);
 UnitType House_GetIXVehicle(HouseType houseID);
 
 #endif /* HOUSE_H */

@@ -42,28 +42,28 @@ MSVC_PACKED_BEGIN
  */
 struct Tile
 {
-	/* 0000 01FF */
+	/* 0000 0000 0000 01FF */
 	PACK uint32 groundSpriteID:9; /*!< The Sprite which is drawn on this Tile. */
-	/* 0000 FE00 */
+	/* 0000 0000 0000 FE00 */
 	PACK uint32 overlaySpriteID:7; /*!< The Overlay which is drawn over this Tile. */
-	/* 0007 0000 */
+	/* 0000 0000 0007 0000 */
 	PACK uint32 houseID:3; /*!< Which House owns this Tile. */
-	/* 0008 0000 */
+	/* 0000 0000 0008 0000 */
 	PACK uint32 isUnveiled:1; /*!< There is no fog on the Tile. */
-	/* 0010 0000 */
+	/* 0000 0000 0010 0000 */
 	PACK uint32 hasUnit:1; /*!< There is a Unit on the Tile. */
-	/* 0020 0000 */
+	/* 0000 0000 0020 0000 */
 	PACK uint32 hasStructure:1; /*!< There is a Structure on the Tile. */
-	/* 0040 0000 */
+	/* 0000 0000 0040 0000 */
 	PACK uint32 hasAnimation:1; /*!< There is animation going on the Tile. */
-	/* 0080 0000 */
+	/* 0000 0000 0080 0000 */
 	PACK uint32 hasExplosion:1; /*!< There is an explosion on the Tile. */
-	/* FF00 0000 */
-	PACK uint32 index:8; /*!< Index of the Structure / Unit (index 1 is Structure/Unit 0, etc). */
+	/* 0000 00FF FF00 0000 */
+	PACK uint32 index:16; /*!< Index of the Structure / Unit (index 1 is Structure/Unit 0, etc). */
 } GCC_PACKED;
 
 MSVC_PACKED_END
-assert_compile(sizeof(Tile) == 0x04);
+assert_compile(sizeof(Tile) == 0x08);
 
 struct FogOfWarTile
 {

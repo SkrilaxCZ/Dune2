@@ -42,7 +42,7 @@
 #include "types.h"
 
 #include <allegro5/allegro.h>
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 class AdLibDriver;

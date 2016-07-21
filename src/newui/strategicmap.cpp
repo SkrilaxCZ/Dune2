@@ -88,7 +88,7 @@ static void StrategicMap_DrawPlanet(const StrategicMapData* map)
 	const int idx = map->state - STRATEGIC_MAP_SHOW_PLANET;
 	assert(0 <= idx && idx < 3);
 
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, cps[idx], 8, 24, 8, 24, 304, 120);
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, cps[idx], 8, 24, 8, 24, 304, 120);
 
 	if (map->region_aux != NULL)
 		Video_DrawFadeIn(map->region_aux);
@@ -116,14 +116,14 @@ static void StrategicMap_DrawEmblem(unsigned char emblemID)
 		y = emblem[2].y;
 	}
 
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "MAPMACH.CPS", x, y, emblem[0].x, emblem[0].y, 7 * 8, 40);
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "MAPMACH.CPS", x, y, emblem[1].x, emblem[1].y, 7 * 8, 40);
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "MAPMACH.CPS", x, y, emblem[0].x, emblem[0].y, 7 * 8, 40);
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "MAPMACH.CPS", x, y, emblem[1].x, emblem[1].y, 7 * 8, 40);
 }
 
 static void StrategicMap_DrawBackground(HouseType houseID)
 {
 	const CPSID conquest = CPS_CONQUEST_EN;
-	Video_DrawCPS(SEARCHDIR_GLOBAL_DATA_DIR, "MAPMACH.CPS");
+	Video_DrawCPS(SEARCHDIR_DATA_DIR, "MAPMACH.CPS");
 	StrategicMap_DrawEmblem(g_table_houseInfo[houseID].mapmachCps);
 	Video_DrawCPSSpecial(conquest, houseID, 8, 0);
 }
@@ -177,10 +177,10 @@ static void StrategicMap_DrawArrow(HouseType houseID, int scenario, const Strate
 	const ShapeID tintID = SHAPE_ARROW_TINT + 5 * (shapeID - SHAPE_ARROW);
 	const int x = map->arrow[scenario].x;
 	const int y = map->arrow[scenario].y;
-	const uint8 c = 144 + houseID * 16;
+	const uint8 c = 144 + g_table_houseInfo[houseID].spriteColor * 16;
 
 	Shape_Draw(shapeID, x, y, (WindowID)0, 0);
-	Shape_DrawTint(tintID + 0, x, y, STRATEGIC_MAP_ARROW_EDGE_COLOUR + houseID * 16, (WindowID)0, 0);
+	Shape_DrawTint(tintID + 0, x, y, STRATEGIC_MAP_ARROW_EDGE_COLOUR + g_table_houseInfo[houseID].spriteColor * 16, (WindowID)0, 0);
 	Shape_DrawTint(tintID + 1, x, y, c + ((frame + 0) & 0x3), (WindowID)0, 0);
 	Shape_DrawTint(tintID + 2, x, y, c + ((frame + 1) & 0x3), (WindowID)0, 0);
 	Shape_DrawTint(tintID + 3, x, y, c + ((frame + 2) & 0x3), (WindowID)0, 0);
@@ -450,7 +450,7 @@ void StrategicMap_Draw(HouseType houseID, StrategicMapData* map, int64_t fade_st
 		return;
 	}
 
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "DUNERGN.CPS", 8, 24, 8, 24, 304, 120);
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "DUNERGN.CPS", 8, 24, 8, 24, 304, 120);
 	StrategicMap_DrawRegions(map);
 	StrategicMap_DrawText(map);
 

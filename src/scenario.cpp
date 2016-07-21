@@ -186,9 +186,7 @@ static void Scenario_Load_Houses()
 	uint8 houseID;
 
 	for (houseID = 0; houseID < HOUSE_MAX; houseID++)
-	{
 		Scenario_Load_House(houseID);
-	}
 
 	h = g_playerHouse;
 	/* In case there was no unitCountMax in the scenario, calculate
@@ -214,6 +212,9 @@ static void Scenario_Load_Houses()
 
 		h->unitCountMax = max;
 	}
+#if DEBUG
+	h->unitCountMax = 0xFFFF;
+#endif
 }
 
 static void Scenario_Load_Unit(const char* key, char* settings)
@@ -689,6 +690,20 @@ void Scenario_InitTables()
 	memcpy_s(g_table_houseInfo, sizeof(g_table_houseInfo), g_table_base_houseInfo, sizeof(g_table_base_houseInfo));
 	memcpy_s(g_table_structureInfo, sizeof(g_table_structureInfo), g_table_base_structureInfo, sizeof(g_table_base_structureInfo));
 	memcpy_s(g_table_unitInfo, sizeof(g_table_unitInfo), g_table_base_unitInfo, sizeof(g_table_base_unitInfo));
+
+/*#ifdef DEBUG
+	for (int i = 0; i < STRUCTURE_MAX; i++)
+	{
+		g_table_structureInfo[i].o.buildTime = 1;
+		g_table_structureInfo[i].o.buildCredits = 1;
+	}
+
+	for (int i = 0; i < UNIT_MAX; i++)
+	{
+		g_table_unitInfo[i].o.buildTime = 1;
+		g_table_unitInfo[i].o.buildCredits = 1;
+	}
+#endif*/
 }
 
 void Scenario_CentreViewport(uint8 houseID)
@@ -763,10 +778,10 @@ bool Scenario_Load(uint16 scenarioID, uint8 houseID)
 
 	/* Load scenario file */
 	snprintf(filename, sizeof(filename), "SCEN%c%03d.INI", g_table_houseInfo[houseID].name[0], scenarioID);
-	if (!File_Exists_Ex(SEARCHDIR_GLOBAL_DATA_DIR, filename))
+	if (!File_Exists_Ex(SEARCHDIR_SCENARIO_DIR, filename))
 		return false;
 
-	s_scenarioBuffer = File_ReadWholeFile_Ex(SEARCHDIR_GLOBAL_DATA_DIR, filename);
+	s_scenarioBuffer = File_ReadWholeFile_Ex(SEARCHDIR_SCENARIO_DIR, filename);
 
 	memset(&g_scenario, 0, sizeof(Scenario));
 
@@ -775,9 +790,7 @@ bool Scenario_Load(uint16 scenarioID, uint8 houseID)
 	Map_CreateLandscape(g_scenario.mapSeed);
 
 	for (i = 0; i < 16; i++)
-	{
 		g_scenario.reinforcement[i].unitID = UNIT_INDEX_INVALID;
-	}
 
 	Scenario_Load_Houses();
 

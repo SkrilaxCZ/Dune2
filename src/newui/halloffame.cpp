@@ -59,15 +59,15 @@ static void HallOfFame_DrawEmblem(unsigned char emblemL, unsigned char emblemR)
 	int x;
 
 	x = 8 + 56 * emblemL;
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "FAME.CPS", x, 136, 0, 8, 7 * 8, 56);
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "FAME.CPS", x, 136, 0, 8, 7 * 8, 56);
 
 	x = 8 + 56 * emblemR;
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "FAME.CPS", x, 136, SCREEN_WIDTH - 7 * 8, 8, 7 * 8, 56);
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "FAME.CPS", x, 136, SCREEN_WIDTH - 7 * 8, 8, 7 * 8, 56);
 }
 
 void HallOfFame_DrawBackground(HouseType houseID, bool hallOfFame)
 {
-	Video_DrawCPS(SEARCHDIR_GLOBAL_DATA_DIR, "FAME.CPS");
+	Video_DrawCPS(SEARCHDIR_DATA_DIR, "FAME.CPS");
 
 	if (houseID != HOUSE_INVALID)
 	{
@@ -113,9 +113,9 @@ void HallOfFame_DrawScoreTime(int score, int64_t ticks_played)
 			memmove(hours, hours + 1, strlen(hours));
 	}
 
-	GUI_DrawText_Wrapper(String_Get_ByIndex(STR_SCORE_D), 72, 15, 15, 0, 0x22, score);
+	GUI_DrawText_Wrapper(String_Get_ByIndex(STR_SCORE_NUM), 72, 15, 15, 0, 0x22, score);
 	GUI_DrawText_Wrapper(buffer, 248, 15, 15, 0, 0x222);
-	GUI_DrawText_Wrapper(String_Get_ByIndex(STR_YOU_HAVE_ATTAINED_THE_RANK_OF), SCREEN_WIDTH / 2, 38, 15, 0, 0x122);
+	GUI_DrawText_Wrapper(String_Get_ByIndex(STR_RANK_OF), SCREEN_WIDTH / 2, 38, 15, 0, 0x122);
 }
 
 void HallOfFame_DrawRank(const HallOfFameData* fame)
@@ -214,7 +214,7 @@ void HallOfFame_DrawUnitsDestroyed(HouseType houseID, const HallOfFameData* fame
 {
 	const int y = 92 + 36 * 1;
 
-	Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "FAME.CPS", 8, 80, 8, 116, 304, 36);
+	Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "FAME.CPS", 8, 80, 8, 116, 304, 36);
 	GUI_DrawTextOnFilledRectangle(String_Get_ByIndex(STR_UNITS_DESTROYED_BY), 119);
 	HallOfFame_DrawYouEnemyLabel(y);
 
@@ -230,7 +230,7 @@ void HallOfFame_DrawBuildingsDestroyed(HouseType houseID, int scenarioID, const 
 		Prim_FillRect_i(8, 152, 8 + 304 - 1, 191, 116);
 	else
 	{
-		Video_DrawCPSRegion(SEARCHDIR_GLOBAL_DATA_DIR, "FAME.CPS", 8, 80, 8, 152, 304, 36);
+		Video_DrawCPSRegion(SEARCHDIR_DATA_DIR, "FAME.CPS", 8, 80, 8, 152, 304, 36);
 		GUI_DrawTextOnFilledRectangle(String_Get_ByIndex(STR_BUILDINGS_DESTROYED_BY), 155);
 		HallOfFame_DrawYouEnemyLabel(y);
 

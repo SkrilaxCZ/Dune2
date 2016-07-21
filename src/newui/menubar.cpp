@@ -221,7 +221,7 @@ bool MenuBar_ClickMentat(Widget* w)
 
 	Widget* scrollbar = GUI_Widget_Get_ByIndex(g_widgetMentatTail, 15);
 	const bool skip_advice = (g_scenario_type == SCENARIO_SKIRMISH);
-	Mentat_LoadHelpSubjects(scrollbar, true, SEARCHDIR_GLOBAL_DATA_DIR, g_playerHouseID, g_campaignID, skip_advice);
+	Mentat_LoadHelpSubjects(scrollbar, true, SEARCHDIR_DATA_DIR, g_playerHouseID, g_campaignID, skip_advice);
 
 	Mouse_TransformToDiv(SCREENDIV_MENU, &g_mouseX, &g_mouseY);
 	return true;
@@ -609,13 +609,13 @@ static void MenuBar_TickOptions()
 
 	case 0x8000 | 33: /* STR_RESTART_SCENARIO */
 		g_gameOverlay = GAMEOVERLAY_CONFIRM_RESTART;
-		g_yesNoWindowDesc.stringID = STR_ARE_YOU_SURE_YOU_WISH_TO_RESTART;
+		g_yesNoWindowDesc.stringID = STR_SURE_TO_RESTART;
 		GUI_Window_Create(&g_yesNoWindowDesc);
 		break;
 
 	case 0x8000 | 34: /* STR_PICK_ANOTHER_HOUSE */
 		g_gameOverlay = GAMEOVERLAY_CONFIRM_PICK_HOUSE;
-		g_yesNoWindowDesc.stringID = STR_ARE_YOU_SURE_YOU_WISH_TO_PICK_A_NEW_HOUSE;
+		g_yesNoWindowDesc.stringID = STR_SURE_TO_PICK_A_NEW_HOUSE;
 		GUI_Window_Create(&g_yesNoWindowDesc);
 		break;
 
@@ -625,7 +625,7 @@ static void MenuBar_TickOptions()
 
 	case 0x8000 | 36: /* STR_QUIT_PLAYING */
 		g_gameOverlay = GAMEOVERLAY_CONFIRM_QUIT;
-		g_yesNoWindowDesc.stringID = STR_ARE_YOU_SURE_YOU_WANT_TO_QUIT_PLAYING;
+		g_yesNoWindowDesc.stringID = STR_SURE_TO_QUIT;
 		GUI_Window_Create(&g_yesNoWindowDesc);
 		break;
 

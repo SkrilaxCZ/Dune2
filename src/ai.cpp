@@ -375,13 +375,9 @@ uint16 StructureAI_PickNextToBuild(const Structure* s)
 	}
 
 	if (AI_IsBrutalAI((HouseType)s->o.houseID))
-	{
 		buildable = StructureAI_FilterBuildOptions((StructureType)s->o.type, (HouseType)s->o.houseID, buildable);
-	}
 	else
-	{
 		buildable = StructureAI_FilterBuildOptions_Original((StructureType)s->o.type, (HouseType)s->o.houseID, buildable);
-	}
 
 	uint16 type = 0xFFFF;
 	uint16 priority_type = 0;
@@ -392,9 +388,7 @@ uint16 StructureAI_PickNextToBuild(const Structure* s)
 
 		/* Adjustments to build order for brutal AI. */
 		if (AI_IsBrutalAI((HouseType)s->o.houseID))
-		{
 			i = StructureAI_RemapBuildItem(j, &priority_i);
-		}
 		else
 		{
 			i = j;
@@ -440,16 +434,8 @@ uint16 UnitAI_GetAnyEnemyInRange(const Unit* unit)
 	Unit* u = Unit_Find(&find);
 	while (u != NULL)
 	{
-		if (u->o.type == UNIT_SANDWORM)
-		{
-		}
-		else if (House_AreAllied(houseID, Unit_GetHouseID(u)))
-		{
-		}
-		else if (!g_table_unitInfo[u->o.type].flags.isGroundUnit)
-		{
-		}
-		else if (Tile_GetDistanceRoundedUp(unit->o.position, u->o.position) <= dist)
+		if (u->o.type != UNIT_SANDWORM && !House_AreAllied(houseID, Unit_GetHouseID(u)) && g_table_unitInfo[u->o.type].flags.isGroundUnit
+			&& Tile_GetDistanceRoundedUp(unit->o.position, u->o.position) <= dist)
 		{
 			return Tools_Index_Encode(u->o.index, IT_UNIT);
 		}
@@ -464,13 +450,8 @@ uint16 UnitAI_GetAnyEnemyInRange(const Unit* unit)
 	Structure* s;
 	while ((s = Structure_Find(&find)) != NULL)
 	{
-		if (House_AreAllied(houseID, s->o.houseID))
-		{
-		}
-		else if (Tile_GetDistanceRoundedUp(unit->o.position, s->o.position) <= dist)
-		{
+		if (!House_AreAllied(houseID, s->o.houseID) && Tile_GetDistanceRoundedUp(unit->o.position, s->o.position) <= dist)
 			return Tools_Index_Encode(s->o.index, IT_STRUCTURE);
-		}
 	}
 
 	return 0;

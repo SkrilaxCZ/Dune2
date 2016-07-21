@@ -25,13 +25,17 @@
 #include <cassert>
 #include <cstdint>
 
-#include "types.h"
+#ifdef ADLIB_EXPORTS
+#define ADLIB_API __declspec(dllexport)
+#else
+#define ADLIB_API __declspec(dllimport)
+#endif
 
 namespace OPL
 {
 	class OPL;
 
-	class Config
+	class ADLIB_API Config
 	{
 	public:
 		enum OplFlags
@@ -52,7 +56,7 @@ namespace OPL
 		};
 	};
 
-	class OPL
+	class ADLIB_API OPL
 	{
 	private:
 		// TODO: This is part of a temporary HACK to allow only 1 instance
@@ -96,7 +100,7 @@ namespace OPL
 		 * @param a		port address
 		 * @return		value read
 		 */
-		virtual uint8 read(int a) = 0;
+		virtual uint8_t read(int a) = 0;
 
 		/**
 		 * Function to directly write to a specific OPL register.
@@ -119,7 +123,7 @@ namespace OPL
 		 * So if you request 4 samples from a stereo OPL, you will get
 		 * a total of two left channel and two right channel samples.
 		 */
-		virtual void readBuffer(int16* buffer, int length) = 0;
+		virtual void readBuffer(int16_t* buffer, int length) = 0;
 
 		/**
 		 * Returns whether the setup OPL mode is stereo or not
@@ -130,21 +134,19 @@ namespace OPL
 
 // Legacy API
 // !You should not write any new code using the legacy API!
-typedef OPL::OPL FM_OPL;
+ADLIB_API void OPLDestroy(OPL::OPL* OPL);
 
-void OPLDestroy(FM_OPL* OPL);
-
-void OPLResetChip(FM_OPL* OPL);
-void OPLWrite(FM_OPL* OPL, int a, int v);
-unsigned char OPLRead(FM_OPL* OPL, int a);
-void OPLWriteReg(FM_OPL* OPL, int r, int v);
-void YM3812UpdateOne(FM_OPL* OPL, int16* buffer, int length);
+ADLIB_API void OPLResetChip(OPL::OPL* OPL);
+ADLIB_API void OPLWrite(OPL::OPL* OPL, int a, int v);
+ADLIB_API unsigned char OPLRead(OPL::OPL* OPL, int a);
+ADLIB_API void OPLWriteReg(OPL::OPL* OPL, int r, int v);
+ADLIB_API void YM3812UpdateOne(OPL::OPL* OPL, int16_t* buffer, int length);
 
 /**
  * Legacy factory to create an AdLib (OPL2) chip.
  *
  * !You should not write any new code using the legacy API!
  */
-FM_OPL* makeAdLibOPL(int rate, bool bMAME);
+ADLIB_API OPL::OPL* makeAdLibOPL(int rate, bool bMAME);
 
 #endif

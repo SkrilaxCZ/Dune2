@@ -8,7 +8,7 @@
 #include <allegro5/allegro_memfile.h>
 
 #include "audio_a5.h"
-#include "adl/sound_adlib.h"
+#include "sound_adlib.h"
 
 #include "audio.h"
 #include "../common_a5.h"

@@ -290,14 +290,14 @@ static void GameLoop_LevelEnd()
 		{
 			Audio_PlayVoice(VOICE_YOUR_MISSION_IS_COMPLETE);
 
-			GUI_DisplayModalMessage(String_Get_ByIndex(STR_YOU_HAVE_SUCCESSFULLY_COMPLETED_YOUR_MISSION), 0xFFFF);
+			GUI_DisplayModalMessage(String_Get_ByIndex(STR_MISSION_WON), 0xFFFF);
 			g_gameMode = GM_WIN;
 		}
 		else
 		{
 			Audio_PlayVoice(VOICE_YOU_HAVE_FAILED_YOUR_MISSION);
 
-			GUI_DisplayModalMessage(String_Get_ByIndex(STR_YOU_HAVE_FAILED_YOUR_MISSION), 0xFFFF);
+			GUI_DisplayModalMessage(String_Get_ByIndex(STR_MISSION_FAILED), 0xFFFF);
 			g_gameMode = GM_LOSE;
 		}
 
@@ -981,10 +981,10 @@ int main(int argc, char** argv)
 
 	char filename[1024];
 
-	snprintf(filename, sizeof(filename), "%s/error.log", g_personal_data_dir);
+	snprintf(filename, sizeof(filename), "%s/error.log", g_dune_data_dir);
 	FILE* err = fopen(filename, "w");
 
-	snprintf(filename, sizeof(filename), "%s/output.log", g_personal_data_dir);
+	snprintf(filename, sizeof(filename), "%s/output.log", g_dune_data_dir);
 	FILE* out = fopen(filename, "w");
 
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
@@ -1108,7 +1108,7 @@ void Game_Prepare()
 
 			if (!u->o.flags.s.used || !u->o.flags.s.isNotOnMap)
 			{
-				s->o.linkedID = 0xFF;
+				s->o.linkedID = 0xFFFF;
 				s->countDown = 0;
 			}
 			else

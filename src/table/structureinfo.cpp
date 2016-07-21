@@ -12,7 +12,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_CONCRETE,
 			/* name                 */ "Concrete",
-			/* stringID_full        */ STR_SMALL_CONCRETE_SLAB,
+			/* stringID_full        */ STR_CONCRETE_LONG,
 			/* wsa                  */ "slab.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -77,7 +77,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_CONCRETE_4,
 			/* name                 */ "Concrete4",
-			/* stringID_full        */ STR_LARGE_CONCRETE_SLAB,
+			/* stringID_full        */ STR_CONCRETE_4_LONG,
 			/* wsa                  */ "4slab.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -142,7 +142,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_PALACE,
 			/* name                 */ "Palace",
-			/* stringID_full        */ STR_HOUSE_PALACE,
+			/* stringID_full        */ STR_PALACE_LONG,
 			/* wsa                  */ "palace.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -205,9 +205,9 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 
 	{/* 3 */
 		{/* objectInfo */
-			/* stringID_abbrev      */ STR_LIGHT_FCTRY,
+			/* stringID_abbrev      */ STR_LIGHT_FACTORY,
 			/* name                 */ "Light Fctry",
-			/* stringID_full        */ STR_LIGHT_VEHICLE_FACTORY,
+			/* stringID_full        */ STR_LIGHT_FACTORY_LONG,
 			/* wsa                  */ "liteftry.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -270,9 +270,9 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 
 	{/* 4 */
 		{/* objectInfo */
-			/* stringID_abbrev      */ STR_HEAVY_FCTRY,
+			/* stringID_abbrev      */ STR_HEAVY_FACTORY,
 			/* name                 */ "Heavy Fctry",
-			/* stringID_full        */ STR_HEAVY_VEHICLE_FACTORY,
+			/* stringID_full        */ STR_HEAVY_FACTORY_LONG,
 			/* wsa                  */ "hvyftry.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -337,7 +337,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_HITECH,
 			/* name                 */ "Hi-Tech",
-			/* stringID_full        */ STR_HITECH_FACTORY,
+			/* stringID_full        */ STR_HITECH_LONG,
 			/* wsa                  */ "hitcftry.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -402,7 +402,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_IX,
 			/* name                 */ "IX",
-			/* stringID_full        */ STR_HOUSE_OF_IX,
+			/* stringID_full        */ STR_IX_LONG,
 			/* wsa                  */ "ix.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -467,7 +467,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_WOR,
 			/* name                 */ "WOR",
-			/* stringID_full        */ STR_WOR_TROOPER_FACILITY,
+			/* stringID_full        */ STR_WOR_LONG,
 			/* wsa                  */ "wor.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -514,7 +514,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* buildableUnits */
 			/* [0]                  */ UNIT_TROOPER,
 			/* [1]                  */ UNIT_TROOPERS,
-			/* [2]                  */ UNIT_INVALID,
+			/* [2]                  */ UNIT_SARDAUKAR,
 			/* [3]                  */ UNIT_INVALID,
 			/* [4]                  */ UNIT_INVALID,
 			/* [5]                  */ UNIT_INVALID,
@@ -522,7 +522,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 			/* [7]                  */ UNIT_INVALID,
 		},
 		{/* upgradeCampaign */
-			/* [0]                  */ {5, 6, 6, 6, 6, 6}, /* H trait: trooper squads one level earlier. */
+			/* [0]                  */ {4, 6, 6, 6, 0, 6}, /* H trait: trooper squads are in level 4, sardaukar no repair */
 			/* [1]                  */ {0, 0, 0, 0, 0, 0},
 			/* [2]                  */ {0, 0, 0, 0, 0, 0},
 		},
@@ -532,7 +532,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_CONST_YARD,
 			/* name                 */ "Const Yard",
-			/* stringID_full        */ STR_CONSTRUCTION_YARD,
+			/* stringID_full        */ STR_CONST_YARD_LONG,
 			/* wsa                  */ "construc.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -597,7 +597,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_WINDTRAP,
 			/* name                 */ "Windtrap",
-			/* stringID_full        */ STR_WINDTRAP_POWER_CENTER,
+			/* stringID_full        */ STR_WINDTRAP_LONG,
 			/* wsa                  */ "windtrap.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -662,7 +662,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_BARRACKS,
 			/* name                 */ "Barracks",
-			/* stringID_full        */ STR_INFANTRY_BARRACKS,
+			/* stringID_full        */ STR_BARRACKS_LONG,
 			/* wsa                  */ "barrac.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -694,7 +694,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 			/* hintStringID         */ STR_HINT_BARRACKS,
 			/* priorityBuild        */ 0,
 			/* priorityTarget       */ 100,
-			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_ATREIDES,
+			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_ORDOS | FLAG_HOUSE_ATREIDES,
 		},
 		/* enterFilter          */ FLAG_UNIT_NONE,
 		/* creditsStorage       */ 0,
@@ -727,7 +727,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_STARPORT,
 			/* name                 */ "Starport",
-			/* stringID_full        */ STR_STARPORT_FACILITY,
+			/* stringID_full        */ STR_STARPORT_LONG,
 			/* wsa                  */ "starport.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -792,7 +792,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_REFINERY,
 			/* name                 */ "Refinery",
-			/* stringID_full        */ STR_SPICE_REFINERY,
+			/* stringID_full        */ STR_REFINERY_LONG,
 			/* wsa                  */ "refinery.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -857,7 +857,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_REPAIR2,
 			/* name                 */ "Repair",
-			/* stringID_full        */ STR_REPAIR_FACILITY,
+			/* stringID_full        */ STR_REPAIR_LONG,
 			/* wsa                  */ "repair.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -922,7 +922,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_WALL,
 			/* name                 */ "Wall",
-			/* stringID_full        */ STR_BASE_DEFENSE_WALL,
+			/* stringID_full        */ STR_WALL_LONG,
 			/* wsa                  */ "wall.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -987,7 +987,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_TURRET,
 			/* name                 */ "Turret",
-			/* stringID_full        */ STR_CANNON_TURRET,
+			/* stringID_full        */ STR_TURRET_LONG,
 			/* wsa                  */ "turret.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -1052,7 +1052,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_RTURRET,
 			/* name                 */ "R-Turret",
-			/* stringID_full        */ STR_ROCKET_TURRET,
+			/* stringID_full        */ STR_RTURRET_LONG,
 			/* wsa                  */ "rturret.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -1117,7 +1117,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_SPICE_SILO,
 			/* name                 */ "Spice Silo",
-			/* stringID_full        */ STR_SPICE_STORAGE_SILO,
+			/* stringID_full        */ STR_SPICE_SILO_LONG,
 			/* wsa                  */ "storage.wsa",
 			{/* flags */
 				/* hasShadow            */ false,
@@ -1182,7 +1182,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 		{/* objectInfo */
 			/* stringID_abbrev      */ STR_OUTPOST,
 			/* name                 */ "Outpost",
-			/* stringID_full        */ STR_RADAR_OUTPOST,
+			/* stringID_full        */ STR_OUTPOST_LONG,
 			/* wsa                  */ "headqrts.wsa",
 			{/* flags */
 				/* hasShadow            */ false,

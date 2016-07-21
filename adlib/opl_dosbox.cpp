@@ -26,17 +26,15 @@
  * http://www.dosbox.com
  */
 
-#ifndef DISABLE_DOSBOX_OPL
-
 #include "opl_dosbox.h"
 
 #include <cassert>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
-#include <cstdlib>
+#include <chrono>
 
-#include <allegro5/allegro.h>
+using namespace std::chrono;
 
 namespace OPL
 {
@@ -88,7 +86,7 @@ namespace OPL
 			startTime = time + delay;
 		}
 
-		bool Chip::write(uint32 reg, uint8 val)
+		bool Chip::write(uint32_t reg, uint8_t val)
 		{
 			switch (reg)
 			{
@@ -99,7 +97,7 @@ namespace OPL
 				timer[1].counter = val;
 				return true;
 			case 0x04:
-				double time = al_get_time();
+				double time = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count() / 1000000.0;
 
 				if (val & 0x80)
 				{
@@ -138,15 +136,15 @@ namespace OPL
 			return false;
 		}
 
-		uint8 Chip::read()
+		uint8_t Chip::read()
 		{
-			double time = al_get_time();
+			double time = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count() / 1000000.0;
 
 			fprintf(stderr, "warning: timer update is not implemented reliable\n");
 			timer[0].update(time);
 			timer[1].update(time);
 
-			uint8 ret = 0;
+			uint8_t ret = 0;
 			// Overflow won't be set if a channel is masked
 			if (timer[0].overflow)
 			{
@@ -167,17 +165,17 @@ namespace OPL
 
 			struct Handler : public DOSBox::Handler
 			{
-				void writeReg(uint32 reg, uint8 val)
+				void writeReg(uint32_t reg, uint8_t val)
 				{
 					adlib_write(reg, val);
 				}
 
-				uint32 writeAddr(uint32 port, uint8 val)
+				uint32_t writeAddr(uint32_t port, uint8_t val)
 				{
 					return val;
 				}
 
-				void generate(int16* chan, unsigned int samples)
+				void generate(int16_t* chan, unsigned int samples)
 				{
 					adlib_getsample(chan, samples);
 				}
@@ -196,23 +194,23 @@ namespace OPL
 
 			struct Handler : public DOSBox::Handler
 			{
-				void writeReg(uint32 reg, uint8 val)
+				void writeReg(uint32_t reg, uint8_t val)
 				{
 					adlib_write(reg, val);
 				}
 
-				uint32 writeAddr(uint32 port, uint8 val)
+				uint32_t writeAddr(uint32_t port, uint8_t val)
 				{
 					adlib_write_index(port, val);
 					return index;
 				}
 
-				void generate(int16* chan, uint samples)
+				void generate(int16_t* chan, unsigned int samples)
 				{
 					adlib_getsample(chan, samples);
 				}
 
-				void init(uint rate)
+				void init(unsigned int rate)
 				{
 					adlib_init(rate);
 				}
@@ -288,7 +286,7 @@ namespace OPL
 					// Not a 0x??8 port, then write to a specific port
 					if (!(port & 0x8))
 					{
-						uint8 index = (port & 2) >> 1;
+						uint8_t index = (port & 2) >> 1;
 						dualWrite(index, _reg.dual[index], val);
 					}
 					else
@@ -316,7 +314,7 @@ namespace OPL
 					// Not a 0x?88 port, when write to a specific side
 					if (!(port & 0x8))
 					{
-						uint8 index = (port & 2) >> 1;
+						uint8_t index = (port & 2) >> 1;
 						_reg.dual[index] = val & 0xff;
 					}
 					else
@@ -329,7 +327,7 @@ namespace OPL
 			}
 		}
 
-		uint8 OPL::read(int port)
+		uint8_t OPL::read(int port)
 		{
 			switch (_type)
 			{
@@ -396,7 +394,7 @@ namespace OPL
 			};
 		}
 
-		void OPL::dualWrite(uint8 index, uint8 reg, uint8 val)
+		void OPL::dualWrite(uint8_t index, uint8_t reg, uint8_t val)
 		{
 			// Make sure you don't use opl3 features
 			// Don't allow write to disable opl3
@@ -418,11 +416,11 @@ namespace OPL
 				val |= index ? 0xA0 : 0x50;
 			}
 
-			uint32 fullReg = reg + (index ? 0x100 : 0);
+			uint32_t fullReg = reg + (index ? 0x100 : 0);
 			_handler->writeReg(fullReg, val);
 		}
 
-		void OPL::readBuffer(int16* buffer, int length)
+		void OPL::readBuffer(int16_t* buffer, int length)
 		{
 			// For stereo OPL cards, we divide the sample count by 2,
 			// to match stereo AudioStream behavior.
@@ -433,5 +431,3 @@ namespace OPL
 		}
 	} // End of namespace DOSBox
 } // End of namespace OPL
-
-#endif // !DISABLE_DOSBOX_ADLIB
