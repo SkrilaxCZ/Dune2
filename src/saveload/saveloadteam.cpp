@@ -18,7 +18,6 @@ static const SaveLoadDesc s_saveTeam[] = {
 	SLD_ENTRY (Team, SLDT_UINT16, action),
 	SLD_ENTRY (Team, SLDT_UINT16, actionStart),
 	SLD_ENTRY (Team, SLDT_UINT8, houseID),
-	SLD_EMPTY2( SLDT_UINT8, 3),
 	SLD_ENTRY (Team, SLDT_UINT16, position.x),
 	SLD_ENTRY (Team, SLDT_UINT16, position.y),
 	SLD_ENTRY (Team, SLDT_UINT16, targetTile),

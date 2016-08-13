@@ -66,11 +66,11 @@ bool Map_Load(FILE* fp, uint32 length)
 		t->overlaySpriteID = g_veiledSpriteID;
 	}
 
-	while (length >= sizeof(uint16) + sizeof(Tile))
+	while (length >= sizeof(uint16) + 4 * sizeof(uint8))
 	{
 		Tile* t;
 
-		length -= sizeof(uint16) + sizeof(Tile);
+		length -= sizeof(uint16) + 4 * sizeof(uint8); /* Size of tile is 4 */
 
 		if (!fread_le_uint16(&i, fp))
 			return false;
@@ -82,9 +82,7 @@ bool Map_Load(FILE* fp, uint32 length)
 			return false;
 
 		if (g_mapSpriteID[i] != t->groundSpriteID)
-		{
 			g_mapSpriteID[i] |= 0x8000;
-		}
 	}
 	if (length != 0)
 		return false;

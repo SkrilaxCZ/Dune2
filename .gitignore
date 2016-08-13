@@ -11,7 +11,7 @@
 *.exp
 *.db
 .vs
-
+*.opendb
 
 # Windows binaries
 *.exe
@@ -21,6 +21,8 @@
 # Build directories
 src/Build
 adlib/Build
+lang/bin
+lang/obj
 
 # Allow prebuilts
 !allegro/Win32/bin/*.dll

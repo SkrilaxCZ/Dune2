@@ -5,11 +5,13 @@
 
 #include "enumeration.h"
 #include "types.h"
+#include "file.h"
 
 enum ScenarioType
 {
 	SCENARIO_CAMPAIGN = 0,
-	SCENARIO_SKIRMISH = 1
+	SCENARIO_SKIRMISH = 1,
+	SCENARIO_CUSTOM = 2
 };
 
 /**
@@ -42,12 +44,12 @@ struct Scenario
 	uint16 killedEnemy; /*!< Number of units lost by "Enemy". */
 	uint16 destroyedAllied; /*!< Number of structures lost by "You". */
 	uint16 destroyedEnemy; /*!< Number of structures lost by "Enemy". */
-	uint16 harvestedAllied; /*!< Total amount of spice harvested by "You". */
-	uint16 harvestedEnemy; /*!< Total amount of spice harvested by "Enemy". */
+	uint32 harvestedAllied; /*!< Total amount of spice harvested by "You". */
+	uint32 harvestedEnemy; /*!< Total amount of spice harvested by "Enemy". */
 	Reinforcement reinforcement[16]; /*!< Reinforcement information. */
 };
 
- struct Skirmish
+struct Skirmish
 {
 	uint32 seed;
 	Brain brain[HOUSE_MAX];
@@ -61,8 +63,8 @@ extern Scenario g_scenario;
 extern Skirmish g_skirmish;
 
 void Scenario_InitTables();
-void Scenario_SetCampaignAlliacnes();
 bool Scenario_Load(uint16 scenarioID, uint8 houseID);
+bool Scenario_Load(const char* filename, SearchDirectory directory);
 void Scenario_CentreViewport(uint8 houseID);
 
 void Scenario_Load_Map_Bloom(uint16 packed, struct Tile* t);

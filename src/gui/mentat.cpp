@@ -38,19 +38,13 @@ static void GUI_Mentat_SetSprites(MentatID mentatID)
 	memset(s_mentatSprites, 0, sizeof(s_mentatSprites));
 
 	for (int i = 0; i < 5; i++)
-	{
 		s_mentatSprites[0][i] = g_sprites[387 + mentatID * 15 + i];
-	}
 
 	for (int i = 0; i < 5; i++)
-	{
 		s_mentatSprites[1][i] = g_sprites[392 + mentatID * 15 + i];
-	}
 
 	for (int i = 0; i < 4; i++)
-	{
 		s_mentatSprites[2][i] = g_sprites[398 + mentatID * 15 + i];
-	}
 }
 
 /**
@@ -78,13 +72,9 @@ void GUI_Mentat_Animation(MentatID mentatID, uint16 speakingMode)
 		if (movingOtherTimer != 0)
 		{
 			if (s_mentatSprites[2][1 + abs(otherSprite)] == NULL)
-			{
 				otherSprite = 1 - otherSprite;
-			}
 			else
-			{
 				otherSprite++;
-			}
 		}
 
 		switch (mentatID)
@@ -296,9 +286,7 @@ void GUI_Mentat_Create_HelpScreen_Widgets()
 	g_widgetMentatTail = GUI_Widget_Link(g_widgetMentatTail, g_widgetMentatFirst);
 }
 
-void
-GUI_Mentat_ShowHelp(Widget* scrollbar, SearchDirectory dir,
-                    HouseType houseID, int campaignID)
+void GUI_Mentat_ShowHelp(Widget* scrollbar, SearchDirectory dir, HouseType houseID, int campaignID)
 {
 	MentatState* mentat = &g_mentat_state;
 

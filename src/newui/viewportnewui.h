@@ -17,6 +17,6 @@ void Viewport_DrawSelectionHealthBars();
 void Viewport_DrawSelectionBox();
 void Viewport_DrawPanCursor();
 void Viewport_RenderBrush(int x, int y, int blurx);
-extern bool Viewport_Click(Widget* w);
+bool Viewport_Click(Widget* w);
 
 #endif

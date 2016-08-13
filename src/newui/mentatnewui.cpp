@@ -268,9 +268,9 @@ void MentatBriefing_SplitText(MentatState* mentat)
 	mentat->speaking_timer = Timer_GetTicks() + 4 * strlen(mentat->text);
 }
 
-void MentatBriefing_InitText(HouseType houseID, int campaignID, BriefingEntry entry, MentatState* mentat)
+void MentatBriefing_InitText(HouseType houseID, uint16 campaignID, BriefingEntry entry, MentatState* mentat)
 {
-	const int stringID = ((campaignID + 1) * 4) + entry;
+	const int stringID = campaignID == 0xFFFF ? entry : ((campaignID + 1) * 4) + entry;
 	assert(entry <= MENTAT_BRIEFING_ADVICE);
 
 	strncpy(mentat->buf, String_GetMentatString(houseID, stringID), sizeof(mentat->buf));
@@ -342,13 +342,13 @@ void MentatBriefing_AdvanceText(MentatState* mentat)
 
 /*--------------------------------------------------------------*/
 
-void MentatBriefing_InitWSA(HouseType houseID, int scenarioID, BriefingEntry entry, MentatState* mentat)
+void MentatBriefing_InitWSA(HouseType houseID, uint16 scenarioID, BriefingEntry entry, MentatState* mentat)
 {
 	const char* key[3] = {"BriefPicture", "WinPicture", "LosePicture"};
 	const char* def[3] = {"HARVEST.WSA", "WIN1.WSA", "LOSTBILD.WSA"};
 	assert(entry <= MENTAT_BRIEFING_ADVICE);
 
-	if (scenarioID <= 0)
+	if (scenarioID == 0xFFFF)
 	{
 		const char* wsaFilename = House_GetWSAHouseFilename(houseID);
 

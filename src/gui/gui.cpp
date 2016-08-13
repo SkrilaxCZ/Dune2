@@ -31,6 +31,7 @@
 #include "../newui/halloffame.h"
 #include "../newui/menubar.h"
 #include "../newui/savemenu.h"
+#include "../newui/scenariomenu.h"
 #include "../opendune.h"
 #include "../pool/pool.h"
 #include "../pool/housepool.h"
@@ -243,7 +244,7 @@ void GUI_DrawStatusBarText(int x, int y)
  * @param x The most left position where to draw the string.
  * @param y The most top position where to draw the string.
  */
-void GUI_DrawChar_(unsigned char c, int x, int y)
+void GUI_DrawChar(unsigned char c, int x, int y)
 {
 	const int width = (g_curWidgetIndex == WINDOWID_RENDER_TEXTURE) ? g_widgetProperties[WINDOWID_RENDER_TEXTURE].width : SCREEN_WIDTH;
 	const int height = (g_curWidgetIndex == WINDOWID_RENDER_TEXTURE) ? g_widgetProperties[WINDOWID_RENDER_TEXTURE].height : SCREEN_WIDTH;
@@ -281,9 +282,7 @@ void GUI_DrawChar_(unsigned char c, int x, int y)
 		}
 	}
 	else
-	{
 		x += width * fc->unusedLines;
-	}
 
 	if (fc->usedLines == 0)
 		return;
@@ -626,7 +625,7 @@ void GUI_UpdateProductionStringID()
 
 	if (s->o.flags.s.upgrading)
 	{
-		g_productionStringID = STR_UPGRADINGD_DONE;
+		g_productionStringID = STR_UPGRADING_DONE;
 		return;
 	}
 
@@ -644,7 +643,7 @@ void GUI_UpdateProductionStringID()
 
 	if (s->countDown != 0)
 	{
-		g_productionStringID = STR_D_DONE;
+		g_productionStringID = STR_PCT_DONE;
 		return;
 	}
 
@@ -718,7 +717,7 @@ uint16 GUI_SplitText(char* str, uint16 maxwidth, char delimiter)
  *        0x4000 = position relative to window
  *        0x8000 = centre sprite
  */
-void GUI_DrawSprite_(Screen screenID, uint8* sprite, int16 posX, int16 posY, uint16 windowID, uint16 flags, ...)
+void GUI_DrawSprite(Screen screenID, uint8* sprite, int16 posX, int16 posY, uint16 windowID, uint16 flags, ...)
 {
 	const uint16 s_variable_60[8] = {1, 3, 2, 5, 4, 3, 2, 1};
 
@@ -1194,7 +1193,7 @@ void GUI_DrawSprite_(Screen screenID, uint8* sprite, int16 posX, int16 posY, uin
  * @param harvestedEnemy Pointer to the total amount of spice harvested by enemies.
  * @param houseID The houseID of the player.
  */
-uint16 Update_Score(int16 score, uint16* harvestedAllied, uint16* harvestedEnemy, uint8 houseID)
+uint16 Update_Score(int32 score, uint32* harvestedAllied, uint32* harvestedEnemy, uint8 houseID)
 {
 	PoolFindStruct find;
 	uint16 locdi = 0;
@@ -1248,23 +1247,18 @@ uint16 Update_Score(int16 score, uint16* harvestedAllied, uint16* harvestedEnemy
 
 	g_validateStrictIfZero--;
 
-	tmp = *harvestedEnemy + loc0C;
-	*harvestedEnemy = (tmp > 65000) ? 65000 : (tmp & 0xFFFF);
-
-	tmp = *harvestedAllied + locdi;
-	*harvestedAllied = (tmp > 65000) ? 65000 : (tmp & 0xFFFF);
+	*harvestedEnemy = *harvestedEnemy + loc0C;
+	*harvestedAllied = *harvestedAllied + locdi;
 
 	score += House_Get_ByIndex(houseID)->credits / 100;
 
 	if (score < 0)
 		score = 0;
 
-	targetTime = g_campaignID * 45;
+	targetTime = g_techLevel * 45;
 
 	if (s_ticksPlayed < targetTime)
-	{
 		score += targetTime - s_ticksPlayed;
-	}
 
 	return score;
 }
@@ -1383,10 +1377,6 @@ uint16 GUI_DisplayHint(uint16 stringID, uint16 spriteID)
 
 	return GUI_DisplayModalMessage(String_Get_ByIndex(stringID), spriteID);
 }
-
-#if 0
-void GUI_DrawProgressbar(uint16 current, uint16 max);
-#endif
 
 /**
  * Draw the interface (borders etc etc) and radar on the screen.
@@ -1525,47 +1515,7 @@ void GUI_DrawCredits(int credits, uint16 mode, int x)
 	}
 
 	g_playerCredits = creditsOld;
-
-#if 0
-	Screen oldScreenID = GFX_Screen_SetActive(SCREEN_1);
-	uint16 oldValue_07AE_0000 = Widget_SetCurrentWidget(4);
-	char charCreditsOld[7];
-	char charCreditsNew[7];
-	int i;
-
-	snprintf(charCreditsOld, sizeof(charCreditsOld), "%6d", creditsOld);
-	snprintf(charCreditsNew, sizeof(charCreditsNew), "%6d", creditsNew);
-
-	for (i = 0; i < 6; i++) {
-		uint16 left = i * 10 + 4;
-		uint16 spriteID;
-
-		spriteID = (charCreditsOld[i] == ' ') ? 13 : charCreditsOld[i] - 34;
-
-		if (charCreditsOld[i] != charCreditsNew[i]) {
-			GUI_DrawSprite(g_screenActiveID, g_sprites[spriteID], left, offset - creditsAnimationOffset, 4, 0x4000);
-			if (creditsAnimationOffset == 0) continue;
-
-			spriteID = (charCreditsNew[i] == ' ') ? 13 : charCreditsNew[i] - 34;
-
-			GUI_DrawSprite(g_screenActiveID, g_sprites[spriteID], left, offset + 8 - creditsAnimationOffset, 4, 0x4000);
-		} else {
-			GUI_DrawSprite(g_screenActiveID, g_sprites[spriteID], left, 1, 4, 0x4000);
-		}
-	}
-
-	if (oldScreenID != g_screenActiveID) {
-		GUI_Mouse_Hide_InWidget(5);
-		GUI_Screen_Copy(g_curWidgetXBase/8, g_curWidgetYBase, g_curWidgetXBase/8, g_curWidgetYBase - 40, g_curWidgetWidth/8, g_curWidgetHeight, g_screenActiveID, oldScreenID);
-		GUI_Mouse_Show_InWidget();
-	}
-
-	GFX_Screen_SetActive(oldScreenID);
-
-	Widget_SetCurrentWidget(oldValue_07AE_0000);
-#else
 	MenuBar_DrawCredits(creditsNew, creditsOld, offset - creditsAnimationOffset, x);
-#endif
 }
 
 /**
@@ -1796,6 +1746,18 @@ const char* GUI_String_Get_ByIndex(int16 stringID)
 
 	switch (stringID)
 	{
+	case -65:
+	case -64:
+	case -63:
+	case -62:
+	case -61:
+	{
+		const char* s = g_scenarioDesc[abs((int16)stringID + 61)];
+		if (*s == '\0')
+			return NULL;
+		return s;
+	}
+
 	case -5:
 	case -4:
 	case -3:
@@ -2183,7 +2145,7 @@ void GUI_HallOfFame_Show(HouseType houseID, uint16 score)
 
 	GFX_Screen_SetActive(SCREEN_0);
 
-	g_yesNoWindowDesc.stringID = STR_ARE_YOU_SURE_YOU_WANT_TO_CLEAR_THE_HIGH_SCORES;
+	g_yesNoWindowDesc.stringID = STR_SURE_TO_CLEAR_HIGH_SCORES;
 	GUI_Window_Create(&g_yesNoWindowDesc);
 	GUI_Widget_Get_ByIndex(g_widgetLinkedListTail, 30)->data = data;
 

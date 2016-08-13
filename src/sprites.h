@@ -7,10 +7,7 @@
 #include "gfx.h"
 #include "shape.h"
 
-enum
-{
-	TILE_SIZE = 16
-};
+const int TILE_SIZE = 16;
 
 /**
  * The \c ICON.MAP contains indices only. An index can point either to another
@@ -78,12 +75,12 @@ void Sprites_InitCHOAM(const char* bttn, const char* choam);
 void Sprites_InitMentat(MentatID mentatID);
 void Sprites_InitCredits();
 void Sprites_Uninit();
-extern uint8 Sprite_GetWidth(const uint8* sprite);
-extern uint8 Sprite_GetHeight(const uint8* sprite);
+uint8 Sprite_GetWidth(const uint8* sprite);
+uint8 Sprite_GetHeight(const uint8* sprite);
 void Sprites_LoadTiles();
 void Sprites_UnloadTiles();
-extern uint16 Sprites_LoadImage(SearchDirectory dir, const char* filename, Screen screenID, uint8* palette);
+uint16 Sprites_LoadImage(SearchDirectory dir, const char* filename, Screen screenID, uint8* palette);
 void Sprites_CPS_LoadRegionClick();
-extern bool Sprite_IsUnveiled(uint16 spriteID);
+bool Sprite_IsUnveiled(uint16 spriteID);
 
 #endif /* SPRITES_H */

@@ -68,12 +68,6 @@ static bool Load_Main(FILE* fp)
 	if (BETOH32(header) != CC_SCEN)
 		return false;
 
-	if (g_scenario_type == SCENARIO_SKIRMISH)
-	{
-		for (HouseType h = HOUSE_HARKONNEN; h < HOUSE_MAX; h++)
-			g_skirmish.brain[h] = BRAIN_NONE;
-	}
-
 	position = ftell(fp);
 
 	/* Find the 'INFO' chunk, as it contains the savegame version */
@@ -86,31 +80,9 @@ static bool Load_Main(FILE* fp)
 	if (!fread_le_uint16(&version, fp))
 		return false;
 	length -= 2;
-	if (version == 0)
-		return false;
 
 	if (version != 0x0290)
-	{
-		/* Get the scenarioID / campaignID */
-		if (!Info_LoadOld(fp, length))
-			return false;
-
-		g_gameMode = GM_RESTART;
-
-		/* Find the 'PLYR' chunk */
-		fseek(fp, position, SEEK_SET);
-		length = Load_FindChunk(fp, CC_PLYR);
-		if (length == 0)
-			return false;
-
-		/* Find the human player */
-		if (!House_LoadOld(fp, length))
-			return false;
-
-		GUI_DisplayModalMessage(String_Get_ByIndex(STR_WARNING_OLD_SAVE), 0xFFFF);
-
-		return true;
-	}
+		return false;
 
 	/* Load the 'INFO' chunk'. It has to be the first chunk loaded */
 	if (!Info_Load(fp, length))
@@ -129,33 +101,49 @@ static bool Load_Main(FILE* fp)
 
 		switch (BETOH32(header))
 		{
-		case CC_NAME: break; /* 'NAME' chunk is of no interest to us */
-		case CC_INFO: break; /* 'INFO' chunk is already read */
-		case CC_MAP: if (!Map_Load(fp, length))
+		case CC_NAME:
+			break; /* 'NAME' chunk is of no interest to us */
+
+		case CC_INFO:
+			break; /* 'INFO' chunk is already read */
+
+		case CC_MAP:
+			if (!Map_Load(fp, length))
 				return false;
 			load_map = true;
 			Map_Load2Fallback();
 			break;
-		case CC_PLYR: if (!House_Load(fp, length))
-				return false;
-			break;
-		case CC_UNIT: if (!Unit_Load(fp, length))
-				return false;
-			load_unit = true;
-			break;
-		case CC_BLDG: if (!Structure_Load(fp, length))
-				return false;
-			load_bldg = true;
-			break;
-		case CC_TEAM: if (!Team_Load(fp, length))
-				return false;
-			break;
-		case CC_ODUN: if (!UnitNew_Load(fp, length))
+
+		case CC_PLYR:
+			if (!House_Load(fp, length))
 				return false;
 			break;
 
-			/* Dune Dynasty extensions.  Note: must come AFTER CC_BLDG, CC_UNIT, etc. */
-		case CC_DDAI: if (!BrutalAI_Load(fp, length))
+		case CC_UNIT:
+			if (!Unit_Load(fp, length))
+				return false;
+			load_unit = true;
+			break;
+
+		case CC_BLDG:
+			if (!Structure_Load(fp, length))
+				return false;
+			load_bldg = true;
+			break;
+
+		case CC_TEAM:
+			if (!Team_Load(fp, length))
+				return false;
+			break;
+
+		case CC_ODUN:
+			if (!UnitNew_Load(fp, length))
+				return false;
+			break;
+
+		/* Dune Dynasty extensions.  Note: must come AFTER CC_BLDG, CC_UNIT, etc. */
+		case CC_DDAI:
+			if (!BrutalAI_Load(fp, length))
 				return false;
 			break;
 
@@ -166,9 +154,7 @@ static bool Load_Main(FILE* fp)
 					return false;
 			}
 			else
-			{
 				Error("Structure_Load2 called before Structure_Load. Skipped.\n");
-			}
 			break;
 
 		case CC_DDI2:
@@ -178,9 +164,7 @@ static bool Load_Main(FILE* fp)
 					return false;
 			}
 			else
-			{
 				Error("Info_Load2 called before Unit_Load. Skipped.\n");
-			}
 			break;
 
 		case CC_DDM2:
@@ -190,17 +174,7 @@ static bool Load_Main(FILE* fp)
 					return false;
 			}
 			else
-			{
 				Error("Map_Load2 called before Map_Load. Skipped.\n");
-			}
-			break;
-
-		case CC_DDS2:
-			if (g_scenario_type == SCENARIO_SKIRMISH)
-			{
-				if (!Scenario_Load2(fp, length))
-					return false;
-			}
 			break;
 
 		case CC_DDU2:
@@ -210,9 +184,7 @@ static bool Load_Main(FILE* fp)
 					return false;
 			}
 			else
-			{
 				Error("Unit_Load2 called before Unit_Load. Skipped.\n");
-			}
 			break;
 
 		default:
@@ -224,19 +196,6 @@ static bool Load_Main(FILE* fp)
 		position += length + 8 + (length & 1);
 		fseek(fp, position, SEEK_SET);
 	}
-
-	if (g_scenario_type == SCENARIO_SKIRMISH)
-	{
-		if (Skirmish_IsPlayable())
-			Skirmish_Prepare();
-		else
-		{
-			GUI_DisplayModalMessage("Missing skirmish saved game data!", 0xFFFF);
-			return false;
-		}
-	}
-	else
-		Scenario_SetCampaignAlliacnes();
 
 	return true;
 }

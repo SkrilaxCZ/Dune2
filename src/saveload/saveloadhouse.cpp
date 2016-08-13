@@ -11,6 +11,7 @@ static const SaveLoadDesc s_saveHouse[] = {
 	SLD_ENTRY2(House, SLDT_UINT16, index, SLDT_UINT8),
 	SLD_ENTRY (House, SLDT_UINT16, harvestersIncoming),
 	SLD_ENTRY2(House, SLDT_UINT16, flags, SLDT_HOUSEFLAGS),
+	SLD_ENTRY (House, SLDT_UINT16, brain),
 	SLD_ENTRY (House, SLDT_UINT16, unitCount),
 	SLD_ENTRY (House, SLDT_UINT16, unitCountMax),
 	SLD_ENTRY (House, SLDT_UINT16, unitCountEnemy),
@@ -24,7 +25,6 @@ static const SaveLoadDesc s_saveHouse[] = {
 	SLD_ENTRY (House, SLDT_UINT16, creditsQuota),
 	SLD_ENTRY (House, SLDT_UINT16, palacePosition.x),
 	SLD_ENTRY (House, SLDT_UINT16, palacePosition.y),
-	SLD_EMPTY ( SLDT_UINT16),
 	SLD_ENTRY (House, SLDT_UINT16, timerUnitAttack),
 	SLD_ENTRY (House, SLDT_UINT16, timerSandwormAttack),
 	SLD_ENTRY (House, SLDT_UINT16, timerStructureAttack),
@@ -74,37 +74,6 @@ bool House_Load(FILE* fp, uint32 length)
 		}
 	}
 	if (length != 0)
-		return false;
-
-	return true;
-}
-
-/**
- * Load all Houses from a file.
- * @param fp The file to load from.
- * @param length The length of the data chunk.
- * @return True if and only if all bytes were read successful.
- */
-bool House_LoadOld(FILE* fp, uint32 length)
-{
-	while (length > 0)
-	{
-		House hl;
-
-		/* Read the next House from disk */
-		if (!SaveLoad_Load(s_saveHouse, fp, &hl))
-			return false;
-
-		/* See if it is a human house */
-		if (hl.flags.human)
-		{
-			g_playerHouseID = (HouseType)hl.index;
-			break;
-		}
-
-		length -= SaveLoad_GetLength(s_saveHouse);
-	}
-	if (length == 0)
 		return false;
 
 	return true;

@@ -6,10 +6,10 @@
 #include <stdbool.h>
 #include "enumeration.h"
 
-extern uint16 String_Decompress(const char* source, char* dest);
-extern const char* String_GenerateFilename(const char* name);
-extern char* String_Get_ByIndex(uint16 stringID);
-extern const char* String_GetMentatString(HouseType houseID, int stringID);
+uint16 String_Decompress(const char* source, char* dest);
+const char* String_GenerateFilename(const char* name);
+char* String_Get_ByIndex(uint16 stringID);
+const char* String_GetMentatString(HouseType houseID, int stringID);
 void String_TranslateSpecial(const char* source, char* dest);
 void String_LoadCampaignStrings();
 void String_Init();

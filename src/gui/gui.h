@@ -27,35 +27,29 @@ enum SelectionType
 /**
  * Hall Of Fame data struct.
  */
-typedef struct HallOfFameStruct
+struct HallOfFameStruct
 {
 	char name[6]; /*!< Name of the entry. */
 	uint16 score; /*!< Score of the entry. */
 	uint16 rank; /*!< Rank of the entry. */
 	uint16 campaignID; /*!< Which campaign was reached. */
 	uint8 houseID; /*!< Which house was playing. */
-
-#if 0
-	uint8  padding1;                                        /*!< Padding bytes. */
-	uint16 padding2;                                        /*!< Padding bytes. */
-#else
 	/* Dune Dynasty: extra padding bytes used to extend name. */
 	char name_extended[3];
-#endif
-} HallOfFameStruct;
+};
 
 assert_compile(sizeof(HallOfFameStruct) == 16);
 
 /**
  * Information for the selection type.
  */
-typedef struct SelectionTypeStruct
+struct SelectionTypeStruct
 {
 	int8 visibleWidgets[20]; /*!< List of index of visible widgets, -1 terminated. */
 	bool variable_04; /*!< ?? */
 	bool variable_06; /*!< ?? */
 	uint16 defaultWidget; /*!< Index of the default Widget. */
-} SelectionTypeStruct;
+};
 
 struct Widget;
 
@@ -85,7 +79,7 @@ extern bool g_structureHighHealth;
 
 void GUI_ClearScreen(Screen screenID);
 void GUI_DrawScreen(Screen screenID);
-void GUI_DrawSprite_(Screen memory, uint8* sprite, int16 posX, int16 posY, uint16 windowID, uint16 flags, ...);
+void GUI_DrawSprite(Screen memory, uint8* sprite, int16 posX, int16 posY, uint16 windowID, uint16 flags, ...);
 void GUI_DrawInterfaceAndRadar();
 void GUI_Palette_RemapScreen(uint16 left, uint16 top, uint16 width, uint16 height, Screen screenID, uint8* remap);
 void GUI_Screen_Copy(int16 xSrc, int16 ySrc, int16 xDst, int16 yDst, int16 width, int16 height, Screen screenSrc, Screen screenDst);
@@ -97,26 +91,26 @@ void GUI_Palette_CreateMapping(uint8* palette, uint8* colors, uint8 reference, u
 void GUI_Palette_CreateRemap(uint8 houseID);
 void GUI_PaletteAnimate();
 
-void GUI_DrawChar_(unsigned char c, int x, int y);
+void GUI_DrawChar(unsigned char c, int x, int y);
 void GUI_DisplayText(const char* str, int16 importance, ...);
 void GUI_DrawStatusBarText(int x, int y);
 void GUI_DrawText(const char* string, int16 left, int16 top, uint8 fgColour, uint8 bgColour);
 void GUI_DrawText_Wrapper(const char* string, int16 left, int16 top, uint8 fgColour, uint8 bgColour, uint16 flags, ...);
 void GUI_DrawTextOnFilledRectangle(const char* string, uint16 top);
-extern uint16 GUI_DisplayModalMessage(const char* str, uint16 stringID, ...);
-extern uint16 GUI_DisplayHint(uint16 stringID, uint16 spriteID);
+uint16 GUI_DisplayModalMessage(const char* str, uint16 stringID, ...);
+uint16 GUI_DisplayHint(uint16 stringID, uint16 spriteID);
 
 void GUI_UpdateProductionStringID();
-extern uint16 GUI_SplitText(char* str, uint16 maxwidth, char delimiter);
+uint16 GUI_SplitText(char* str, uint16 maxwidth, char delimiter);
 void GUI_ChangeSelectionType(uint16 selectionType);
 void GUI_InitColors(const uint8* colors, uint8 first, uint8 last);
-extern const char* GUI_String_Get_ByIndex(int16 stringID);
-extern uint16 Update_Score(int16 score, uint16* harvestedAllied, uint16* harvestedEnemy, uint8 houseID);
+const char* GUI_String_Get_ByIndex(int16 stringID);
+uint16 Update_Score(int32 score, uint32* harvestedAllied, uint32* harvestedEnemy, uint8 houseID);
 void GUI_HallOfFame_Show(HouseType houseID, uint16 score);
 extern uint16 GUI_HallOfFame_DrawData(HallOfFameStruct* data, bool show);
 
 /* editbox.c */
-extern int GUI_EditBox(char* text, uint16 maxLength, uint16 unknown1, struct Widget* w, uint16 (*tickProc)(), uint16 unknown4);
+int GUI_EditBox(char* text, uint16 maxLength, uint16 unknown1, struct Widget* w, uint16 (*tickProc)(), uint16 unknown4);
 void GUI_EditBox_Draw(const char* text);
 
 #endif /* GUI_GUI_H */

@@ -117,7 +117,7 @@ static void Cutscene_DrawText(char* str, int left, int top, uint8 fg, uint8 bg)
 
 	while (*s != '\0')
 	{
-		GUI_DrawChar_(*s, x, top);
+		GUI_DrawChar(*s, x, top);
 		x += Font_GetCharWidth(*s);
 		s++;
 	}
@@ -131,7 +131,7 @@ static void Cutscene_DrawText_Wrapper(const char* str, int x, int y)
 
 	while (*s != '\0')
 	{
-		GUI_DrawChar_(*s, x, y);
+		GUI_DrawChar(*s, x, y);
 		x += Font_GetCharWidth(*s);
 		s++;
 	}
@@ -1152,7 +1152,7 @@ static void GameCredits_Play(char* data, uint16 windowID, Screen memory, Screen 
 			if (spriteID == 525)
 				spriteID = 514;
 
-			GUI_DrawSprite_(memory, g_sprites[spriteID], positions[spritePos].x, positions[spritePos].y, windowID, 0x4000);
+			GUI_DrawSprite(memory, g_sprites[spriteID], positions[spritePos].x, positions[spritePos].y, windowID, 0x4000);
 
 			counter = 8;
 			stage++;

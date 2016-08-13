@@ -120,6 +120,7 @@ static void Scenario_Load_General()
 	g_viewportPosition = Ini_GetInteger("BASIC", "TacticalPos", g_viewportPosition, (char*)s_scenarioBuffer);
 	g_selectionRectanglePosition = Ini_GetInteger("BASIC", "CursorPos", g_selectionRectanglePosition, (char*)s_scenarioBuffer);
 	g_scenario.mapScale = Ini_GetInteger("BASIC", "MapScale", 0, (char*)s_scenarioBuffer);
+	g_techLevel = Ini_GetInteger("BASIC", "TechLevel", 0, (char*)s_scenarioBuffer);
 
 	Ini_GetString("BASIC", "BriefPicture", "HARVEST.WSA", g_scenario.pictureBriefing, 14, (char*)s_scenarioBuffer);
 	Ini_GetString("BASIC", "WinPicture", "WIN1.WSA", g_scenario.pictureWin, 14, (char*)s_scenarioBuffer);
@@ -141,11 +142,19 @@ static void Scenario_Load_House(uint8 houseID)
 	for (b = buf; *b != '\0'; b++)
 		if (*b >= 'a' && *b <= 'z')
 			*b += 'A' - 'a';
-	houseType = strstr("HUMAN$CPU", buf);
-	if (houseType == NULL)
+
+	Brain brain = BRAIN_NONE;
+
+	if (!strcmp(buf, "HUMAN"))
+		brain = BRAIN_HUMAN;
+	else if (!strcmp(buf, "CPU_ALLY"))
+		brain = BRAIN_CPU_ALLY;
+	else if (!strcmp(buf, "CPU_ENEMY"))
+		brain = BRAIN_CPU_ENEMY;
+
+	if (brain == BRAIN_NONE)
 		return;
 
-	Brain brain = (*houseType == 'H') ? BRAIN_HUMAN : BRAIN_CPU_ENEMY;
 	uint16 credits;
 	uint16 creditsQuota;
 	uint16 unitCountMax;
@@ -166,17 +175,16 @@ House* Scenario_Create_House(HouseType houseID, Brain brain, uint16 credits, uin
 	h->credits = credits;
 	h->creditsQuota = creditsQuota;
 	h->unitCountMax = unitCountMax;
+	h->brain = brain;
 
 	/* For 'Brain = Human' we have to set a few additional things */
 	if (brain != BRAIN_HUMAN)
 		return h;
 
 	h->flags.human = true;
-
 	g_playerHouseID = houseID;
 	g_playerHouse = h;
 	g_playerCreditsNoSilo = h->credits;
-
 	return h;
 }
 
@@ -289,8 +297,7 @@ static void Scenario_Load_Unit(const char* key, char* settings)
 	Scenario_Create_Unit((HouseType)houseType, (UnitType)unitType, hitpoints, position, orientation, (UnitActionType)actionType);
 }
 
-void
-Scenario_Create_Unit(HouseType houseType, UnitType unitType, uint16 hitpoints, tile32 position, int8 orientation, UnitActionType actionType)
+void Scenario_Create_Unit(HouseType houseType, UnitType unitType, uint16 hitpoints, tile32 position, int8 orientation, UnitActionType actionType)
 {
 	Unit* u;
 
@@ -305,8 +312,8 @@ Scenario_Create_Unit(HouseType houseType, UnitType unitType, uint16 hitpoints, t
 	u->actionID = actionType;
 	u->nextActionID = ACTION_INVALID;
 
-	/* In case the above function failed and we are passed campaign 2, don't add the unit */
-	if (!Map_IsValidPosition(Tile_PackTile(u->o.position)) && g_campaignID > 2)
+	/* In case the above function failed, don't add the unit */
+	if (!Map_IsValidPosition(Tile_PackTile(u->o.position)))
 	{
 		Unit_Free(u);
 		return;
@@ -731,57 +738,24 @@ void Scenario_CentreViewport(uint8 houseID)
 		Map_CentreViewport(u->o.position.x >> 4, u->o.position.y >> 4);
 }
 
-void Scenario_SetCampaignAlliacnes()
-{
-	/* Initialize */
-	for (HouseType h1 = HOUSE_HARKONNEN; h1 < HOUSE_MAX; h1++)
-	{
-		for (HouseType h2 = HOUSE_HARKONNEN; h2 < HOUSE_MAX; h2++)
-		{
-			/* Each house is allied with itself */
-			if (h1 == h2)
-			{
-				g_table_houseAlliance[h1][h2] = HOUSEALLIANCE_ALLIES;
-				continue;
-			}
-
-			/* Otherwise set brain as default */
-			g_table_houseAlliance[h1][h2] = HOUSEALLIANCE_BRAIN;
-		}
-	}
-
-	/* Set houses as enemies of the player */
-	for (HouseType h = HOUSE_HARKONNEN; h < HOUSE_MAX; h++)
-	{
-		if (h != g_playerHouseID)
-		{
-			g_table_houseAlliance[h][g_playerHouseID] = HOUSEALLIANCE_ENEMIES;
-			g_table_houseAlliance[g_playerHouseID][h] = HOUSEALLIANCE_ENEMIES;
-		}
-	}
-
-	
-	/* Fremen is allied to Atreides  */
-	g_table_houseAlliance[HOUSE_ATREIDES][HOUSE_FREMEN] = HOUSEALLIANCE_ALLIES;
-	g_table_houseAlliance[HOUSE_FREMEN][HOUSE_ATREIDES] = HOUSEALLIANCE_ALLIES;
-}
-
 bool Scenario_Load(uint16 scenarioID, uint8 houseID)
 {
 	char filename[14];
-	int i;
 
 	if (houseID >= HOUSE_MAX)
 		return false;
 
-	g_scenarioID = scenarioID;
-
 	/* Load scenario file */
 	snprintf(filename, sizeof(filename), "SCEN%c%03d.INI", g_table_houseInfo[houseID].name[0], scenarioID);
-	if (!File_Exists_Ex(SEARCHDIR_SCENARIO_DIR, filename))
+	return Scenario_Load(filename, SEARCHDIR_CAMPAIGN_DIR);
+}
+
+bool Scenario_Load(const char* filename, SearchDirectory directory)
+{
+	if (!File_Exists_Ex(directory, filename))
 		return false;
 
-	s_scenarioBuffer = File_ReadWholeFile_Ex(SEARCHDIR_SCENARIO_DIR, filename);
+	s_scenarioBuffer = File_ReadWholeFile_Ex(directory, filename);
 
 	memset(&g_scenario, 0, sizeof(Scenario));
 
@@ -789,7 +763,7 @@ bool Scenario_Load(uint16 scenarioID, uint8 houseID)
 	Sprites_LoadTiles();
 	Map_CreateLandscape(g_scenario.mapSeed);
 
-	for (i = 0; i < 16; i++)
+	for (int i = 0; i < 16; i++)
 		g_scenario.reinforcement[i].unitID = UNIT_INDEX_INVALID;
 
 	Scenario_Load_Houses();
@@ -805,7 +779,7 @@ bool Scenario_Load(uint16 scenarioID, uint8 houseID)
 	Scenario_Load_MapParts("Field", Scenario_Load_Map_Field);
 	Scenario_Load_MapParts("Special", Scenario_Load_Map_Special);
 
-	Scenario_CentreViewport(houseID);
+	Scenario_CentreViewport(g_playerHouseID);
 	g_tickScenarioStart = g_timerGame;
 
 	free(s_scenarioBuffer);

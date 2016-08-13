@@ -25,10 +25,10 @@ enum ShapeID
 	SHAPE_ATTACK = 28,
 	SHAPE_MOVE = 29,
 	SHAPE_DEATH_HAND = 30,
-	SHAPE_SAVE_LOAD_SCROLL_UP = 59,
-	SHAPE_SAVE_LOAD_SCROLL_UP_PRESSED = 60,
-	SHAPE_SAVE_LOAD_SCROLL_DOWN = 61,
-	SHAPE_SAVE_LOAD_SCROLL_DOWN_PRESSED = 62,
+	SHAPE_SCROLL_UP = 59,
+	SHAPE_SCROLL_UP_PRESSED = 60,
+	SHAPE_SCROLL_DOWN = 61,
+	SHAPE_SCROLL_DOWN_PRESSED = 62,
 	SHAPE_STRUCTURE_LAYOUT_OUTLINE = 63,
 
 	SHAPE_CONCRETE_SLAB = 65,
@@ -134,8 +134,8 @@ enum ShapeFlag
 
 ENUM_FLAG_OPERATORS(ShapeFlag)
 
-extern int Shape_Width(ShapeID shapeID);
-extern int Shape_Height(ShapeID shapeID);
+int Shape_Width(ShapeID shapeID);
+int Shape_Height(ShapeID shapeID);
 
 void Shape_Draw(ShapeID shapeID, int x, int y, WindowID windowID, int flags);
 void Shape_DrawScale(ShapeID shapeID, int x, int y, int w, int h, WindowID windowID, int flags);

@@ -35,6 +35,7 @@ extern uint32 g_hintsShown1;
 extern uint32 g_hintsShown2;
 extern GameMode g_gameMode;
 extern GameOverlay g_gameOverlay;
+extern uint16 g_techLevel;
 extern uint16 g_campaignID;
 extern uint16 g_scenarioID;
 extern uint16 g_activeAction;
@@ -44,6 +45,7 @@ extern bool g_debugScenario;
 extern bool g_debugSkipDialogs;
 
 extern uint16 g_validateStrictIfZero;
+extern bool g_generatingMap;
 extern uint16 g_selectionType;
 extern uint16 g_selectionTypeNew;
 extern bool g_viewport_forceRedraw;
@@ -55,10 +57,11 @@ extern void* g_readBuffer;
 extern uint32 g_readBufferSize;
 
 void GameLoop_TweakWidgetDimensions();
-void GameLoop_Main(bool new_game);
+void GameLoop_Main(bool new_game, const char* scenario);
 void Game_Prepare();
 void Game_Init();
 void Game_LoadScenario(uint8 houseID, uint16 scenarioID);
+bool Game_LoadScenario(const char* scenario);
 void GameLoop_Uninit();
 void PrepareEnd();
 

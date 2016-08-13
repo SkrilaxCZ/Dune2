@@ -19,6 +19,7 @@
 #define HASH_SIZE 4093
 
 #define DUNE2_DATA_PREFIX           "data"
+#define DUNE2_CAMPAIGN_PREFIX       "campaign"
 #define DUNE2_SCENARIO_PREFIX       "scenario"
 #define DUNE2_SAVE_PREFIX           "save"
 
@@ -169,6 +170,8 @@ void File_MakeCompleteFilename(char* buf, size_t len, SearchDirectory dir, const
 		i = snprintf(buf, len, "%s/%s/", g_dune_data_dir, DUNE2_DATA_PREFIX);
 	else if (dir == SEARCHDIR_SCENARIO_DIR)
 		i = snprintf(buf, len, "%s/%s/", g_dune_data_dir, DUNE2_SCENARIO_PREFIX);
+	else if (dir == SEARCHDIR_CAMPAIGN_DIR)
+		i = snprintf(buf, len, "%s/%s/", g_dune_data_dir, DUNE2_CAMPAIGN_PREFIX);
 	else if (dir == SEARCHDIR_SAVE_DIR)
 		i = snprintf(buf, len, "%s/%s/", g_dune_data_dir, DUNE2_SAVE_PREFIX);
 

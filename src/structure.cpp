@@ -61,7 +61,7 @@ void GameLoop_Structure()
 	bool tickScript = false;
 	bool tickPalace = false;
 
-	if (g_tickStructureDegrade <= g_timerGame && g_campaignID > 1)
+	if (g_tickStructureDegrade <= g_timerGame && g_techLevel > 1)
 	{
 		tickDegrade = true;
 		g_tickStructureDegrade = g_timerGame + Tools_AdjustToGameSpeed(10800, 5400, 21600, true);
@@ -174,12 +174,7 @@ void GameLoop_Structure()
 				if (repairCost <= h->credits)
 				{
 					h->credits -= repairCost;
-
-					/* AIs repair in early games slower than in later games */
-					if (s->o.houseID == g_playerHouseID || g_campaignID >= 3)
-						s->o.hitpoints += 5;
-					else
-						s->o.hitpoints += 3;
+					s->o.hitpoints += 5;
 
 					if (s->o.hitpoints > si->o.hitpoints)
 					{
@@ -212,15 +207,6 @@ void GameLoop_Structure()
 					buildSpeed = 256;
 					if (s->o.hitpoints < si->o.hitpoints)
 						buildSpeed = s->o.hitpoints * 256 / si->o.hitpoints;
-
-					if (g_playerHouseID != s->o.houseID)
-					{
-						if (buildSpeed > g_campaignID * 20 + 95)
-						{
-							/* For AIs, we slow down building speed in all but the last campaign */
-							buildSpeed = g_campaignID * 20 + 95;
-						}
-					}
 
 					buildCost = oi->buildCredits * 256 / oi->buildTime;
 
@@ -651,7 +637,7 @@ bool Structure_Place(Structure* s, uint16 position, HouseType houseID)
 	/* ENHANCEMENT -- Dune 2 AI disregards tile occupancy altogether.
 	 * This prevents the AI building structures on top of units and structures.
 	 */
-	if (s->o.houseID != g_playerHouseID)
+	if (g_generatingMap || s->o.houseID != g_playerHouseID)
 		validBuildLocation = Structure_IsValidBuildLandscape(position, (StructureType)s->o.type);
 	else
 		validBuildLocation = Structure_IsValidBuildLocation(position, (StructureType)s->o.type);
@@ -1121,7 +1107,7 @@ void Structure_ActivateSpecial(Structure* s)
 			/* Find a random location to appear */
 			location = Map_FindLocationTile(4, HOUSE_INVALID);
 
-			for (i = 0; i < 5; i++)
+			for (i = 0; i < 8; i++)
 			{
 				Unit* u;
 				tile32 position;
@@ -1143,7 +1129,7 @@ void Structure_ActivateSpecial(Structure* s)
 				if (u == NULL)
 					continue;
 
-				Unit_SetAction(u, ACTION_HUNT);
+				Unit_SetAction(u, ACTION_GUARD);
 			}
 
 			s->countDown = g_table_houseInfo[s->o.houseID].specialCountDown;
@@ -1254,9 +1240,7 @@ static void Structure_Destroy(Structure* s)
 			while (linkedID != 0xFFFF)
 			{
 				Unit* u = Unit_Get_ByIndex(linkedID);
-
 				linkedID = u->o.linkedID;
-
 				Unit_Remove(u);
 			}
 		}
@@ -1267,8 +1251,10 @@ static void Structure_Destroy(Structure* s)
 
 	h->credits -= (h->creditsStorage == 0) ? h->credits : min(h->credits, (h->credits * 256 / h->creditsStorage) * si->creditsStorage / 256);
 
+	/* Kinda irrational IMO
 	if (s->o.houseID != g_playerHouseID)
-		h->credits += si->o.buildCredits + (g_campaignID > 7 ? si->o.buildCredits / 2 : 0);
+		h->credits += si->o.buildCredits;
+	 */
 
 	if (s->o.type != STRUCTURE_WINDTRAP)
 		return;
@@ -1404,8 +1390,7 @@ bool Structure_IsUpgradable(Structure* s)
 		}
 	}
 
-	if (si->upgradeCampaign[next_upgrade_level][s->o.houseID] != 0 &&
-		si->upgradeCampaign[next_upgrade_level][s->o.houseID] <= g_campaignID + 1)
+	if (si->upgradeCampaign[next_upgrade_level][s->o.houseID] != 0 && si->upgradeCampaign[next_upgrade_level][s->o.houseID] <= g_techLevel + 1)
 	{
 		House* h;
 
@@ -1421,8 +1406,6 @@ bool Structure_IsUpgradable(Structure* s)
 		return false;
 	}
 
-	/* Use per-house upgrade levels: Harkonnen WOR one level earlier. */
-	/* if (s->o.houseID == HOUSE_HARKONNEN && s->o.type == STRUCTURE_WOR_TROOPER && s->upgradeLevel == 0 && g_campaignID > 3) {} */
 	return false;
 }
 
@@ -1440,31 +1423,6 @@ static bool Structure_SkipUpgradeLevel(const Structure* s, int level)
 	}
 	else
 	{
-#if 0
-		/* Original behaviour: Harkonnen cannot produce trikes,
-		 * so light factories begin upgraded.
-		 */
-		if (s->creatorHouseID == HOUSE_HARKONNEN && typeID == STRUCTURE_LIGHT_VEHICLE) {}
-
-		/* Original behaviour: Ordos cannot produce launchers,
-		 * so heavy factories skip an upgrade.
-		 * upgradeLevel 0 -> 1 -> 3; not 0 -> 2 -> 3.
-		 *
-		 * ENHANCEMENT -- was s->o.houseID, but should be s->creatorHouseID.
-		 * The original behaviour meant that if you captured an Ordos
-		 * heavy factory on level 6, you could upgrade the factory twice.
-		 * The second factory upgrade doesn't unlock any new units.
-		 *
-		 * Also, originally Ordos would unlock both launchers and
-		 * siege tanks when upgrading enemy factories from level 1 due
-		 * to the freebie upgrade.  This doesn't occur in the game
-		 * since the AI always has full upgrades, but you can restore
-		 * this behaviour by setting Ordos launcher's
-		 * upgradeLevelRequired to 0.
-		 */
-		if (s->creatorHouseID == HOUSE_ORDOS && s->o.type == STRUCTURE_HEAVY_VEHICLE && s->upgradeLevel == 2) {}
-#endif
-
 		/* Generalised behaviour: the upgrade is free if it does not
 		 * unlock any new tech.
 		 */
@@ -1956,7 +1914,7 @@ bool Structure_BuildObject(Structure* s, uint16 objectType)
 		if (s->o.houseID != g_playerHouseID)
 			return true;
 
-		GUI_DisplayText(String_Get_ByIndex(STR_PRODUCTION_OF_S_HAS_STARTED), 2, str);
+		GUI_DisplayText(String_Get_ByIndex(STR_PRODUCTION_STARTED), 2, str);
 
 		return true;
 	}
@@ -2146,9 +2104,6 @@ static uint32 Structure_GetPrerequisites(const StructureInfo* si, HouseType hous
 	const uint8 houseFlag = (1 << houseID);
 	uint32 structuresRequired = si->o.structuresRequired;
 
-	/* Desired behaviour: Harkonnen can build WOR without Barracks. */
-	/* if (i == STRUCTURE_WOR_TROOPER && s->o.houseID == HOUSE_HARKONNEN && g_campaignID >= 1) {} */
-
 	/* Generalised behaviour: the prerequisite structures are only
 	 * required if the owner can build it.
 	 */
@@ -2183,16 +2138,12 @@ int Structure_GetAvailable(const Structure* s, int i)
 
 		if (((structuresBuilt & structuresRequired) == structuresRequired) || (s->o.houseID != g_playerHouseID))
 		{
-			if ((g_campaignID >= availableCampaign - 1) && (si->o.availableHouse & (1 << s->o.houseID)))
+			if ((g_techLevel >= availableCampaign - 1) && (si->o.availableHouse & (1 << s->o.houseID)))
 			{
 				if ((s->upgradeLevel >= si->o.upgradeLevelRequired[s->o.houseID]) || (s->o.houseID != g_playerHouseID))
-				{
 					return 1;
-				}
 				else if ((s->upgradeTimeLeft != 0) && (s->upgradeLevel + 1 >= si->o.upgradeLevelRequired[s->o.houseID]))
-				{
 					return -1;
-				}
 			}
 		}
 
@@ -2382,13 +2333,9 @@ void Structure_InitFactoryItems(const Structure* s)
 			g_factoryWindowItems[g_factoryWindowTotal].shapeID = (ShapeID)oi->spriteID;
 
 			if (available == -1)
-			{
 				g_factoryWindowItems[g_factoryWindowTotal].credits = floor(si->o.buildCredits / 40) * 20;
-			}
 			else
-			{
 				g_factoryWindowItems[g_factoryWindowTotal].credits = oi->buildCredits;
-			}
 
 			g_factoryWindowItems[g_factoryWindowTotal].sortPriority = oi->sortPriority;
 			g_factoryWindowTotal++;

@@ -492,13 +492,6 @@ void GameLoop_Unit()
 				if (Script_IsLoaded(&u->o.script))
 				{
 					int opcodesLeft = SCRIPT_UNIT_OPCODES_PER_TICK + 2;
-
-#if 0
-					if (!ui->o.flags.scriptNoSlowdown && !Map_IsPositionInViewport(u->o.position, NULL, NULL)) {
-						opcodesLeft = 3;
-					}
-#endif
-
 					u->o.script.variables[3] = g_playerHouseID;
 
 					for (; opcodesLeft > 0 && u->o.script.delay == 0; opcodesLeft--)
@@ -868,13 +861,9 @@ void Unit_Sort()
 		if ((u->o.seenByHouses & (1 << g_playerHouseID)) != 0 && !u->o.flags.s.isNotOnMap)
 		{
 			if (House_AreAllied(u->o.houseID, g_playerHouseID))
-			{
 				h->unitCountAllied++;
-			}
 			else
-			{
 				h->unitCountEnemy++;
-			}
 		}
 	}
 }
@@ -1558,9 +1547,7 @@ bool Unit_Deviation_Decrease(Unit* unit, uint16 amount)
 		return false;
 
 	if (amount == 0)
-	{
 		amount = g_table_houseInfo[unit->o.houseID].toughness;
-	}
 
 	if (unit->deviated > amount)
 	{
@@ -2076,7 +2063,7 @@ bool Unit_Damage(Unit* unit, uint16 damage, uint16 range)
 		else
 		{
 			if (!ui->o.flags.noMessageOnDeath && alive)
-				Audio_PlayVoice((VoiceID)((houseID == g_playerHouseID || g_campaignID > 3) ? VOICE_HARKONNEN_UNIT_DESTROYED + (int)houseID : VOICE_ENEMY_UNIT_DESTROYED));
+				Audio_PlayVoice((VoiceID)(VOICE_HARKONNEN_UNIT_DESTROYED + (int)houseID));
 		}
 
 		Unit_SetAction(unit, ACTION_DIE);
@@ -2383,7 +2370,7 @@ Unit* Unit_CreateWrapper(uint8 houseID, UnitType typeID, uint16 destination)
 		return NULL;
 	}
 
-	if (House_AreAllied(houseID, g_playerHouseID) || Unit_IsTypeOnMap(houseID, UNIT_CARRYALL))
+	if ((houseID == g_playerHouseID) || Unit_IsTypeOnMap(houseID, UNIT_CARRYALL))
 		carryall->o.flags.s.byScenario = true;
 
 	tile.x = 0xFFFF;
@@ -3214,13 +3201,9 @@ void Unit_UpdateMap(uint16 type, Unit* unit)
 
 	/* if (t->isUnveiled || unit->o.houseID == g_playerHouseID) {} */
 	if ((g_mapVisible[packed].fogOverlayBits != 0xF) || (unit->o.houseID == g_playerHouseID))
-	{
 		Unit_HouseUnitCount_Add(unit, g_playerHouseID);
-	}
 	else
-	{
 		Unit_HouseUnitCount_Remove(unit);
-	}
 
 	if (type == 1)
 	{
@@ -3434,28 +3417,45 @@ void Unit_HouseUnitCount_Add(Unit* unit, uint8 houseID)
 	}
 
 	if (!ui->flags.isNormalUnit && unit->o.type != UNIT_SANDWORM)
-	{
 		return;
-	}
 
 	if ((unit->o.seenByHouses & houseIDBit) == 0)
 	{
 		if (House_AreAllied(houseID, Unit_GetHouseID(unit)))
-		{
 			h->unitCountAllied++;
-		}
 		else
-		{
 			h->unitCountEnemy++;
-		}
 	}
 
-	if (ui->movementType != MOVEMENT_WINGER)
+	if (ui->movementType != MOVEMENT_WINGER && unit->o.type != UNIT_SANDWORM)
 	{
 		if (!House_AreAllied(houseID, Unit_GetHouseID(unit)))
 		{
 			h->flags.isAIActive = true;
 			House_Get_ByIndex(Unit_GetHouseID(unit))->flags.isAIActive = true;
+
+			if ((houseID == g_playerHouseID) || (Unit_GetHouseID(unit) == g_playerHouseID))
+			{
+				/* Activate allied CPU players too */
+				PoolFindStruct find;
+
+				find.houseID = HOUSE_INVALID;
+				find.index = 0xFFFF;
+				find.type = 0xFFFF;
+
+				while (true)
+				{
+					House* h2 = House_Find(&find);
+					if (h2 == NULL)
+						break;
+
+					if (h2->index == g_playerHouseID)
+						continue;
+
+					if (House_AreAllied(h2->index, g_playerHouseID))
+						h2->flags.isAIActive = true;
+				}
+			}
 		}
 	}
 
@@ -3499,36 +3499,29 @@ void Unit_HouseUnitCount_Add(Unit* unit, uint8 houseID)
 					g_musicInBattle = 1;
 
 				if (unit->o.type == UNIT_SABOTEUR)
-				{
 					Audio_PlayVoice(VOICE_WARNING_SABOTEUR_APPROACHING);
-				}
 				else
 				{
-					if (g_scenarioID < 3)
+					PoolFindStruct find;
+					Structure* s;
+					VoiceID feedbackID;
+
+					find.houseID = g_playerHouseID;
+					find.index = 0xFFFF;
+					find.type = STRUCTURE_CONSTRUCTION_YARD;
+
+					s = Structure_Find(&find);
+					if (s != NULL)
 					{
-						PoolFindStruct find;
-						Structure* s;
-						VoiceID feedbackID;
+						const uint8 orient16 = Orientation_256To16(Tile_GetDirection(s->o.position, unit->o.position));
+						const uint8 orient4 = ((orient16 + 1) & 0xF) / 4;
 
-						find.houseID = g_playerHouseID;
-						find.index = 0xFFFF;
-						find.type = STRUCTURE_CONSTRUCTION_YARD;
-
-						s = Structure_Find(&find);
-						if (s != NULL)
-						{
-							const uint8 orient16 = Orientation_256To16(Tile_GetDirection(s->o.position, unit->o.position));
-							const uint8 orient4 = ((orient16 + 1) & 0xF) / 4;
-
-							feedbackID = VOICE_WARNING_ENEMY_UNIT_APPROACHING_FROM_THE_NORTH + (int)orient4;
-						}
-						else
-							feedbackID = VOICE_WARNING_ENEMY_UNIT_APPROACHING;
-
-						Audio_PlayVoice(feedbackID);
+						feedbackID = VOICE_WARNING_ENEMY_UNIT_APPROACHING_FROM_THE_NORTH + (int)orient4;
 					}
 					else
-						Audio_PlayVoice(VOICE_WARNING_HARKONNEN_UNIT_APPROACHING + (int)unit->o.houseID);
+						feedbackID = VOICE_WARNING_ENEMY_UNIT_APPROACHING;
+
+					Audio_PlayVoice(feedbackID);
 				}
 
 				hp->timerUnitAttack = 8;

@@ -217,8 +217,7 @@ void GUI_Widget_Free_WithScrollbar(Widget* w)
 
 /*--------------------------------------------------------------*/
 
-Widget* Scrollbar_Allocate(Widget* list, WindowID parentID,
-                           int listarea_dx, int scrollbar_dx, int dy, bool set_mentat_widgets)
+Widget* Scrollbar_Allocate(Widget* list, WindowID parentID,  int listarea_dx, int scrollbar_dx, int dy, bool set_mentat_widgets)
 {
 	const int listarea_x = 24 + listarea_dx;
 	const int scrollbar_x = 168 + scrollbar_dx;
@@ -229,12 +228,10 @@ Widget* Scrollbar_Allocate(Widget* list, WindowID parentID,
 	list = GUI_Widget_Link(list, listarea);
 	list = GUI_Widget_Link(list, scrollbar);
 
-	Widget* scrolldown = GUI_Widget_Allocate3(16, parentID, scrollbar_x, 96 + dy,
-	                                          SHAPE_SCROLLBAR_DOWN, SHAPE_SCROLLBAR_DOWN_PRESSED, scrollbar, 1);
+	Widget* scrolldown = GUI_Widget_Allocate3(16, parentID, scrollbar_x, 96 + dy, SHAPE_SCROLLBAR_DOWN, SHAPE_SCROLLBAR_DOWN_PRESSED, scrollbar, 1);
 	list = GUI_Widget_Link(list, scrolldown);
 
-	Widget* scrollup = GUI_Widget_Allocate3(17, parentID, scrollbar_x, 16 + dy,
-	                                        SHAPE_SCROLLBAR_UP, SHAPE_SCROLLBAR_UP_PRESSED, scrollbar, 0);
+	Widget* scrollup = GUI_Widget_Allocate3(17, parentID, scrollbar_x, 16 + dy, SHAPE_SCROLLBAR_UP, SHAPE_SCROLLBAR_UP_PRESSED, scrollbar, 0);
 	list = GUI_Widget_Link(list, scrollup);
 
 	if (set_mentat_widgets)
@@ -595,19 +592,20 @@ static void ScrollListArea_Draw(Widget* w)
 
 		case SCROLLBAR_BRAIN:
 			colour = (n == s_selectedHelpSubject) ? 8 : 31;
-			Prim_Rect_i(x - 2, y, x + 31, y + 8, colour);
+			Prim_Rect_i(x - 2, y, x + 29, y + 8, colour);
 
 			const char* str = NULL;
 
-			if (*(si->d.brain) == BRAIN_HUMAN)
+			if (*(si->d.br.brain) == BRAIN_HUMAN)
 				str = "You";
-			else if (*(si->d.brain) == BRAIN_CPU_ENEMY)
+			else if (*(si->d.br.brain) == BRAIN_CPU_ENEMY)
 				str = "Enemy";
-			else if (*(si->d.brain) == BRAIN_CPU_ALLY)
+			else if (*(si->d.br.brain) == BRAIN_CPU_ALLY)
 				str = "Ally";
 
-			GUI_DrawText_Wrapper(str, x + 15, y + 1, colour, 0, 0x111);
-			GUI_DrawText_Wrapper(si->text, x + 37, y, colour, 0, 0x12);
+			GUI_DrawText_Wrapper(str, x + 14, y + 1, colour, 0, 0x111);
+			Prim_FillRect(x + 32, y, x + 40, y + 8, 0x91 + (g_table_houseInfo[si->d.br.house].spriteColor << 4));
+			GUI_DrawText_Wrapper(si->text, x + 43, y, colour, 0, 0x12);
 			break;
 		}
 	}

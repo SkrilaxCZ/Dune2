@@ -14,8 +14,8 @@
  *  0x80__ = centre sprite.
  */
 
-#include <assert.h>
-#include <stdlib.h>
+#include <cassert>
+#include <cstdlib>
 #include "os/math.h"
 
 #include "shape.h"
@@ -69,7 +69,7 @@ static void Shape_FixXY(ShapeID shapeID, int x, int y, WindowID windowID, int fl
 void Shape_Draw(ShapeID shapeID, int x, int y, WindowID windowID, int flags)
 {
 	Shape_FixXY(shapeID, x, y, windowID, flags, &x, &y);
-	Video_DrawShape(shapeID, HOUSE_HARKONNEN, x, y, flags & 0x373);
+	Video_DrawShape(shapeID, HOUSE_NONE, x, y, flags & 0x373);
 }
 
 void Shape_DrawScale(ShapeID shapeID, int x, int y, int w, int h, WindowID windowID, int flags)

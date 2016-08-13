@@ -270,7 +270,6 @@ static void ConfigA5_InitDataDirectoriesAndLoadConfigFile()
 	ALLEGRO_PATH* user_settings_path = al_get_standard_path(ALLEGRO_USER_SETTINGS_PATH);
 	const char* user_settings_cstr = al_path_cstr(user_settings_path, ALLEGRO_NATIVE_PATH_SEP);
 	char filename[1024];
-	FILE* fp;
 
 	snprintf(g_dune_data_dir, sizeof(g_dune_data_dir), "%s", dune_data_cstr);
 

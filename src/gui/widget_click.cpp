@@ -57,7 +57,7 @@ bool GUI_Widget_SpriteTextButton_Click(Widget* w)
 	case STR_COMPLETED:
 	case STR_ON_HOLD:
 	case STR_BUILD_IT:
-	case STR_D_DONE:
+	case STR_PCT_DONE:
 		return ActionPanel_ClickFactory(w, s);
 
 	case STR_LAUNCH:
@@ -111,9 +111,7 @@ static bool GUI_Widget_TextButton_Click_(Widget* w, ActionType ref, Unit* u)
 
 	unitAction = (ActionType)u->nextActionID;
 	if (unitAction == ACTION_INVALID)
-	{
 		unitAction = (ActionType)u->actionID;
-	}
 
 	if (u->deviated != 0)
 	{
@@ -330,10 +328,6 @@ bool GUI_Widget_RepairUpgrade_Click(Widget* w)
 	return false;
 }
 
-#if 0
-static void GUI_Widget_Undraw(Widget *w, uint8 colour);
-#endif
-
 void GUI_Window_Create(WindowDesc* desc)
 {
 	uint8 i;
@@ -342,9 +336,7 @@ void GUI_Window_Create(WindowDesc* desc)
 		return;
 
 	g_widgetLinkedListTail = NULL;
-
 	GFX_Screen_SetActive(SCREEN_1);
-
 	uint16 old_widget = Widget_SetCurrentWidget(desc->index);
 
 	for (i = 0; i < desc->widgetCount; i++)
@@ -365,13 +357,9 @@ void GUI_Window_Create(WindowDesc* desc)
 		if (desc != &g_savegameNameWindowDesc)
 		{
 			if (desc->widgets[i].labelStringId != STR_NULL)
-			{
 				w->shortcut = GUI_Widget_GetShortcut(*GUI_String_Get_ByIndex(desc->widgets[i].labelStringId));
-			}
 			else
-			{
 				w->shortcut = GUI_Widget_GetShortcut(*GUI_String_Get_ByIndex(desc->widgets[i].stringID));
-			}
 		}
 
 		w->shortcut2 = desc->widgets[i].shortcut2;
@@ -392,58 +380,10 @@ void GUI_Window_Create(WindowDesc* desc)
 		GUI_Widget_MakeNormal(w, false);
 	}
 
-#if 0
-	if (s_savegameCountOnDisk >= 5 && desc->addArrows) {
-		Widget *w = &g_table_windowWidgets[7];
-
-		w->drawParameterNormal.sprite   = SHAPE_SAVE_LOAD_SCROLL_UP;
-		w->drawParameterSelected.sprite = SHAPE_SAVE_LOAD_SCROLL_UP_PRESSED;
-		w->drawParameterDown.sprite     = SHAPE_SAVE_LOAD_SCROLL_UP_PRESSED;
-		w->next             = NULL;
-		w->parentID         = desc->index;
-
-		GUI_Widget_MakeNormal(w, false);
-		GUI_Widget_MakeInvisible(w);
-
-		g_widgetLinkedListTail = GUI_Widget_Link(g_widgetLinkedListTail, w);
-
-		w = &g_table_windowWidgets[8];
-
-		w->drawParameterNormal.sprite   = SHAPE_SAVE_LOAD_SCROLL_DOWN;
-		w->drawParameterSelected.sprite = SHAPE_SAVE_LOAD_SCROLL_DOWN_PRESSED;
-		w->drawParameterDown.sprite     = SHAPE_SAVE_LOAD_SCROLL_DOWN_PRESSED;
-		w->next             = NULL;
-		w->parentID         = desc->index;
-
-		GUI_Widget_MakeNormal(w, false);
-		GUI_Widget_MakeInvisible(w);
-
-		g_widgetLinkedListTail = GUI_Widget_Link(g_widgetLinkedListTail, w);
-	}
-#endif
-
 	Widget_SetCurrentWidget(old_widget);
-
 	GFX_Screen_SetActive(SCREEN_0);
 }
 
-#if 0
-static void GUI_Window_BackupScreen(WindowDesc *desc);
-static void GUI_Window_RestoreScreen(WindowDesc *desc);
-static void GUI_Widget_GameControls_Click(Widget *w);
-static void ShadeScreen();
-static void UnshadeScreen();
-static bool GUI_YesNo(uint16 stringID);
-extern bool GUI_Widget_Options_Click(Widget *w);
-
-/* Moved to newui/savemenu.c. */
-static uint16 GetSavegameCount();
-static void FillSavegameDesc(bool save);
-extern int GUI_Widget_Savegame_Click(uint16 key);
-static void UpdateArrows(bool save, bool force);
-void GUI_Widget_InitSaveLoad(bool save);
-extern int GUI_Widget_SaveLoad_Click(bool save);
-#endif
 
 /**
  * Handles Click event for "Clear List" button.

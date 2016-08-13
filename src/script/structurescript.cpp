@@ -67,24 +67,17 @@ uint16 Script_Structure_SetState(ScriptEngine* script)
 	if (state == STRUCTURE_STATE_DETECT)
 	{
 		if (s->o.linkedID == 0xFFFF)
-		{
 			state = STRUCTURE_STATE_IDLE;
-		}
 		else
 		{
 			if (s->countDown == 0)
-			{
 				state = STRUCTURE_STATE_READY;
-			}
 			else
-			{
 				state = STRUCTURE_STATE_BUSY;
-			}
 		}
 	}
 
 	Structure_SetState(s, state);
-
 	return 0;
 }
 
@@ -144,24 +137,14 @@ uint16 Script_Structure_RefineSpice(ScriptEngine* script)
 
 	creditsStep = 7;
 	if (u->o.houseID != g_playerHouseID)
-	{
 		creditsStep += (Tools_Random_256() % 4) - 1;
-	}
 
 	creditsStep *= harvesterStep;
 
 	if (House_AreAllied(g_playerHouseID, s->o.houseID))
-	{
 		g_scenario.harvestedAllied += creditsStep;
-		if (g_scenario.harvestedAllied > 65000)
-			g_scenario.harvestedAllied = 65000;
-	}
 	else
-	{
 		g_scenario.harvestedEnemy += creditsStep;
-		if (g_scenario.harvestedEnemy > 65000)
-			g_scenario.harvestedEnemy = 65000;
-	}
 
 	h = House_Get_ByIndex(s->o.houseID);
 	h->credits += creditsStep;
@@ -464,13 +447,9 @@ uint16 Script_Structure_RotateTurret(ScriptEngine* script)
 
 	/* Find the base sprite of the structure */
 	if (s->o.type == STRUCTURE_ROCKET_TURRET)
-	{
 		baseSpriteID = g_iconMap[g_iconMap[ICM_ICONGROUP_BASE_ROCKET_TURRET] + 2];
-	}
 	else
-	{
 		baseSpriteID = g_iconMap[g_iconMap[ICM_ICONGROUP_BASE_DEFENSE_TURRET] + 2];
-	}
 
 	rotation = tile->groundSpriteID - baseSpriteID;
 	if (rotation < 0 || rotation > 7)
@@ -489,13 +468,10 @@ uint16 Script_Structure_RotateTurret(ScriptEngine* script)
 		rotateDiff += 8;
 
 	if (rotateDiff < 4)
-	{
 		rotation++;
-	}
 	else
-	{
 		rotation--;
-	}
+
 	rotation &= 0x7;
 
 	/* Set the new sprites */

@@ -206,7 +206,7 @@ void ActionPanel_DrawStructureDescription(Structure* s)
 			percent = (steps - (s->countDown >> 8)) * 100 / steps;
 
 			Shape_Draw((ShapeID)g_table_unitInfo[u->o.type].o.spriteID, 20, y + 9, (WindowID)0, 0);
-			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_D_DONE), 18, y + 36, 29, 0, 0x11, percent);
+			GUI_DrawText_Wrapper(String_Get_ByIndex(STR_PCT_DONE), 18, y + 36, 29, 0, 0x11, percent);
 		}
 		break;
 
@@ -521,7 +521,7 @@ bool ActionPanel_ClickFactory(const Widget* widget, Structure* s)
 			break;
 
 		case STR_COMPLETED:
-		case STR_D_DONE:
+		case STR_PCT_DONE:
 			if (lmb)
 			{
 				if (g_factoryWindowItems[item].available > 0)
@@ -529,7 +529,7 @@ bool ActionPanel_ClickFactory(const Widget* widget, Structure* s)
 				else
 					action_successful = false;
 			}
-			else if (rmb && (g_productionStringID == STR_D_DONE))
+			else if (rmb && (g_productionStringID == STR_PCT_DONE))
 				s->o.flags.s.onHold = true;
 			break;
 
@@ -612,13 +612,9 @@ static void ActionPanel_ClickStarportPlus(Structure* s, int entry)
 		BuildQueue_Add(&s->queue, item->objectType, item->credits);
 
 		if (g_starportAvailable[type] == 1)
-		{
 			g_starportAvailable[type] = -1;
-		}
 		else
-		{
 			g_starportAvailable[type]--;
-		}
 
 		h->credits -= item->credits;
 	}
@@ -757,23 +753,23 @@ static void ActionPanel_DrawScrollButtons(const Widget* widget)
 	ActionPanel_ScrollButtonDimensions(widget, true, &x1, &y1, &x2, &y2);
 	if (pressed && Mouse_InRegion_Div(widget->div, x1, y1, x2, y2))
 	{
-		Shape_Draw(SHAPE_SAVE_LOAD_SCROLL_UP_PRESSED, x1, y1, (WindowID)0, 0);
+		Shape_Draw(SHAPE_SCROLL_UP_PRESSED, x1, y1, (WindowID)0, 0);
 	}
 	else if ((s_factory_panel_layout != FACTORYPANEL_SMALL_ICONS_WITHOUT_SCROLL) ||
 		Mouse_InRegion_Div(widget->div, x1, y1, x2, y2 + 15))
 	{
-		Shape_Draw(SHAPE_SAVE_LOAD_SCROLL_UP, x1, y1, (WindowID)0, 0);
+		Shape_Draw(SHAPE_SCROLL_UP, x1, y1, (WindowID)0, 0);
 	}
 
 	ActionPanel_ScrollButtonDimensions(widget, false, &x1, &y1, &x2, &y2);
 	if (pressed && Mouse_InRegion_Div(widget->div, x1, y1, x2, y2))
 	{
-		Shape_Draw(SHAPE_SAVE_LOAD_SCROLL_DOWN_PRESSED, x1, y1, (WindowID)0, 0);
+		Shape_Draw(SHAPE_SCROLL_DOWN_PRESSED, x1, y1, (WindowID)0, 0);
 	}
 	else if ((s_factory_panel_layout != FACTORYPANEL_SMALL_ICONS_WITHOUT_SCROLL) ||
 		Mouse_InRegion_Div(widget->div, x1, y1 - 15, x2, y2))
 	{
-		Shape_Draw(SHAPE_SAVE_LOAD_SCROLL_DOWN, x1, y1, (WindowID)0, 0);
+		Shape_Draw(SHAPE_SCROLL_DOWN, x1, y1, (WindowID)0, 0);
 	}
 }
 
@@ -875,11 +871,11 @@ void ActionPanel_HighlightIcon(HouseType houseID, int x1, int y1, bool large_ico
 
 void ActionPanel_DrawFactory(const Widget* widget, Structure* s)
 {
-	if (g_productionStringID == STR_UPGRADINGD_DONE)
+	if (g_productionStringID == STR_UPGRADING_DONE)
 	{
 		const int percentDone = 100 - s->upgradeTimeLeft;
 
-		GUI_DrawText_Wrapper(String_Get_ByIndex(STR_UPGRADINGD_DONE),
+		GUI_DrawText_Wrapper(String_Get_ByIndex(STR_UPGRADING_DONE),
 		                     widget->offsetX, widget->offsetY + 35 - 19, 0xF, 0, 0x021, percentDone);
 		return;
 	}
@@ -1011,7 +1007,7 @@ void ActionPanel_DrawFactory(const Widget* widget, Structure* s)
 				Prim_FillRect_RGBA(x1f, y1f, x2f, y2f, 0x00, 0x00, 0x00, 0x80);
 			}
 
-			if (g_productionStringID == STR_D_DONE || g_productionStringID == STR_ON_HOLD)
+			if (g_productionStringID == STR_PCT_DONE || g_productionStringID == STR_ON_HOLD)
 			{
 				int buildTime;
 
@@ -1029,7 +1025,7 @@ void ActionPanel_DrawFactory(const Widget* widget, Structure* s)
 				const int timeLeft = buildTime - (s->countDown + 255) / 256;
 				const int percentDone = 100 * timeLeft / buildTime;
 
-				if ((g_productionStringID == STR_D_DONE) || !(s_factory_panel_layout & FACTORYPANEL_LARGE_ICON_FLAG))
+				if ((g_productionStringID == STR_PCT_DONE) || !(s_factory_panel_layout & FACTORYPANEL_LARGE_ICON_FLAG))
 				{
 					GUI_DrawText_Wrapper("%d%%", x1 + w / 2, y1 + (h - 10) / 2, fg, 0, 0x121, percentDone);
 				}

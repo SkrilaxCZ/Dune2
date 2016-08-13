@@ -230,7 +230,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 			/* spriteID             */ SHAPE_LIGHT_VEHICLE,
 			/* buildCredits         */ 400,
 			/* buildTime            */ 32,
-			/* availableCampaign    */ {3, 2, 2, 2, 2, 2}, /* Non-H trait: light factory one level earlier. */
+			/* availableCampaign    */ {3, 2, 2, 2, 2, 3}, /* Non-H, Non-M trait: light factory one level earlier. */
 			/* structuresRequired   */ FLAG_STRUCTURE_REFINERY | FLAG_STRUCTURE_WINDTRAP,
 			/* sortPriority         */ 14,
 			/* upgradeLevelRequired */ {0, 0, 0, 0, 0, 0},
@@ -490,7 +490,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 			/* spriteID             */ SHAPE_WOR_TROOPER,
 			/* buildCredits         */ 400,
 			/* buildTime            */ 35,
-			/* availableCampaign    */ {2, 4, 4, 4, 4, 4}, /* H trait: WOR three levels earlier. */
+			/* availableCampaign    */ {2, 4, 4, 2, 4, 4}, /* H, F trait: WOR three levels earlier. */
 			/* structuresRequired   */ FLAG_STRUCTURE_OUTPOST | FLAG_STRUCTURE_BARRACKS | FLAG_STRUCTURE_WINDTRAP,
 			/* sortPriority         */ 20,
 			/* upgradeLevelRequired */ {0, 0, 0, 0, 0, 0},
@@ -499,7 +499,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 			/* hintStringID         */ STR_HINT_WOR,
 			/* priorityBuild        */ 0,
 			/* priorityTarget       */ 175,
-			/* availableHouse       */ FLAG_HOUSE_MERCENARY | FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_HARKONNEN,
+			/* availableHouse       */ FLAG_HOUSE_SARDAUKAR | FLAG_HOUSE_FREMEN | FLAG_HOUSE_ORDOS | FLAG_HOUSE_HARKONNEN,
 		},
 		/* enterFilter          */ FLAG_UNIT_NONE,
 		/* creditsStorage       */ 0,
@@ -522,7 +522,7 @@ const StructureInfo g_table_base_structureInfo[STRUCTURE_MAX] = {
 			/* [7]                  */ UNIT_INVALID,
 		},
 		{/* upgradeCampaign */
-			/* [0]                  */ {4, 6, 6, 6, 0, 6}, /* H trait: trooper squads are in level 4, sardaukar no repair */
+			/* [0]                  */ {4, 6, 6, 4, 6, 6}, /* H, F trait: trooper squads are in level 4 */
 			/* [1]                  */ {0, 0, 0, 0, 0, 0},
 			/* [2]                  */ {0, 0, 0, 0, 0, 0},
 		},

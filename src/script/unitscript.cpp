@@ -469,7 +469,6 @@ uint16 Script_Unit_MoveToTarget(ScriptEngine* script)
 		return 0;
 
 	tile = Tools_Index_GetTile(u->targetMove);
-
 	distance = Tile_GetDistance(u->o.position, tile);
 
 	if ((int16)distance < 128)
@@ -485,29 +484,23 @@ uint16 Script_Unit_MoveToTarget(ScriptEngine* script)
 			return 1;
 
 		script->delay = 2;
-
 		script->script--;
 		return 0;
 	}
 
 	orientation = Tile_GetDirection(u->o.position, tile);
-
 	Unit_SetOrientation(u, orientation, false, 0);
-
 	diff = abs(orientation - u->orientation[0].current);
 	if (diff > 128)
 		diff = 256 - diff;
 
 	Unit_SetSpeed(u, (Tools_AdjustToGameSpeed(min(distance / 8, 255), 25, 255, true) * (255 - diff) + 128) / 256);
-
 	delay = max((int16)distance / 1024, 1);
-
 	Unit_UpdateMap(2, u);
 
 	if (delay != 0)
 	{
 		script->delay = delay;
-
 		script->script--;
 	}
 
@@ -675,6 +668,7 @@ uint16 Script_Unit_Fire(ScriptEngine* script)
 	typeID = (UnitType)ui->bulletType;
 
 	fireTwice = ui->flags.firesTwice && u->o.hitpoints > ui->o.hitpoints / 2;
+
 	/* FIXME: This is hardcoded override, allow specifying in the config */
 	if (u->o.type == UNIT_SARDAUKAR)
 		fireTwice = true;
@@ -846,9 +840,7 @@ uint16 Script_Unit_GetOrientation(ScriptEngine* script)
 	if (Tools_Index_IsValid(encoded))
 	{
 		tile32 tile;
-
 		tile = Tools_Index_GetTile(encoded);
-
 		return Tile_GetDirection(u->o.position, tile);
 	}
 
@@ -1758,7 +1750,7 @@ uint16 Script_Unit_StartAnimation(ScriptEngine* script)
 
 /**
  * Call a UnitType and make it go to the current unit. In general, type should
- *  be a Carry-All for this to make any sense.
+ * be a Carry-All for this to make any sense.
  *
  * Stack: 1 - An unit type.
  *

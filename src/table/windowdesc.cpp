@@ -365,3 +365,75 @@ WindowDesc g_savegameNameWindowDesc = {
 		}
 	}
 };
+
+WindowDesc g_scenarioLoadWindowDesc = {
+	/* index       */ 23,
+	/* stringID    */ STR_LOAD_A_GAME,
+	/* addArrows   */ true,
+	/* widgetCount */ 6,
+	{/* widgets */
+		{/* 0 */
+			/* stringID      */ -61, /* First scenario. */
+			/* offsetX       */ 16,
+			/* offsetY       */ 39,
+			/* width         */ 256,
+			/* height        */ 15,
+			/* labelStringID */ STR_NULL,
+			/* shortcut2     */ 0,
+		},
+		{/* 1 */
+			/* stringID      */ -62, /* Second scenario. */
+			/* offsetX       */ 16,
+			/* offsetY       */ 56,
+			/* width         */ 256,
+			/* height        */ 15,
+			/* labelStringID */ STR_NULL,
+			/* shortcut2     */ 0,
+		},
+		{/* 2 */
+			/* stringID      */ -63, /* Third scenario. */
+			/* offsetX       */ 16,
+			/* offsetY       */ 73,
+			/* width         */ 256,
+			/* height        */ 15,
+			/* labelStringID */ STR_NULL,
+			/* shortcut2     */ 0,
+		},
+		{/* 3 */
+			/* stringID      */ -64, /* Fourth scenario. */
+			/* offsetX       */ 16,
+			/* offsetY       */ 90,
+			/* width         */ 256,
+			/* height        */ 15,
+			/* labelStringID */ STR_NULL,
+			/* shortcut2     */ 0,
+		},
+		{/* 4 */
+			/* stringID      */ -65, /* Fifth scenario. */
+			/* offsetX       */ 16,
+			/* offsetY       */ 107,
+			/* width         */ 256,
+			/* height        */ 15,
+			/* labelStringID */ STR_NULL,
+			/* shortcut2     */ 0,
+		},
+		{/* 5 */
+			/* stringID      */ STR_CANCEL,
+			/* offsetX       */ 176,
+			/* offsetY       */ 126,
+			/* width         */ 96,
+			/* height        */ 15,
+			/* labelStringID */ STR_NULL,
+			/* shortcut2     */ SCANCODE_ESCAPE,
+		},
+		{/* 6 */
+			/* stringID      */ STR_NULL,
+			/* offsetX       */ 0,
+			/* offsetY       */ 0,
+			/* width         */ 0,
+			/* height        */ 0,
+			/* labelStringID */ STR_NULL,
+			/* shortcut2     */ 0,
+		}
+	}
+};

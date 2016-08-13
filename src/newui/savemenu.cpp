@@ -245,9 +245,9 @@ void SaveMenu_InitSaveLoad(bool save)
 	{
 		Widget* w = &g_table_windowWidgets[7];
 
-		w->drawParameterNormal.sprite = SHAPE_SAVE_LOAD_SCROLL_UP;
-		w->drawParameterSelected.sprite = SHAPE_SAVE_LOAD_SCROLL_UP_PRESSED;
-		w->drawParameterDown.sprite = SHAPE_SAVE_LOAD_SCROLL_UP_PRESSED;
+		w->drawParameterNormal.sprite = SHAPE_SCROLL_UP;
+		w->drawParameterSelected.sprite = SHAPE_SCROLL_UP_PRESSED;
+		w->drawParameterDown.sprite = SHAPE_SCROLL_UP_PRESSED;
 		w->next = NULL;
 		w->parentID = desc->index;
 
@@ -258,9 +258,9 @@ void SaveMenu_InitSaveLoad(bool save)
 
 		w = &g_table_windowWidgets[8];
 
-		w->drawParameterNormal.sprite = SHAPE_SAVE_LOAD_SCROLL_DOWN;
-		w->drawParameterSelected.sprite = SHAPE_SAVE_LOAD_SCROLL_DOWN_PRESSED;
-		w->drawParameterDown.sprite = SHAPE_SAVE_LOAD_SCROLL_DOWN_PRESSED;
+		w->drawParameterNormal.sprite = SHAPE_SCROLL_DOWN;
+		w->drawParameterSelected.sprite = SHAPE_SCROLL_DOWN_PRESSED;
+		w->drawParameterDown.sprite = SHAPE_SCROLL_DOWN_PRESSED;
 		w->next = NULL;
 		w->parentID = desc->index;
 

@@ -114,18 +114,12 @@ void GameLoop_House()
 			const bool narrator_speaking = Audio_Poll();
 
 			if (!narrator_speaking)
-			{
 				Audio_PlayVoice(voiceID);
-			}
 			else if (voiceID == VOICE_FIVE)
-			{
 				Audio_PlayEffect(EFFECT_COUNT_DOWN_TICK);
-			}
 		}
 		else if (voiceID >= VOICE_MISSILE_LAUNCHED)
-		{
 			Audio_PlayVoice(voiceID);
-		}
 
 		if (g_houseMissileCountdown == 0)
 		{
@@ -198,9 +192,7 @@ void GameLoop_House()
 				}
 			}
 			else
-			{
 				deployed = Unit_SetPosition(u, Tile_UnpackTile(Map_FindLocationTile(locationID, u->o.houseID)));
-			}
 
 			if (deployed && g_scenario.reinforcement[i].repeat != 0)
 			{
@@ -238,9 +230,7 @@ void GameLoop_House()
 			if (h->index != g_playerHouseID)
 			{
 				if (h->creditsStorage < h->credits)
-				{
 					h->credits = h->creditsStorage;
-				}
 			}
 			else
 			{
@@ -248,7 +238,6 @@ void GameLoop_House()
 				if (h->credits > maxCredits)
 				{
 					h->credits = maxCredits;
-
 					GUI_DisplayText(String_Get_ByIndex(STR_INSUFFICIENT_STORAGE), 1);
 				}
 			}
@@ -256,22 +245,16 @@ void GameLoop_House()
 			if (h->index == g_playerHouseID)
 			{
 				if (h->creditsStorage > g_playerCreditsNoSilo)
-				{
 					g_playerCreditsNoSilo = 0;
-				}
 
-				if (g_playerCreditsNoSilo == 0 && g_campaignID > 1 && h->credits != 0)
+				if (g_playerCreditsNoSilo == 0 && g_techLevel > 1 && h->credits != 0)
 				{
 					if (h->creditsStorage != 0 && ((h->credits * 256 / h->creditsStorage) > 200))
-					{
-						GUI_DisplayText(String_Get_ByIndex(STR_SPICE_STORAGE_CAPACITY_LOW_BUILD_SILOS), 0);
-					}
+						GUI_DisplayText(String_Get_ByIndex(STR_NOT_ENOUGH_SILOS), 0);
 				}
 
 				if (h->credits < 100 && g_playerCreditsNoSilo != 0)
-				{
-					GUI_DisplayText(String_Get_ByIndex(STR_CREDITS_ARE_LOW_HARVEST_SPICE_FOR_MORE_CREDITS), 0);
-				}
+					GUI_DisplayText(String_Get_ByIndex(STR_CREDITS_ARE_LOW), 0);
 			}
 		}
 
@@ -445,20 +428,9 @@ void House_EnsureHarvesterAvailable(uint8 houseID)
  */
 bool House_AreAllied(uint8 houseID1, uint8 houseID2)
 {
-	if (houseID1 == HOUSE_INVALID || houseID2 == HOUSE_INVALID)
-		return false;
-
-	if (g_table_houseAlliance[houseID1][houseID2] == HOUSEALLIANCE_ALLIES)
-		return true;
-
-	if (g_table_houseAlliance[houseID1][houseID2] == HOUSEALLIANCE_ENEMIES)
-		return false;
-
-	/* Check if Houses are allies of the player. */
-	const bool h1_brain = (g_table_houseAlliance[houseID1][g_playerHouseID] == HOUSEALLIANCE_ALLIES);
-	const bool h2_brain = (g_table_houseAlliance[houseID2][g_playerHouseID] == HOUSEALLIANCE_ALLIES);
-
-	return (h1_brain == h2_brain);
+	bool humanSide1 = House_Get_ByIndex(houseID1)->brain == BRAIN_HUMAN || House_Get_ByIndex(houseID1)->brain == BRAIN_CPU_ALLY;
+	bool humanSide2 = House_Get_ByIndex(houseID2)->brain == BRAIN_HUMAN || House_Get_ByIndex(houseID2)->brain == BRAIN_CPU_ALLY;
+	return (humanSide1 == humanSide2);
 }
 
 /**
@@ -608,7 +580,7 @@ const char* House_GetWSAHouseFilename(uint8 houseID)
 
 UnitType House_GetInfantrySquad(HouseType houseID)
 {
-	if (houseID == HOUSE_ATREIDES)
+	if (houseID == HOUSE_ATREIDES || houseID == HOUSE_MERCENARY)
 		return UNIT_INFANTRY;
 	if (houseID == HOUSE_SARDAUKAR)
 		return UNIT_SARDAUKAR;

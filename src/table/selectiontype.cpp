@@ -1,7 +1,6 @@
 /** @file src/table/selectiontype.c Selectiontype table. */
 
 #include "types.h"
-
 #include "../gui/gui.h"
 
 const SelectionTypeStruct g_table_selectionType[8] = {

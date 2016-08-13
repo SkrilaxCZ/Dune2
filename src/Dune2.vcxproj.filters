@@ -259,6 +259,9 @@
     <ClCompile Include="audio\sound_adlib.cpp">
       <Filter>audio</Filter>
     </ClCompile>
+    <ClCompile Include="newui\scenariomenu.cpp">
+      <Filter>newui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ai.h" />
@@ -467,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="audio\sound_adlib.h">
       <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="newui\scenariomenu.h">
+      <Filter>newui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

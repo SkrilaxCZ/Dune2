@@ -130,12 +130,6 @@ static bool Save_Main(FILE* fp, const char* description)
 		return false;
 
 	/* Store Dune Dynasty extensions. */
-	if (g_scenario_type == SCENARIO_SKIRMISH)
-	{
-		if (!Save_Chunk(fp, "DDS2", &Scenario_Save2))
-			return false;
-	}
-
 	if (!Save_Chunk(fp, "DDI2", &Info_Save2))
 		return false;
 	if (!Save_Chunk(fp, "DDM2", &Map_Save2))

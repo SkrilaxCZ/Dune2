@@ -11,7 +11,7 @@ enum
 	MAX_FACTORY_WINDOW_ITEMS = 25
 };
 
-typedef struct FactoryWindowItem
+struct FactoryWindowItem
 {
 	int objectType;
 
@@ -25,7 +25,7 @@ typedef struct FactoryWindowItem
 	int credits;
 	int sortPriority;
 	ShapeID shapeID;
-} FactoryWindowItem;
+};
 
 extern FactoryWindowItem g_factoryWindowItems[MAX_FACTORY_WINDOW_ITEMS];
 extern int g_factoryWindowTotal;
@@ -39,9 +39,9 @@ void ActionPanel_DrawMissileCountdown(uint8 fg, int count);
 void ActionPanel_DrawFactory(const Widget* widget, Structure* s);
 void ActionPanel_DrawPalace(const Widget* w, Structure* s);
 void ActionPanel_BeginPlacementMode(Structure* construction_yard);
-extern bool ActionPanel_ClickFactory(const Widget* widget, Structure* s);
+bool ActionPanel_ClickFactory(const Widget* widget, Structure* s);
 void ActionPanel_ClickStarportOrder(Structure* s);
-extern bool ActionPanel_ClickStarport(const Widget* widget, Structure* s);
-extern bool ActionPanel_ClickPalace(const Widget* widget, Structure* s);
+bool ActionPanel_ClickStarport(const Widget* widget, Structure* s);
+bool ActionPanel_ClickPalace(const Widget* widget, Structure* s);
 
 #endif

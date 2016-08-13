@@ -190,6 +190,7 @@
     <ClCompile Include="newui\menu.cpp" />
     <ClCompile Include="newui\menubar.cpp" />
     <ClCompile Include="newui\savemenu.cpp" />
+    <ClCompile Include="newui\scenariomenu.cpp" />
     <ClCompile Include="newui\scrollbar.cpp" />
     <ClCompile Include="newui\slider.cpp" />
     <ClCompile Include="newui\strategicmap.cpp" />
@@ -297,6 +298,7 @@
     <ClInclude Include="newui\menu.h" />
     <ClInclude Include="newui\menubar.h" />
     <ClInclude Include="newui\savemenu.h" />
+    <ClInclude Include="newui\scenariomenu.h" />
     <ClInclude Include="newui\scrollbar.h" />
     <ClInclude Include="newui\slider.h" />
     <ClInclude Include="newui\strategicmap.h" />

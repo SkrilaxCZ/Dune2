@@ -104,7 +104,7 @@ void HallOfFame_DrawScoreTime(int score, int64_t ticks_played)
 {
 	char buffer[64];
 
-	snprintf(buffer, sizeof(buffer), String_Get_ByIndex(STR_TIME_DH_DM), (int)ticks_played / 60, (int)ticks_played % 60);
+	snprintf(buffer, sizeof(buffer), String_Get_ByIndex(STR_TIME), (int)ticks_played / 60, (int)ticks_played % 60);
 
 	if (ticks_played < 60)
 	{

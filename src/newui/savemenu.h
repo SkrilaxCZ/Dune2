@@ -5,8 +5,8 @@
 
 extern char g_savegameDesc[5][51];
 
-extern int SaveMenu_Savegame_Click(uint16 key);
+int SaveMenu_Savegame_Click(uint16 key);
 void SaveMenu_InitSaveLoad(bool save);
-extern int SaveMenu_SaveLoad_Click(bool save);
+int SaveMenu_SaveLoad_Click(bool save);
 
 #endif

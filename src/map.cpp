@@ -36,7 +36,7 @@
 #include "unit.h"
 #include "video/video.h"
 
-uint16 g_mapSpriteID[64 * 64];
+uint16 g_mapSpriteID[MAP_SIZE_MAX * MAP_SIZE_MAX];
 
 /* Map data.  In fog of war:
  * g_map[] corresponds to TRUE information, and the map scouted.
@@ -725,7 +725,7 @@ void Map_FillCircleWithSpice(uint16 packed, uint16 radius)
 static void Map_FixupSpiceEdges(uint16 packed)
 {
 	/* Relative steps in the map array for moving up, right, down, left. */
-	static const int16 _mapDifference[] = {-64, 1, 64, -1};
+	static const int16 _mapDifference[] = {-MAP_SIZE_MAX, 1, MAP_SIZE_MAX, -1};
 
 	uint16 type;
 	uint16 spriteID;
@@ -817,8 +817,8 @@ void Map_ChangeSpiceAmount(uint16 packed, int16 dir)
 	Map_FixupSpiceEdges(packed);
 	Map_FixupSpiceEdges(packed + 1);
 	Map_FixupSpiceEdges(packed - 1);
-	Map_FixupSpiceEdges(packed - 64);
-	Map_FixupSpiceEdges(packed + 64);
+	Map_FixupSpiceEdges(packed - MAP_SIZE_MAX);
+	Map_FixupSpiceEdges(packed + MAP_SIZE_MAX);
 }
 
 /**
@@ -1095,7 +1095,7 @@ void Map_UpdateAround(uint16 radius, tile32 position, Unit* unit, uint8 function
 			{
 				uint16 curPacked;
 
-				if (x + i < 0 || x + i >= 64 || y + j < 0 || y + j >= 64)
+				if (x + i < 0 || x + i >= MAP_SIZE_MAX || y + j < 0 || y + j >= MAP_SIZE_MAX)
 					continue;
 
 				curPacked = Tile_PackXY(x + i, y + j);
@@ -1376,7 +1376,7 @@ static void Map_UnveilTile_Neighbour(uint16 packed)
 
 		for (i = 0; i < 4; i++)
 		{
-			static const int16 mapOffset[] = {-64, 1, 64, -1};
+			static const int16 mapOffset[] = {-MAP_SIZE_MAX, 1, MAP_SIZE_MAX, -1};
 			uint16 neighbour = packed + mapOffset[i];
 
 			if (Tile_IsOutOfMap(neighbour))
@@ -1448,8 +1448,8 @@ bool Map_UnveilTile(uint16 packed, uint8 houseID)
 	Map_UnveilTile_Neighbour(packed);
 	Map_UnveilTile_Neighbour(packed + 1);
 	Map_UnveilTile_Neighbour(packed - 1);
-	Map_UnveilTile_Neighbour(packed - 64);
-	Map_UnveilTile_Neighbour(packed + 64);
+	Map_UnveilTile_Neighbour(packed - MAP_SIZE_MAX);
+	Map_UnveilTile_Neighbour(packed + MAP_SIZE_MAX);
 
 	return true;
 }
@@ -1485,9 +1485,7 @@ void Map_UpdateFogOfWar()
 			FogOfWarTile* f = &g_mapVisible[packed];
 
 			if (!t->isUnveiled || f->timeout <= g_timerGame)
-			{
 				f->fogOverlayBits = 0xF;
-			}
 			else
 			{
 				f->groundSpriteID = t->groundSpriteID;
@@ -1499,11 +1497,11 @@ void Map_UpdateFogOfWar()
 				f->hasStructure = t->hasStructure;
 				f->fogOverlayBits = 0;
 
-				if (g_mapVisible[packed - 64].timeout <= g_timerGame)
+				if (g_mapVisible[packed - MAP_SIZE_MAX].timeout <= g_timerGame)
 					f->fogOverlayBits |= 0x1;
 				if (g_mapVisible[packed + 1].timeout <= g_timerGame)
 					f->fogOverlayBits |= 0x2;
-				if (g_mapVisible[packed + 64].timeout <= g_timerGame)
+				if (g_mapVisible[packed + MAP_SIZE_MAX].timeout <= g_timerGame)
 					f->fogOverlayBits |= 0x4;
 				if (g_mapVisible[packed - 1].timeout <= g_timerGame)
 					f->fogOverlayBits |= 0x8;
@@ -1612,8 +1610,8 @@ void Map_CreateLandscape(uint32 seed)
 	uint16 j;
 	uint16 k;
 	uint8 memory[273];
-	uint16 currentRow[64];
-	uint16 previousRow[64];
+	uint16 currentRow[MAP_SIZE_MAX];
+	uint16 previousRow[MAP_SIZE_MAX];
 	uint16 spriteID1;
 	uint16 spriteID2;
 	uint16* iconMap;
@@ -1636,7 +1634,6 @@ void Map_CreateLandscape(uint32 seed)
 		for (j = 0; j < lengthof(around); j++)
 		{
 			int16 index = min(max(0, base + around[j]), 272);
-
 			memory[index] = (memory[index] + (Tools_Random_256() & 0xF)) & 0xF;
 		}
 	}
@@ -1649,7 +1646,6 @@ void Map_CreateLandscape(uint32 seed)
 		for (j = 0; j < lengthof(around); j++)
 		{
 			int16 index = min(max(0, base + around[j]), 272);
-
 			memory[index] = Tools_Random_256() & 0x3;
 		}
 	}
@@ -1657,9 +1653,7 @@ void Map_CreateLandscape(uint32 seed)
 	for (j = 0; j < 16; j++)
 	{
 		for (i = 0; i < 16; i++)
-		{
 			g_map[Tile_PackXY(i * 4, j * 4)].groundSpriteID = memory[j * 16 + i];
-		}
 	}
 
 	/* Average around the 4x4 grid. */
@@ -1682,19 +1676,15 @@ void Map_CreateLandscape(uint32 seed)
 				if (Tile_IsOutOfMap(packed))
 					continue;
 
-				packed1 = Tile_PackXY((i * 4 + offsets[0]) & 0x3F, j * 4 + offsets[1]);
-				packed2 = Tile_PackXY((i * 4 + offsets[2]) & 0x3F, j * 4 + offsets[3]);
-				assert(packed1 < 64 * 64);
+				packed1 = Tile_PackXY((i * 4 + offsets[0]) & MAP_SIZE_STRIDE_MASK, j * 4 + offsets[1]);
+				packed2 = Tile_PackXY((i * 4 + offsets[2]) & MAP_SIZE_STRIDE_MASK, j * 4 + offsets[3]);
+				assert(packed1 < MAP_SIZE_MAX * MAP_SIZE_MAX);
 
 				/* ENHANCEMENT -- use groundSpriteID=0 when out-of-bounds to generate the original maps. */
-				if (packed2 < 64 * 64)
-				{
+				if (packed2 < MAP_SIZE_MAX * MAP_SIZE_MAX)
 					sprite2 = g_map[packed2].groundSpriteID;
-				}
 				else
-				{
 					sprite2 = 0;
-				}
 
 				g_map[packed].groundSpriteID = (g_map[packed1].groundSpriteID + sprite2 + 1) / 2;
 			}
@@ -1704,28 +1694,28 @@ void Map_CreateLandscape(uint32 seed)
 	memset(currentRow, 0, 128);
 
 	/* Average each tile with its neighbours. */
-	for (j = 0; j < 64; j++)
+	for (j = 0; j < MAP_SIZE_MAX; j++)
 	{
-		Tile* t = &g_map[j * 64];
+		Tile* t = &g_map[j * MAP_SIZE_MAX];
 		memcpy(previousRow, currentRow, 128);
 
-		for (i = 0; i < 64; i++)
+		for (i = 0; i < MAP_SIZE_MAX; i++)
 			currentRow[i] = t[i].groundSpriteID;
 
-		for (i = 0; i < 64; i++)
+		for (i = 0; i < MAP_SIZE_MAX; i++)
 		{
 			uint16 neighbours[9];
 			uint16 total = 0;
 
 			neighbours[0] = (i == 0 || j == 0) ? currentRow[i] : previousRow[i - 1];
 			neighbours[1] = (j == 0) ? currentRow[i] : previousRow[i];
-			neighbours[2] = (i == 63 || j == 0) ? currentRow[i] : previousRow[i + 1];
+			neighbours[2] = ((i == MAP_SIZE_MAX - 1) || j == 0) ? currentRow[i] : previousRow[i + 1];
 			neighbours[3] = (i == 0) ? currentRow[i] : currentRow[i - 1];
 			neighbours[4] = currentRow[i];
-			neighbours[5] = (i == 63) ? currentRow[i] : currentRow[i + 1];
-			neighbours[6] = (i == 0 || j == 63) ? currentRow[i] : t[i + 63].groundSpriteID;
-			neighbours[7] = (j == 63) ? currentRow[i] : t[i + 64].groundSpriteID;
-			neighbours[8] = (i == 63 || j == 63) ? currentRow[i] : t[i + 65].groundSpriteID;
+			neighbours[5] = (i == MAP_SIZE_MAX - 1) ? currentRow[i] : currentRow[i + 1];
+			neighbours[6] = (i == 0 || j == 63) ? currentRow[i] : t[i + MAP_SIZE_MAX - 1].groundSpriteID;
+			neighbours[7] = (j == MAP_SIZE_MAX - 1) ? currentRow[i] : t[i + MAP_SIZE_MAX].groundSpriteID;
+			neighbours[8] = ((i == MAP_SIZE_MAX - 1) || (j == MAP_SIZE_MAX - 1)) ? currentRow[i] : t[i + MAP_SIZE_MAX + 1].groundSpriteID;
 
 			for (k = 0; k < 9; k++)
 				total += neighbours[k];
@@ -1734,6 +1724,7 @@ void Map_CreateLandscape(uint32 seed)
 	}
 
 	/* Filter each tile to determine its final type. */
+
 	spriteID1 = Tools_Random_256() & 0xF;
 	if (spriteID1 < 0x8)
 		spriteID1 = 0x8;
@@ -1744,26 +1735,18 @@ void Map_CreateLandscape(uint32 seed)
 	if (spriteID2 > spriteID1 - 3)
 		spriteID2 = spriteID1 - 3;
 
-	for (i = 0; i < 4096; i++)
+	for (i = 0; i < MAP_SIZE_MAX * MAP_SIZE_MAX; i++)
 	{
 		uint16 spriteID = g_map[i].groundSpriteID;
 
 		if (spriteID > spriteID1 + 4)
-		{
 			spriteID = LST_ENTIRELY_MOUNTAIN;
-		}
 		else if (spriteID >= spriteID1)
-		{
 			spriteID = LST_ENTIRELY_ROCK;
-		}
 		else if (spriteID <= spriteID2)
-		{
 			spriteID = LST_ENTIRELY_DUNE;
-		}
 		else
-		{
 			spriteID = LST_NORMAL_SAND;
-		}
 
 		g_map[i].groundSpriteID = spriteID;
 	}
@@ -1777,8 +1760,8 @@ void Map_CreateLandscape(uint32 seed)
 
 		while (true)
 		{
-			packed = Tools_Random_256() & 0x3F;
-			packed = Tile_PackXY(Tools_Random_256() & 0x3F, packed);
+			packed = Tools_Random_256() & MAP_SIZE_STRIDE_MASK;
+			packed = Tile_PackXY(Tools_Random_256() & MAP_SIZE_STRIDE_MASK, packed);
 
 			if (g_table_landscapeInfo[g_map[packed].groundSpriteID].canBecomeSpice)
 				break;
@@ -1791,7 +1774,7 @@ void Map_CreateLandscape(uint32 seed)
 		{
 			while (true)
 			{
-				packed = Tile_PackTile(Tile_MoveByRandom(tile, Tools_Random_256() & 0x3F, true));
+				packed = Tile_PackTile(Tile_MoveByRandom(tile, Tools_Random_256() & MAP_SIZE_STRIDE_MASK, true));
 
 				if (!Tile_IsOutOfMap(packed))
 					break;
@@ -1802,21 +1785,21 @@ void Map_CreateLandscape(uint32 seed)
 	}
 
 	/* Make everything smoother and use the right sprite indexes. */
-	for (j = 0; j < 64; j++)
+	for (j = 0; j < MAP_SIZE_MAX; j++)
 	{
-		Tile* t = &g_map[j * 64];
+		Tile* t = &g_map[j * MAP_SIZE_MAX];
 
 		memcpy(previousRow, currentRow, 128);
 
-		for (i = 0; i < 64; i++)
+		for (i = 0; i < MAP_SIZE_MAX; i++)
 			currentRow[i] = t[i].groundSpriteID;
 
-		for (i = 0; i < 64; i++)
+		for (i = 0; i < MAP_SIZE_MAX; i++)
 		{
 			uint16 current = t[i].groundSpriteID;
 			uint16 up = (j == 0) ? current : previousRow[i];
-			uint16 left = (i == 63) ? current : currentRow[i + 1];
-			uint16 down = (j == 63) ? current : t[i + 64].groundSpriteID;
+			uint16 left = (i == MAP_SIZE_MAX - 1) ? current : currentRow[i + 1];
+			uint16 down = (j == MAP_SIZE_MAX - 1) ? current : t[i + MAP_SIZE_MAX].groundSpriteID;
 			uint16 right = (i == 0) ? current : currentRow[i - 1];
 			uint16 spriteID = 0;
 
@@ -1875,7 +1858,7 @@ void Map_CreateLandscape(uint32 seed)
 	/* Finalise the tiles with the real sprites. */
 	iconMap = &g_iconMap[g_iconMap[ICM_ICONGROUP_LANDSCAPE]];
 
-	for (i = 0; i < 4096; i++)
+	for (i = 0; i < MAP_SIZE_MAX * MAP_SIZE_MAX; i++)
 	{
 		Tile* t = &g_map[i];
 
@@ -1890,6 +1873,6 @@ void Map_CreateLandscape(uint32 seed)
 		t->index = 0;
 	}
 
-	for (i = 0; i < 4096; i++)
+	for (i = 0; i < MAP_SIZE_MAX * MAP_SIZE_MAX; i++)
 		g_mapSpriteID[i] = g_map[i].groundSpriteID;
 }

@@ -210,6 +210,13 @@ void String_Init()
 	String_Load(SEARCHDIR_DATA_DIR, "PROTECT", true, 525, -1);
 	String_LoadCampaignStrings();
 
+	/* Fix title */
+	free(s_strings[STR_DUNE_II_TITLE]);
+	free(s_strings[STR_INTRO_THE_BUILDING_OF_A_DYNASTY]);
+
+	s_strings[STR_DUNE_II_TITLE] = strdup("Dune II: The Building of a Dynasty");
+	s_strings[STR_INTRO_THE_BUILDING_OF_A_DYNASTY] = strdup("The Building of a Dynasty");
+
 	/* EU version has one more string in DUNE langfile. */
 	if (s_strings[STR_LOAD_GAME] == NULL)
 	{

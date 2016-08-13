@@ -174,9 +174,7 @@ static FadeInAux s_fadeInAux;
  * Otherwise, returns (0, y + row_h + 1), where row_h is the maximum
  * height of any sprite in the same row.
  */
-static void
-VideoA5_GetNextXY(int texture_width, int texture_height,
-                  int x, int y, int w, int h, int row_h, int* retx, int* rety)
+static void VideoA5_GetNextXY(int texture_width, int texture_height, int x, int y, int w, int h, int row_h, int* retx, int* rety)
 {
 	if (x + w - 1 >= texture_width)
 	{
@@ -372,9 +370,9 @@ bool VideoA5_Init()
 
 	VideoA5_SetBitmapFlags(ALLEGRO_MEMORY_BITMAP);
 	VideoA5_InitWindowIcons();
-	interface_texture = al_create_bitmap(w, h);
-
+	
 	VideoA5_SetBitmapFlags(ALLEGRO_VIDEO_BITMAP);
+	interface_texture = al_create_bitmap(w, h);
 	shape_texture = al_create_bitmap(w, h);
 	region_texture = al_create_bitmap(w, h);
 
@@ -509,13 +507,9 @@ static void VideoA5_CopyBitmap(int src_stride, const unsigned char* raw, ALLEGRO
 	ALLEGRO_LOCKED_REGION* reg;
 
 	if (mode == SKIP_COLOUR_0)
-	{
 		reg = al_lock_bitmap(dest, ALLEGRO_PIXEL_FORMAT_ABGR_8888_LE, ALLEGRO_LOCK_READWRITE);
-	}
 	else
-	{
 		reg = al_lock_bitmap(dest, ALLEGRO_PIXEL_FORMAT_ABGR_8888_LE, ALLEGRO_LOCK_WRITEONLY);
-	}
 
 	if (reg == NULL)
 		return;
@@ -554,9 +548,7 @@ static void VideoA5_CopyBitmap(int src_stride, const unsigned char* raw, ALLEGRO
 	al_unlock_bitmap(dest);
 }
 
-static void
-VideoA5_CreateWhiteMask(unsigned char* src, ALLEGRO_LOCKED_REGION* reg,
-                        int src_stride, int sx, int sy, int dx, int dy, int w, int h, int ref)
+static void VideoA5_CreateWhiteMask(unsigned char* src, ALLEGRO_LOCKED_REGION* reg, int src_stride, int sx, int sy, int dx, int dy, int w, int h, int ref)
 {
 	for (int y = 0; y < h; y++)
 	{
@@ -584,9 +576,7 @@ VideoA5_CreateWhiteMask(unsigned char* src, ALLEGRO_LOCKED_REGION* reg,
 	}
 }
 
-static void
-VideoA5_CreateWhiteMaskIndexed(unsigned char* buf,
-                               int stride, int sx, int sy, int dx, int dy, int w, int h, int ref)
+static void VideoA5_CreateWhiteMaskIndexed(unsigned char* buf, int stride, int sx, int sy, int dx, int dy, int w, int h, int ref)
 {
 	for (int y = 0; y < h; y++)
 	{
@@ -1111,9 +1101,7 @@ static void VideoA5_FreeCPS(CPSStore* cps)
  * If expand_x or expand_y is true, then take the data from around the
  * source bitmap.  Otherwise, use the edge of the source bitmap.
  */
-static void
-VideoA5_DrawBitmapRegion_Padded(ALLEGRO_BITMAP* src,
-                                const struct CPSSpecialCoord* coord, float tx, float ty, bool expand_x, bool expand_y)
+static void VideoA5_DrawBitmapRegion_Padded(ALLEGRO_BITMAP* src, const struct CPSSpecialCoord* coord, float tx, float ty, bool expand_x, bool expand_y)
 {
 	float sx = coord->cx;
 	float sy = coord->cy;
@@ -1192,7 +1180,7 @@ static void VideoA5_InitCPS()
 	for (HouseType houseID = HOUSE_HARKONNEN; houseID < HOUSE_MAX; houseID++)
 	{
 		Sprites_LoadImage(SEARCHDIR_DATA_DIR, "SCREEN.CPS", SCREEN_1, NULL);
-		GUI_Palette_CreateRemap(g_table_houseInfo[houseID].spriteColor);
+		GUI_Palette_CreateRemap(houseID);
 		GUI_Palette_RemapScreen(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_1, g_remap);
 		VideoA5_CopyBitmap(SCREEN_WIDTH, buf, cps_screen->bmp, TRANSPARENT_COLOUR_0);
 
@@ -1254,6 +1242,15 @@ void VideoA5_DrawCPSSpecial(CPSID cpsID, HouseType houseID, int x, int y)
 	};
 	assert(cpsID < CPS_SPECIAL_MAX);
 	assert(houseID < HOUSE_MAX);
+	uint8 index;
+
+	if (houseID == HOUSE_NONE)
+		index = 0;
+	else
+	{
+		assert(g_table_houseInfo[houseID].spriteColor < HOUSE_MAX);
+		index = g_table_houseInfo[houseID].spriteColor;
+	}
 
 	const struct CPSSpecialCoord* coord = &cps_special_coord[cpsID];
 
@@ -1262,7 +1259,7 @@ void VideoA5_DrawCPSSpecial(CPSID cpsID, HouseType houseID, int x, int y)
 
 	if (CPS_CONQUEST_EN <= cpsID && cpsID <= CPS_CONQUEST_DE)
 	{
-		const ALLEGRO_COLOR col = al_map_rgb(tint[houseID][0], tint[houseID][1], tint[houseID][2]);
+		const ALLEGRO_COLOR col = al_map_rgb(tint[index][0], tint[index][1], tint[index][2]);
 
 		al_draw_bitmap_region(interface_texture, sx, sy, coord->w, coord->h, x, y, 0);
 		al_draw_tinted_bitmap_region(interface_texture, col, sx, sy + 30, coord->w, 20, x, y, 0);
@@ -1271,16 +1268,12 @@ void VideoA5_DrawCPSSpecial(CPSID cpsID, HouseType houseID, int x, int y)
 
 	if (CPS_SIDEBAR_TOP <= cpsID && cpsID <= CPS_SIDEBAR_BOTTOM)
 	{
-		sx += 17 * houseID;
+		sx += 17 * index;
 
 		if (cpsID == CPS_SIDEBAR_BOTTOM)
-		{
-			sy += 23 * houseID;
-		}
+			sy += 23 * index;
 		else
-		{
-			sy += 4 * houseID;
-		}
+			sy += 4 * index;
 	}
 
 	al_draw_bitmap_region(interface_texture, sx, sy, coord->w, coord->h, x, y, 0);
@@ -1297,16 +1290,11 @@ void VideoA5_DrawCPSSpecialScale(CPSID cpsID, HouseType houseID, int x, int y, f
 	int sy = coord->ty;
 
 	if (cpsID == CPS_SIDEBAR_BOTTOM)
-	{
 		sy += 23 * houseID;
-	}
 	else
-	{
 		sy += 4 * houseID;
-	}
 
-	al_draw_scaled_bitmap(interface_texture, sx, sy, coord->w, coord->h,
-	                      x, y, scale * coord->w, scale * coord->h, 0);
+	al_draw_scaled_bitmap(interface_texture, sx, sy, coord->w, coord->h, x, y, scale * coord->w, scale * coord->h, 0);
 }
 
 FadeInAux* Video_InitFadeInCPS(const char* filename, int x, int y, int w, int h, bool fade_in)
@@ -1385,7 +1373,7 @@ static void VideoA5_ExportIconGroup(IconMapEntries group, int num_common, int x,
 
 	for (HouseType houseID = HOUSE_HARKONNEN; houseID < HOUSE_MAX; houseID++)
 	{
-		GUI_Palette_CreateRemap(g_table_houseInfo[houseID].spriteColor);
+		GUI_Palette_CreateRemap(houseID);
 
 		for (int idx = 0; idx < num; idx++)
 		{
@@ -1406,9 +1394,7 @@ static void VideoA5_ExportIconGroup(IconMapEntries group, int num_common, int x,
 				x += TILE_SIZE + 2;
 			}
 			else
-			{
 				s_icon[iconID][houseID] = s_icon[iconID][HOUSE_HARKONNEN];
-			}
 		}
 	}
 
@@ -1499,9 +1485,7 @@ static void VideoA5_DrawIconPadding(ALLEGRO_BITMAP* membmp, IconConnectivity* co
 	al_destroy_bitmap(dup);
 }
 
-static void
-VideoA5_ExportWindtrapOverlay(unsigned char* buf, uint16 iconID,
-                              int x, int y, int* retx, int* rety)
+static void VideoA5_ExportWindtrapOverlay(unsigned char* buf, uint16 iconID, int x, int y, int* retx, int* rety)
 {
 	const int WINDOW_W = g_widgetProperties[WINDOWID_RENDER_TEXTURE].width;
 	const int WINDOW_H = g_widgetProperties[WINDOWID_RENDER_TEXTURE].height;
@@ -1571,7 +1555,7 @@ static void VideoA5_MaskDebrisTiles(ALLEGRO_BITMAP* membmp)
 	};
 
 	char filename[1024];
-	snprintf(filename, sizeof(filename), "%s/gfx/rubblemask.png", g_dune_data_dir);
+	snprintf(filename, sizeof(filename), "%s/graphics/rubblemask.png", g_dune_data_dir);
 
 	ALLEGRO_BITMAP* mask = al_load_bitmap(filename);
 	if (mask == NULL)
@@ -1647,15 +1631,12 @@ static void VideoA5_InitIcons(unsigned char* buf)
 
 	x = 1 , y = 1;
 	for (int i = 0; icon_data[i].group < ICM_ICONGROUP_EOF; i++)
-	{
 		VideoA5_ExportIconGroup(icon_data[i].group, icon_data[i].num_common, x, y, &x, &y);
-	}
 
 	/* Windtraps.  304..308 in EU v1.07, 310..314 in US v1.0. */
 	for (uint16 i = 8; i <= 15; i++)
 	{
 		const uint16 iconID = g_iconMap[g_iconMap[ICM_ICONGROUP_WINDTRAP_POWER] + i];
-
 		VideoA5_ExportWindtrapOverlay(buf, iconID, x, y, &x, &y);
 	}
 
@@ -1680,12 +1661,6 @@ static void VideoA5_InitIcons(unsigned char* buf)
 	/* Connect neighbours for interpolation. */
 	VideoA5_DrawIconPadding(icon_texture, connect);
 
-#if OUTPUT_TEXTURES
-	al_save_bitmap("icons16.png", icon_texture);
-	al_save_bitmap("icons32.png", icon_texture32);
-	al_save_bitmap("icons48.png", icon_texture48);
-#endif
-
 	VideoA5_SetBitmapFlags(ALLEGRO_VIDEO_BITMAP);
 
 	const int bitmap_flags = al_get_new_bitmap_flags();
@@ -1700,6 +1675,29 @@ static void VideoA5_InitIcons(unsigned char* buf)
 	if (icon_texture48 != NULL)
 		icon_texture48 = VideoA5_ConvertToVideoBitmap(icon_texture48);
 
+	/*for (int i = 0; i < ICONID_MAX; i++)
+	{
+		if (s_icon[i][HOUSE_HARKONNEN].sx >= 0 && s_icon[i][HOUSE_HARKONNEN].sy >= 0)
+		{
+			ALLEGRO_BITMAP* sub = al_create_sub_bitmap(icon_texture, s_icon[i][HOUSE_HARKONNEN].sx, s_icon[i][HOUSE_HARKONNEN].sy, TILE_SIZE, TILE_SIZE);
+			char name[128];
+			sprintf(name, "sprite%03d.png", i);
+
+			al_save_bitmap(name, sub);
+			al_destroy_bitmap(sub);
+		}
+	}*/
+
+#if OUTPUT_TEXTURES
+	al_save_bitmap("icons16.png", icon_texture);
+
+	if (icon_texture32 != NULL)
+		al_save_bitmap("icons32.png", icon_texture32);
+
+	if (icon_texture48 != NULL)
+		al_save_bitmap("icons48.png", icon_texture48);
+#endif
+
 	al_set_new_bitmap_flags(bitmap_flags);
 	free(connect);
 }
@@ -1709,7 +1707,17 @@ void VideoA5_DrawIcon(uint16 iconID, HouseType houseID, int x, int y)
 	assert(iconID < ICONID_MAX);
 	assert(houseID < HOUSE_MAX);
 
-	const IconCoord* coord = &s_icon[iconID][houseID];
+	uint8_t index;
+
+	if (houseID == HOUSE_NONE)
+		index = 0;
+	else
+	{
+		assert(g_table_houseInfo[houseID].spriteColor < HOUSE_MAX);
+		index = g_table_houseInfo[houseID].spriteColor;
+	}
+
+	const IconCoord* coord = &s_icon[iconID][index];
 	assert(coord->sx != 0 && coord->sy != 0);
 
 	/* Windtraps need special overlay. */
@@ -1788,8 +1796,7 @@ void VideoA5_DrawRectCross(int x1, int y1, int w, int h, unsigned char c)
 
 /*--------------------------------------------------------------*/
 
-static ALLEGRO_BITMAP* VideoA5_ExportShape(ShapeID shapeID, int x, int y, int row_h,
-                                           int* retx, int* rety, int* ret_row_h, unsigned char* remap)
+static ALLEGRO_BITMAP* VideoA5_ExportShape(ShapeID shapeID, int x, int y, int row_h, int* retx, int* rety, int* ret_row_h, unsigned char* remap)
 {
 	ALLEGRO_BITMAP* dest = al_get_target_bitmap();
 	const int TEXTURE_W = al_get_bitmap_width(dest);
@@ -1800,7 +1807,7 @@ static ALLEGRO_BITMAP* VideoA5_ExportShape(ShapeID shapeID, int x, int y, int ro
 	ALLEGRO_BITMAP* bmp;
 
 	VideoA5_GetNextXY(TEXTURE_W, TEXTURE_H, x, y, w, h, row_h, &x, &y);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[shapeID], x, y, WINDOWID_RENDER_TEXTURE, 0x100, remap, 1);
+	GUI_DrawSprite(SCREEN_0, g_sprites[shapeID], x, y, WINDOWID_RENDER_TEXTURE, 0x100, remap, 1);
 
 	bmp = al_create_sub_bitmap(dest, x, y, w, h);
 	assert(bmp != NULL);
@@ -1849,18 +1856,18 @@ static void VideoA5_InitShapeCHOAMButtons(unsigned char* buf, int y1)
 	 * Avoid using French buttons.
 	 */
 	Sprites_InitCHOAM("BTTN.ENG", "CHOAM.ENG");
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_RESUME_GAME + 0], 4, y1, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_RESUME_GAME + 1], 4, y2, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_BUILD_THIS + 0], 128, y1, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_BUILD_THIS + 1], 128, y2, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_MENTAT + 0], 256, y1, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_MENTAT + 1], 256, y2, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_OPTIONS + 0], 352, y1, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_OPTIONS + 1], 352, y2, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_INVOICE + 0], 448 - 6, y1, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_INVOICE + 1], 448 - 6, y2, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_SEND_ORDER + 0], 544, y1, WINDOWID_RENDER_TEXTURE, 0);
-	GUI_DrawSprite_(SCREEN_0, g_sprites[SHAPE_SEND_ORDER + 1], 544, y2, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_RESUME_GAME + 0], 4, y1, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_RESUME_GAME + 1], 4, y2, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_BUILD_THIS + 0], 128, y1, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_BUILD_THIS + 1], 128, y2, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_MENTAT + 0], 256, y1, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_MENTAT + 1], 256, y2, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_OPTIONS + 0], 352, y1, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_OPTIONS + 1], 352, y2, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_INVOICE + 0], 448 - 6, y1, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_INVOICE + 1], 448 - 6, y2, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_SEND_ORDER + 0], 544, y1, WINDOWID_RENDER_TEXTURE, 0);
+	GUI_DrawSprite(SCREEN_0, g_sprites[SHAPE_SEND_ORDER + 1], 544, y2, WINDOWID_RENDER_TEXTURE, 0);
 
 	const int WINDOW_W = g_widgetProperties[WINDOWID_RENDER_TEXTURE].width;
 	unsigned char* row1 = &buf[WINDOW_W * (y1 + 2)];
@@ -1964,7 +1971,7 @@ static void VideoA5_InitShapes(unsigned char* buf)
 
 		for (HouseType houseID = HOUSE_HARKONNEN; houseID < HOUSE_MAX; houseID++)
 		{
-			GUI_Palette_CreateRemap(g_table_houseInfo[houseID].spriteColor);
+			GUI_Palette_CreateRemap(houseID);
 
 			for (ShapeID shapeID = (ShapeID)shape_data[group].start; shapeID <= (ShapeID)shape_data[group].end; shapeID++)
 			{
@@ -2001,7 +2008,7 @@ static void VideoA5_InitShapes(unsigned char* buf)
 		const int h = Shape_Height(shapeID);
 
 		VideoA5_GetNextXY(WINDOW_W, WINDOW_H, x, y, 5 * w, h, row_h, &x, &y);
-		GUI_DrawSprite_(SCREEN_0, g_sprites[shapeID], x, y, WINDOWID_RENDER_TEXTURE, 0);
+		GUI_DrawSprite(SCREEN_0, g_sprites[shapeID], x, y, WINDOWID_RENDER_TEXTURE, 0);
 
 		for (int i = 4; i >= 0; i--)
 		{
@@ -2019,6 +2026,14 @@ static void VideoA5_InitShapes(unsigned char* buf)
 	}
 
 	VideoA5_CopyBitmap(WINDOW_W, buf, region_texture, TRANSPARENT_COLOUR_0);
+
+	/*for (int i = 0; i < SHAPE_MAX; i++)
+	{
+		char name[128];
+		sprintf(name, "shape%03d.png", i);
+		if (s_shape[i][HOUSE_HARKONNEN])
+			al_save_bitmap(name, s_shape[i][HOUSE_HARKONNEN]);
+	}*/
 
 #if OUTPUT_TEXTURES
 	al_save_bitmap("shapes.png", shape_texture);
@@ -2086,7 +2101,18 @@ void VideoA5_DrawShape(ShapeID shapeID, HouseType houseID, int x, int y, int fla
 {
 	assert(shapeID < SHAPEID_MAX);
 	assert(houseID < HOUSE_MAX);
-	assert(s_shape[shapeID][houseID] != NULL);
+
+	uint8 index;
+
+	if (houseID == HOUSE_NONE)
+		index = 0;
+	else
+	{
+		assert(g_table_houseInfo[houseID].spriteColor < HOUSE_MAX);
+		index = g_table_houseInfo[houseID].spriteColor;
+	}
+
+	assert(s_shape[shapeID][index] != NULL);
 
 	int al_flags = 0;
 
@@ -2098,10 +2124,10 @@ void VideoA5_DrawShape(ShapeID shapeID, HouseType houseID, int x, int y, int fla
 	if ((flags & 0x300) == 0x100)
 	{
 		/* Highlight. */
-		al_draw_bitmap(s_shape[shapeID][houseID], x, y, al_flags);
+		al_draw_bitmap(s_shape[shapeID][index], x, y, al_flags);
 
 		al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_ONE);
-		al_draw_bitmap(s_shape[shapeID][houseID], x, y, al_flags);
+		al_draw_bitmap(s_shape[shapeID][index], x, y, al_flags);
 		al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
 	}
 	else if ((flags & 0x300) == 0x200)
@@ -2110,7 +2136,7 @@ void VideoA5_DrawShape(ShapeID shapeID, HouseType houseID, int x, int y, int fla
 		const int s_variable_60[8] = {1, 3, 2, 5, 4, 3, 2, 1};
 		const int effect = (flags >> 4) & 0x7;
 
-		ALLEGRO_BITMAP* brush = s_shape[shapeID][houseID];
+		ALLEGRO_BITMAP* brush = s_shape[shapeID][index];
 
 		switch (g_graphics_driver)
 		{
@@ -2134,23 +2160,34 @@ void VideoA5_DrawShape(ShapeID shapeID, HouseType houseID, int x, int y, int fla
 	{
 		/* Shadow. */
 		ALLEGRO_COLOR tint = al_map_rgba(0, 0, 0, flags & 0xF0);
-		al_draw_tinted_bitmap(s_shape[shapeID][houseID], tint, x, y, al_flags);
+		al_draw_tinted_bitmap(s_shape[shapeID][index], tint, x, y, al_flags);
 	}
 	else
 	{
 		/* Normal. */
-		al_draw_bitmap(s_shape[shapeID][houseID], x, y, al_flags);
+		al_draw_bitmap(s_shape[shapeID][index], x, y, al_flags);
 	}
 }
 
 void VideoA5_DrawShapeRotate(ShapeID shapeID, HouseType houseID, int x, int y, int orient256, int flags)
 {
-	ALLEGRO_BITMAP* bmp = s_shape[shapeID][houseID];
 	assert(shapeID < SHAPEID_MAX);
 	assert(houseID < HOUSE_MAX);
-	assert(bmp != NULL);
+	uint8 index;
+
+	if (houseID == HOUSE_NONE)
+		index = 0;
+	else
+	{
+		assert(g_table_houseInfo[houseID].spriteColor < HOUSE_MAX);
+		index = g_table_houseInfo[houseID].spriteColor;
+	}
+	
 	assert((flags & 0x300) != 0x100);
 	assert((flags & 0x300) != 0x200);
+
+	ALLEGRO_BITMAP* bmp = s_shape[shapeID][index];
+	assert(bmp != NULL);
 
 	const float cx = al_get_bitmap_width(bmp) / 2.0f;
 	const float cy = al_get_bitmap_height(bmp) / 2.0f;
@@ -2210,9 +2247,20 @@ FadeInAux* Video_InitFadeInShape(ShapeID shapeID, HouseType houseID, int x, int 
 {
 	assert(shapeID < SHAPEID_MAX);
 	assert(houseID < HOUSE_MAX);
-	assert(s_shape[shapeID][houseID] != NULL);
+	
+	uint8 index;
 
-	ALLEGRO_BITMAP* src = s_shape[shapeID][houseID];
+	if (houseID == HOUSE_NONE)
+		index = 0;
+	else
+	{
+		assert(g_table_houseInfo[houseID].spriteColor < HOUSE_MAX);
+		index = g_table_houseInfo[houseID].spriteColor;
+	}
+	
+	assert(s_shape[shapeID][index] != NULL);
+
+	ALLEGRO_BITMAP* src = s_shape[shapeID][index];
 
 	return VideoA5_InitFadeInSprite(src, x, y, al_get_bitmap_width(src), al_get_bitmap_height(src), true);
 }
@@ -2272,7 +2320,7 @@ static void VideoA5_ExportFont(Font* font, const uint8* pal, int y, int* rety)
 			const int w = Font_GetCharWidth(c) + 1;
 
 			VideoA5_GetNextXY(WINDOW_W, WINDOW_H, x, y, w, font->height, font->height, &x, &y);
-			GUI_DrawChar_(c, x, y);
+			GUI_DrawChar(c, x, y);
 
 			x += w + 1;
 		}
@@ -2371,11 +2419,8 @@ static void VideoA5_InitWSA(unsigned char* buf)
 	int x = 0, y = 0;
 
 	VideoA5_SetBitmapFlags(ALLEGRO_MEMORY_BITMAP);
-
 	ALLEGRO_BITMAP* wsacpy = al_create_bitmap(64, 64);
-
 	VideoA5_SetBitmapFlags(ALLEGRO_VIDEO_BITMAP);
-
 	al_set_target_bitmap(interface_texture);
 
 	for (int frame = 0; frame < num_frames; frame++)
@@ -2577,7 +2622,7 @@ static void VideoA5_InitCursor(unsigned char* buf)
 		memset(buf, 0, SCREEN_WIDTH * sh);
 		al_clear_to_color(al_map_rgba(0x00, 0x00, 0x00, 0x00));
 
-		GUI_DrawSprite_(SCREEN_0, g_sprites[i], 0, 0, 0, 0);
+		GUI_DrawSprite(SCREEN_0, g_sprites[i], 0, 0, 0, 0);
 		VideoA5_CopyBitmap(SCREEN_WIDTH, buf, src, TRANSPARENT_COLOUR_0);
 
 		al_draw_scaled_bitmap(src, 0.0f, 0.0f, sw, sh, 0.0f, 0.0f, dw, dh, 0);

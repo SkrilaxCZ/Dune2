@@ -62,11 +62,11 @@ void Mentat_DrawBackground(MentatID mentatID);
 void Mentat_Draw(MentatID mentatID);
 
 void MentatBriefing_SplitText(MentatState* mentat);
-void MentatBriefing_InitText(HouseType houseID, int campaignID, BriefingEntry entry, MentatState* mentat);
+void MentatBriefing_InitText(HouseType houseID, uint16 campaignID, BriefingEntry entry, MentatState* mentat);
 void MentatBriefing_DrawText(const MentatState* mentat);
 void MentatBriefing_AdvanceText(MentatState* mentat);
 
-void MentatBriefing_InitWSA(HouseType houseID, int scenarioID, BriefingEntry entry, MentatState* mentat);
+void MentatBriefing_InitWSA(HouseType houseID, uint16 scenarioID, BriefingEntry entry, MentatState* mentat);
 void MentatBriefing_DrawWSA(MentatState* mentat);
 
 void MentatHelp_Draw(MentatID mentatID, MentatState* mentat);

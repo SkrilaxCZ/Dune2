@@ -4,7 +4,7 @@
 #include "../house.h"
 
 const DeathHandSpecialWeaponData g_HarkonnenSpecialWeapon = {NULL};
-const FremenSpecialWeaponData g_AtreidesSpecialWeapon = {HOUSE_FREMEN, UNIT_TROOPERS, UNIT_TROOPER};
+const FremenSpecialWeaponData g_AtreidesSpecialWeapon = {HOUSE_ATREIDES, UNIT_TROOPERS, UNIT_TROOPER};
 const SaboteurSpecialWeaponData g_OrdosSpecialWeapon = {HOUSE_ORDOS, UNIT_SABOTEUR};
 const FremenSpecialWeaponData g_FremenSpecialWeapon = {HOUSE_FREMEN, UNIT_TROOPERS, UNIT_TROOPER};
 const DeathHandSpecialWeaponData g_SardaukarSpecialWeapon = {NULL};
@@ -61,7 +61,7 @@ const HouseInfo g_table_base_houseInfo[HOUSE_MAX] =
 		/* toughness            */ 128,
 		/* degradingChance      */ 10,
 		/* degradingAmount      */ 2,
-		/* spriteColour         */ 2,
+		/* spriteColor          */ 2,
 		/* specialCountDown     */ 300,
 		/* starportDeliveryTime */ 10,
 		/* prefixChar           */ 'O',
@@ -83,7 +83,7 @@ const HouseInfo g_table_base_houseInfo[HOUSE_MAX] =
 		/* toughness            */ 55,
 		/* degradingChance      */ 0,
 		/* degradingAmount      */ 1,
-		/* spriteColour         */ 3,
+		/* spriteColor          */ 3,
 		/* specialCountDown     */ 300,
 		/* starportDeliveryTime */ 10, /* was 0. */
 		/* prefixChar           */ 'A',
@@ -105,7 +105,7 @@ const HouseInfo g_table_base_houseInfo[HOUSE_MAX] =
 		/* toughness            */ 234,
 		/* degradingChance      */ 0,
 		/* degradingAmount      */ 1,
-		/* spriteColour         */ 4,
+		/* spriteColor          */ 4,
 		/* specialCountDown     */ 600,
 		/* starportDeliveryTime */ 10, /* was 0. */
 		/* prefixChar           */ 'H',
@@ -124,10 +124,10 @@ const HouseInfo g_table_base_houseInfo[HOUSE_MAX] =
 
 	{/* 5 */
 		/* name                 */ "Mercenary",
-		/* toughness            */ 0,
+		/* toughness            */ 128,
 		/* degradingChance      */ 10,
 		/* degradingAmount      */ 2,
-		/* spriteColour         */ 5,
+		/* spriteColor          */ 5,
 		/* specialCountDown     */ 300,
 		/* starportDeliveryTime */ 10, /* was 0. */
 		/* prefixChar           */ 'O',
@@ -156,7 +156,6 @@ const uint8 g_table_minimapColour[HOUSE_MAX] =
 };
 
 HouseInfo g_table_houseInfo[HOUSE_MAX];
-HouseAlliance g_table_houseAlliance[HOUSE_MAX][HOUSE_MAX];
 
 const HouseType g_table_houseRemap6to3[HOUSE_MAX] =
 {

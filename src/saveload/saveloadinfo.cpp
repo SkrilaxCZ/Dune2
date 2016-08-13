@@ -111,6 +111,7 @@ static const SaveLoadDesc s_saveInfo[] = {
 	SLD_GENTRY (SLDT_UINT32, g_strategicRegionBits),
 	SLD_GENTRY (SLDT_UINT16, g_scenarioID),
 	SLD_GENTRY (SLDT_UINT16, g_campaignID),
+	SLD_GENTRY (SLDT_UINT16, g_techLevel),
 	SLD_GENTRY (SLDT_UINT32, g_hintsShown1),
 	SLD_GENTRY (SLDT_UINT32, g_hintsShown2),
 	SLD_GCALLB (SLDT_UINT32, g_tickScenarioStart, &SaveLoad_TickScenarioStart),

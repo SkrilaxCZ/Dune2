@@ -48,9 +48,9 @@ void Video_ShadeScreen(int alpha);
 void Video_HoldBitmapDrawing(bool hold);
 
 void Video_DrawFadeIn(const struct FadeInAux* aux);
-extern bool Video_TickFadeIn(struct FadeInAux* aux);
-extern struct FadeInAux* Video_InitFadeInCPS(const char* filename, int x, int y, int w, int h, bool fade_in);
-extern struct FadeInAux* Video_InitFadeInShape(ShapeID shapeID, HouseType houseID, int x, int y);
+bool Video_TickFadeIn(struct FadeInAux* aux);
+struct FadeInAux* Video_InitFadeInCPS(const char* filename, int x, int y, int w, int h, bool fade_in);
+struct FadeInAux* Video_InitFadeInShape(ShapeID shapeID, HouseType houseID, int x, int y);
 
 void Video_DrawMinimap(int left, int top, int map_scale, int mode);
 
@@ -79,16 +79,5 @@ void Video_DrawMinimap(int left, int top, int map_scale, int mode);
 #define GUI_Mouse_Show_InWidget()   \
 	do {} while (false)
 #define GUI_Mouse_Hide_InWidget(w)
-
-#if 0
-#include "video_sdl.h"
-
-#define Video_Init                  VideoSDL_Init
-#define Video_Uninit                VideoSDL_Uninit
-#define Video_Tick                  VideoSDL_Tick
-#define Video_SetPalette            VideoSDL_SetPalette
-#define Video_Mouse_SetPosition     VideoSDL_Mouse_SetPosition
-#define Video_Mouse_SetRegion       VideoSDL_Mouse_SetRegion
-#endif
 
 #endif

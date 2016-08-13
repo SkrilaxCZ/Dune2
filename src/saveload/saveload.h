@@ -128,7 +128,7 @@ enum SaveLoadType
 /**
  * Table definition for SaveLoad descriptors.
  */
-typedef struct SaveLoadDesc
+struct SaveLoadDesc
 {
 	size_t offset; /*!< The offset in the object, in bytes. */
 	SaveLoadType type_disk; /*!< The type it is on disk. */
@@ -138,48 +138,44 @@ typedef struct SaveLoadDesc
 	size_t size; /*!< The size of an element. */
 	uint32 (*callback)(void* object, uint32 value, bool loading);/*!< The custom callback. */
 	void* address; /*!< The address of the element. */
-} SaveLoadDesc;
+};
 
-typedef struct SaveLoad_CustomCallbackData
+struct SaveLoad_CustomCallbackData
 {
 	FILE* fp;
 	void* object;
-} SaveLoad_CustomCallbackData;
+};
 
 extern const SaveLoadDesc g_saveObject[];
 extern const SaveLoadDesc g_saveScriptEngine[];
 extern const SaveLoadDesc g_saveScenario[];
 
-extern uint32 SaveLoad_GetLength(const SaveLoadDesc* sld);
-extern bool SaveLoad_Load(const SaveLoadDesc* sld, FILE* fp, void* object);
-extern bool SaveLoad_Save(const SaveLoadDesc* sld, FILE* fp, void* object);
+uint32 SaveLoad_GetLength(const SaveLoadDesc* sld);
+bool SaveLoad_Load(const SaveLoadDesc* sld, FILE* fp, void* object);
+bool SaveLoad_Save(const SaveLoadDesc* sld, FILE* fp, void* object);
 
-extern bool House_Load(FILE* fp, uint32 length);
-extern bool House_LoadOld(FILE* fp, uint32 length);
-extern bool House_Save(FILE* fp);
-extern bool Info_Load(FILE* fp, uint32 length);
-extern bool Info_LoadOld(FILE* fp, uint32 length);
-extern bool Info_Save(FILE* fp);
-extern bool Info_Load2(FILE* fp, uint32 length);
-extern bool Info_Save2(FILE* fp);
-extern bool Map_Load(FILE* fp, uint32 length);
-extern bool Map_Save(FILE* fp);
+bool House_Load(FILE* fp, uint32 length);
+bool House_Save(FILE* fp);
+bool Info_Load(FILE* fp, uint32 length);
+bool Info_Save(FILE* fp);
+bool Info_Load2(FILE* fp, uint32 length);
+bool Info_Save2(FILE* fp);
+bool Map_Load(FILE* fp, uint32 length);
+bool Map_Save(FILE* fp);
 void Map_Load2Fallback();
-extern bool Map_Load2(FILE* fp, uint32 length);
-extern bool Map_Save2(FILE* fp);
-extern bool Scenario_Load2(FILE* fp, uint32 length);
-extern bool Scenario_Save2(FILE* fp);
-extern bool Structure_Load(FILE* fp, uint32 length);
-extern bool Structure_Save(FILE* fp);
-extern bool Structure_Load2(FILE* fp, uint32 length);
-extern bool Structure_Save2(FILE* fp);
-extern bool Team_Load(FILE* fp, uint32 length);
-extern bool Team_Save(FILE* fp);
-extern bool Unit_Load(FILE* fp, uint32 length);
-extern bool Unit_Save(FILE* fp);
-extern bool Unit_Load2(FILE* fp, uint32 length);
-extern bool Unit_Save2(FILE* fp);
-extern bool UnitNew_Load(FILE* fp, uint32 length);
-extern bool UnitNew_Save(FILE* fp);
+bool Map_Load2(FILE* fp, uint32 length);
+bool Map_Save2(FILE* fp);
+bool Structure_Load(FILE* fp, uint32 length);
+bool Structure_Save(FILE* fp);
+bool Structure_Load2(FILE* fp, uint32 length);
+bool Structure_Save2(FILE* fp);
+bool Team_Load(FILE* fp, uint32 length);
+bool Team_Save(FILE* fp);
+bool Unit_Load(FILE* fp, uint32 length);
+bool Unit_Save(FILE* fp);
+bool Unit_Load2(FILE* fp, uint32 length);
+bool Unit_Save2(FILE* fp);
+bool UnitNew_Load(FILE* fp, uint32 length);
+bool UnitNew_Save(FILE* fp);
 
 #endif /* SAVELOAD_SAVELOAD_H */

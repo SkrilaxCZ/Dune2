@@ -12,7 +12,7 @@ enum ScrollbarItemType
 	SCROLLBAR_BRAIN,
 };
 
-typedef struct ScrollbarItem
+struct ScrollbarItem
 {
 	char text[64];
 	ScrollbarItemType type;
@@ -22,9 +22,13 @@ typedef struct ScrollbarItem
 	{
 		uint32 offset;
 		bool* checkbox;
-		Brain* brain;
+		struct
+		{
+			Brain* brain;
+			HouseType house;
+		} br;
 	} d;
-} ScrollbarItem;
+};
 
 void GUI_Widget_Scrollbar_Init(Widget* w, int16 scrollMax, int16 scrollPageSize, int16 scrollPosition);
 void GUI_Widget_Free_WithScrollbar(Widget* w);

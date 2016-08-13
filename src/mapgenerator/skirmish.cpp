@@ -124,13 +124,23 @@ bool Skirmish_IsPlayable()
 	for (HouseType h = HOUSE_HARKONNEN; h < HOUSE_MAX; h++)
 	{
 		if (g_skirmish.brain[h] == BRAIN_HUMAN)
-		{
 			found_human = true;
-		}
 		else if (g_skirmish.brain[h] == BRAIN_CPU_ENEMY)
-		{
 			found_enemy = true;
+
+		if (g_skirmish.brain[h] != BRAIN_NONE)
+		{
+			for (HouseType h2 = HOUSE_HARKONNEN; h2 < HOUSE_MAX; h2++)
+			{
+				if (h == h2)
+					continue;
+
+				// Make sure two houses don't have the same sprite color
+				if (g_skirmish.brain[h2] != BRAIN_NONE && g_table_houseInfo[h].spriteColor == g_table_houseInfo[h2].spriteColor)
+					return false;
+			}
 		}
+
 	}
 
 	return found_human && found_enemy;
@@ -156,9 +166,7 @@ static int Skirmish_PickRandomIsland(const SkirmishData* sd)
 	return -1;
 }
 
-static void
-Skirmish_FindClosestStructures(HouseType houseID, uint16 packed,
-                               uint16* dist_ally, uint16* dist_enemy)
+static void Skirmish_FindClosestStructures(HouseType houseID, uint16 packed, uint16* dist_ally, uint16* dist_enemy)
 {
 	PoolFindStruct find;
 	Structure* s;
@@ -176,13 +184,9 @@ Skirmish_FindClosestStructures(HouseType houseID, uint16 packed,
 
 		const uint16 dist = Tile_GetDistancePacked(Tile_PackTile(s->o.position), packed);
 		if (House_AreAllied(houseID, s->o.houseID))
-		{
 			*dist_ally = min(dist, *dist_ally);
-		}
 		else
-		{
 			*dist_enemy = min(dist, *dist_enemy);
-		}
 	}
 }
 
@@ -204,81 +208,6 @@ static uint16 Skirmish_PickRandomLocation(uint16 acceptableLstFlags, uint16 unac
 	return 0;
 }
 
-static bool Skirmish_ResetAlliances()
-{
-	HouseType playerHouseID = HOUSE_INVALID;
-
-	memset(g_table_houseAlliance, 0, sizeof(g_table_houseAlliance));
-
-	/* Assign alliances. */
-	for (HouseType h1 = HOUSE_HARKONNEN; h1 < HOUSE_MAX; h1++)
-	{
-		if (g_skirmish.brain[h1] == BRAIN_NONE)
-			continue;
-
-		if (g_skirmish.brain[h1] == BRAIN_HUMAN)
-			playerHouseID = h1;
-
-		g_table_houseAlliance[h1][h1] = HOUSEALLIANCE_ALLIES;
-
-		for (HouseType h2 = h1 + 1; h2 < HOUSE_MAX; h2++)
-		{
-			if (g_skirmish.brain[h2] == BRAIN_NONE)
-				continue;
-
-			if ((g_skirmish.brain[h1] == BRAIN_CPU_ENEMY && g_skirmish.brain[h2] == BRAIN_CPU_ENEMY) ||
-				(g_skirmish.brain[h1] != BRAIN_CPU_ENEMY && g_skirmish.brain[h2] != BRAIN_CPU_ENEMY))
-			{
-				g_table_houseAlliance[h1][h2] = HOUSEALLIANCE_ALLIES;
-				g_table_houseAlliance[h2][h1] = HOUSEALLIANCE_ALLIES;
-			}
-			else
-			{
-				g_table_houseAlliance[h1][h2] = HOUSEALLIANCE_ENEMIES;
-				g_table_houseAlliance[h2][h1] = HOUSEALLIANCE_ENEMIES;
-			}
-		}
-	}
-
-	/* Make Fremen and saboteur superweapons usable for houses. */
-	for (HouseType h = HOUSE_HARKONNEN; h < HOUSE_MAX; h++)
-	{
-		HouseInfo* hi = &g_table_houseInfo[h];
-
-		if ((hi->specialWeapon != HOUSE_WEAPON_FREMEN) &&
-			(hi->specialWeapon != HOUSE_WEAPON_SABOTEUR))
-			continue;
-
-		HouseType h2;
-		HouseType* hp;
-
-		if (hi->specialWeapon == HOUSE_WEAPON_FREMEN)
-			hp = &(hi->superWeapon.fremen.owner);
-		else
-			hp = &(hi->superWeapon.saboteur.owner);
-
-		if (g_table_houseAlliance[h][*hp] == HOUSEALLIANCE_ENEMIES)
-		{
-			*hp = h;
-			continue;
-		}
-
-		h2 = *hp;
-
-		for (HouseType h1 = HOUSE_HARKONNEN; h1 < HOUSE_MAX; h1++)
-		{
-			if (g_table_houseAlliance[h][h1] == HOUSEALLIANCE_ALLIES)
-			{
-				g_table_houseAlliance[h1][h2] = HOUSEALLIANCE_ALLIES;
-				g_table_houseAlliance[h2][h1] = HOUSEALLIANCE_ALLIES;
-			}
-		}
-	}
-
-	g_playerHouseID = playerHouseID;
-	return true;
-}
-
 static void Skirmish_TweakTechTree()
 {
 	/* Disallow CPU ornithopters since they start with a prebuilt
@@ -289,7 +218,6 @@ static void Skirmish_TweakTechTree()
 
 void Skirmish_Prepare()
 {
-	Skirmish_ResetAlliances();
 	Skirmish_TweakTechTree();
 }
 
@@ -328,9 +256,7 @@ static void Skirmish_GenSpiceBlooms()
  * around x0, y0.  Only fill tiles that are part of the same source
  * island (similar to bucket fill same colour).
  */
-static int
-Skirmish_FindBuildableArea(int island, int x0, int y0,
-                           SkirmishData* sd, BuildableTile* buildable)
+static int Skirmish_FindBuildableArea(int island, int x0, int y0, SkirmishData* sd, BuildableTile* buildable)
 {
 	const int dx[4] = {0, 1, 0, -1};
 	const int dy[4] = {-1, 0, 1, 0};
@@ -496,7 +422,7 @@ static bool Skirmish_GenStructuresAI(HouseType houseID, SkirmishData* sd)
 	tech_level = 0;
 	structure = 0;
 	structure_count = 0;
-	for (structure = 0; (structure < lengthof(buildorder)) && (tech_level <= g_campaignID); structure++)
+	for (structure = 0; (structure < lengthof(buildorder)) && (tech_level <= g_techLevel); structure++)
 	{
 		if (buildorder[structure].type == STRUCTURE_INVALID)
 			tech_level++;
@@ -825,76 +751,6 @@ static void Skirmish_GenSandworms()
 	}
 }
 
-static void Skirmish_GenReinforcements()
-{
-	const UnitType unitType1[9] = {
-		UNIT_TROOPERS, UNIT_QUAD, UNIT_QUAD,
-		UNIT_TANK, UNIT_LAUNCHER, UNIT_SIEGE_TANK,
-		UNIT_DEVASTATOR, UNIT_DEVASTATOR, UNIT_DEVASTATOR,
-	};
-
-	const UnitType unitType2[9] = {
-		UNIT_TROOPERS, UNIT_TROOPERS, UNIT_QUAD,
-		UNIT_TANK, UNIT_TANK, UNIT_SIEGE_TANK,
-		UNIT_SIEGE_TANK, UNIT_SIEGE_TANK, UNIT_SIEGE_TANK,
-	};
-	assert(g_campaignID < 9);
-
-	uint8 index = 0;
-	for (HouseType h = HOUSE_HARKONNEN; h < HOUSE_MAX && index < 16; h++)
-	{
-		if (g_skirmish.brain[h] == BRAIN_NONE)
-			continue;
-
-		UnitType type[2];
-		type[0] = unitType1[Tools_RandomLCG_Range(0, g_campaignID)];
-		type[1] = unitType2[Tools_RandomLCG_Range(0, g_campaignID)];
-
-		for (int i = 0; i < 2; i++)
-		{
-			if (type[i] == UNIT_TROOPERS)
-				type[i] = House_GetInfantrySquad(h);
-			else if (type[i] == UNIT_QUAD)
-				type[i] = House_GetLightVehicle(h);
-			else if (type[i] == UNIT_DEVASTATOR)
-				type[i] = House_GetIXVehicle(h);
-			else if (type[i] == UNIT_LAUNCHER && h == HOUSE_ORDOS)
-				type[i] = UNIT_DEVIATOR;
-		}
-
-		const bool repeat = (g_skirmish.brain[h] != BRAIN_HUMAN);
-
-		/* Sardaukar always get four sets of troopers in the enemy base.  That's just how it is! */
-		if (h == HOUSE_SARDAUKAR)
-		{
-			Scenario_Create_Reinforcement(index++, h, UNIT_TROOPERS, 6, 10 * 6, repeat);
-			Scenario_Create_Reinforcement(index++, h, UNIT_TROOPERS, 6, 10 * 6, repeat);
-			Scenario_Create_Reinforcement(index++, h, UNIT_TROOPERS, 6, 10 * 6, repeat);
-			Scenario_Create_Reinforcement(index++, h, UNIT_TROOPERS, 6, 10 * 6, repeat);
-		}
-
-		/* Players always get reinforcements at home base. */
-		else if (g_skirmish.brain[h] == BRAIN_HUMAN)
-		{
-			Scenario_Create_Reinforcement(index++, h, UNIT_TANK, 7, 6 * 6, repeat);
-			Scenario_Create_Reinforcement(index++, h, type[0], 7, 6 * 6, repeat);
-			Scenario_Create_Reinforcement(index++, h, UNIT_TANK, 7, 12 * 6, repeat);
-			Scenario_Create_Reinforcement(index++, h, type[1], 7, 12 * 6, repeat);
-		}
-
-		/* Pick random location, but avoid AIR and VISIBLE types. */
-		else
-		{
-			uint8 locationID = Tools_Random_256() & 0x7;
-			if (locationID == 4 || locationID == 5)
-				locationID += 2;
-
-			Scenario_Create_Reinforcement(index++, h, type[0], locationID, 15 * 6, repeat);
-			Scenario_Create_Reinforcement(index++, h, type[1], locationID, 15 * 6, repeat);
-		}
-	}
-}
-
 static void Skirmish_GenCHOAM()
 {
 	g_starportAvailable[UNIT_CARRYALL] = 2;
@@ -904,12 +760,10 @@ static void Skirmish_GenCHOAM()
 	g_starportAvailable[UNIT_HARVESTER] = 2;
 	g_starportAvailable[UNIT_MCV] = 2;
 
-	if (g_campaignID >= 5)
+	if (g_techLevel >= 5)
 		g_starportAvailable[UNIT_LAUNCHER] = Tools_RandomLCG_Range(2, 4);
-	if (g_campaignID >= 6)
+	if (g_techLevel >= 6)
 		g_starportAvailable[UNIT_SIEGE_TANK] = Tools_RandomLCG_Range(3, 5);
-	if (g_campaignID >= 7)
-		g_starportAvailable[UNIT_ORNITHOPTER] = 3;
 }
 
 static bool Skirmish_GenerateMapInner(bool generate_houses, SkirmishData* sd)
@@ -962,7 +816,7 @@ static bool Skirmish_GenerateMapInner(bool generate_houses, SkirmishData* sd)
 			continue;
 
 		if (g_skirmish.brain[houseID] == BRAIN_HUMAN)
-			Scenario_Create_House(houseID, g_skirmish.brain[houseID], 1500, 0, 250);
+			Scenario_Create_House(houseID, g_skirmish.brain[houseID], 2000, 0, 250);
 		else
 		{
 			House* h = Scenario_Create_House(houseID, g_skirmish.brain[houseID], 1000, 0, 250);
@@ -992,7 +846,6 @@ static bool Skirmish_GenerateMapInner(bool generate_houses, SkirmishData* sd)
 
 	Skirmish_GenSpiceBlooms();
 	Skirmish_GenSandworms();
-	Skirmish_GenReinforcements();
 	Skirmish_GenCHOAM();
 
 	Game_Prepare();
@@ -1004,11 +857,12 @@ static bool Skirmish_GenerateMapInner(bool generate_houses, SkirmishData* sd)
 
 bool Skirmish_GenerateMap(bool newseed)
 {
-	const bool generate_houses = Skirmish_IsPlayable();
+	bool generate_houses = Skirmish_IsPlayable();
 	assert(g_validateStrictIfZero == 0);
 
-	g_campaignID = 7;
-	g_scenarioID = 20;
+	g_techLevel = 7;
+	g_campaignID = 0xFFFF;
+	g_scenarioID = 0xFFFF;
 	g_validateStrictIfZero++;
 
 	if (newseed)
@@ -1035,7 +889,9 @@ bool Skirmish_GenerateMap(bool newseed)
 		sd.nislands_unused = 0;
 	}
 
-	const bool ret = Skirmish_GenerateMapInner(generate_houses, &sd);
+	g_generatingMap = true;
+	bool ret = Skirmish_GenerateMapInner(generate_houses, &sd);
+	g_generatingMap = false;
 
 	free(sd.island);
 	g_validateStrictIfZero--;

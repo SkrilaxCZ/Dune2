@@ -1202,10 +1202,7 @@ static bool Viewport_TileIsDebris(uint16 iconID)
 	return false;
 }
 
-static void
-Viewport_DrawTilesInRange(int x0, int y0,
-                          int viewportX1, int viewportY1, int viewportX2, int viewportY2,
-                          bool draw_tile, bool draw_fog)
+static void Viewport_DrawTilesInRange(int x0, int y0, int viewportX1, int viewportY1, int viewportX2, int viewportY2, bool draw_tile, bool draw_fog)
 {
 	const MapInfo* mapInfo = &g_mapInfos[g_scenario.mapScale];
 	int left, top;
@@ -1242,20 +1239,23 @@ Viewport_DrawTilesInRange(int x0, int y0,
 
 		for (left = viewportX1; left < viewportX2; left += TILE_SIZE , curPos++ , t++ , f++)
 		{
+#ifdef DEBUG
+			if (draw_tile)
+#else
 			if (draw_tile && (t->overlaySpriteID != g_veiledSpriteID))
+#endif
 			{
 				if (Viewport_TileIsDebris(f->groundSpriteID))
 				{
 					const uint16 iconID = g_mapSpriteID[curPos] & ~0x8000;
-
 					Video_DrawIcon(iconID, HOUSE_HARKONNEN, left, top);
 				}
 
 				if (f->groundSpriteID)
-				Video_DrawIcon(f->groundSpriteID, f->houseID, left, top);
+					Video_DrawIcon(f->groundSpriteID, f->houseID, left, top);
 
 				if (f->overlaySpriteID != 0)
-				Video_DrawIcon(f->overlaySpriteID, f->houseID, left, top);
+					Video_DrawIcon(f->overlaySpriteID, f->houseID, left, top);
 
 				/* Draw the transparent fog UNDER units, which doesn't
 				 * really conceal units anyway.  This prevents it from
@@ -1268,6 +1268,7 @@ Viewport_DrawTilesInRange(int x0, int y0,
 				}
 			}
 
+#ifndef DEBUG
 			if (draw_fog)
 			{
 				const bool overlay_is_fog = (g_veiledSpriteID - 16 <= t->overlaySpriteID && t->overlaySpriteID <= g_veiledSpriteID);
@@ -1282,19 +1283,11 @@ Viewport_DrawTilesInRange(int x0, int y0,
 					Video_DrawIcon(iconID, (HouseType)t->houseID, left, top);
 				}
 			}
+#endif
 		}
 	}
 
 	Video_HoldBitmapDrawing(false);
-
-#if 0
-	/* Debugging. */
-	for (int x = x0, left = viewportX1; (x < MAP_SIZE_MAX) && (left <= viewportX2); x++, left += TILE_SIZE)
-		GUI_DrawText_Wrapper("%d", left, viewportY1, 15, 0, 0x21, x);
-
-	for (int y = y0, top = viewportY1; (y < MAP_SIZE_MAX) && (top <= viewportY2); y++, top += TILE_SIZE)
-		GUI_DrawText_Wrapper("%d", viewportX1, top, 6, 0, 0x21, y);
-#endif
 }
 
 void Viewport_DrawTiles()
@@ -1445,7 +1438,7 @@ void Viewport_DrawSelectionHealthBars()
 		if ((s->o.type == STRUCTURE_REFINERY || s->o.type == STRUCTURE_SILO) && (s->o.houseID == g_playerHouseID))
 		{
 			const House* h = g_playerHouse;
-			int creditsStored = h->credits * si->creditsStorage / h->creditsStorage;
+			int creditsStored = h->creditsStorage != 0 ? h->credits * si->creditsStorage / h->creditsStorage : 0;
 			if (h->credits > h->creditsStorage)
 				creditsStored = si->creditsStorage;
 
@@ -1501,8 +1494,10 @@ static void Viewport_DrawSelectedUnit(int x, int y)
 void Viewport_DrawSandworm(const Unit* u)
 {
 	/* if (!g_map[Tile_PackTile(u->o.position)].isUnveiled && !g_debugScenario) return; */
+#ifndef DEBUG
 	if (g_mapVisible[Tile_PackTile(u->o.position)].fogOverlayBits == 0xF)
 		return;
+#endif
 
 	const ShapeID shapeID = (const ShapeID)g_table_unitInfo[UNIT_SANDWORM].groundSpriteID;
 	int x, y;
@@ -1594,8 +1589,10 @@ void Viewport_DrawUnit(const Unit* u, int windowX, int windowY, bool render_for_
 	uint16 packed = Tile_PackTile(u->o.position);
 
 	/* if (!g_map[packed].isUnveiled && !g_debugScenario) return; */
+#ifndef DEBUG
 	if (g_mapVisible[packed].fogOverlayBits == 0xF)
 		return;
+#endif
 
 	int x, y;
 
@@ -1714,9 +1711,10 @@ void Viewport_DrawAirUnit(const Unit* u)
 
 	/* Allied air units don't get concealed by fog of war. */
 	/* if (!g_map[curPos].isUnveiled && !g_debugScenario) return; */
-	if ((!g_map[curPos].isUnveiled) ||
-		((g_mapVisible[curPos].fogOverlayBits == 0xF) && !House_AreAllied(u->o.houseID, g_playerHouseID)))
+#ifndef DEBUG
+	if ((!g_map[curPos].isUnveiled) || ((g_mapVisible[curPos].fogOverlayBits == 0xF) && !House_AreAllied(u->o.houseID, g_playerHouseID)))
 		return;
+#endif
 
 	int x, y;
 	if (!Viewport_InterpolateMovement(u, &x, &y))

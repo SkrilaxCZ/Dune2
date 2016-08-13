@@ -20,13 +20,6 @@ enum HouseWeapon
 	HOUSE_WEAPON_INVALID = 0xFF
 };
 
-enum HouseAlliance
-{
-	HOUSEALLIANCE_BRAIN, /* Alliance depends on scenario's brain setting. */
-	HOUSEALLIANCE_ALLIES,
-	HOUSEALLIANCE_ENEMIES,
-};
-
 /**
  * Flags for House structure
  */
@@ -48,6 +41,7 @@ struct House
 	uint8 index; /*!< The index of the House in the array. */
 	uint16 harvestersIncoming; /*!< How many harvesters are waiting to be delivered. Only happens when we run out of Units to do it immediately. */
 	HouseFlags flags; /*!< General flags of the House. */
+	Brain brain;
 	uint16 unitCount; /*!< Amount of units owned by House. */
 	uint16 unitCountMax; /*!< Maximum amount of units this House is allowed to have. */
 	uint16 unitCountEnemy; /*!< Amount of units owned by enemy. */
@@ -142,7 +136,6 @@ struct HouseInfo
 
 extern const HouseInfo g_table_base_houseInfo[HOUSE_MAX];
 extern HouseInfo g_table_houseInfo[HOUSE_MAX];
-extern HouseAlliance g_table_houseAlliance[HOUSE_MAX][HOUSE_MAX];
 extern const HouseType g_table_houseRemap6to3[HOUSE_MAX];
 extern const uint8 g_table_minimapColour[HOUSE_MAX];
 

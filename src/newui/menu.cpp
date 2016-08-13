@@ -17,6 +17,7 @@
 #include "mentatnewui.h"
 #include "menubar.h"
 #include "savemenu.h"
+#include "scenariomenu.h"
 #include "scrollbar.h"
 #include "strategicmap.h"
 #include "../audio/audio.h"
@@ -63,6 +64,7 @@ enum MenuAction
 	MENU_BRIEFING_LOSE,
 	MENU_PLAY_A_GAME,
 	MENU_LOAD_GAME,
+	MENU_LOAD_SCENARIO,
 	MENU_PLAY_SKIRMISH,
 	MENU_BATTLE_SUMMARY,
 	MENU_SKIRMISH_SUMMARY,
@@ -119,6 +121,7 @@ static Widget* briefing_proceed_repeat_widgets;
 static ExtrasMenu extras_page;
 static int extras_credits;
 static bool skirmish_regenerate_map;
+static bool main_menu_run_intro;
 static int64_t skirmish_radar_timer;
 
 static void Extras_ShowScrollbar();
@@ -159,6 +162,7 @@ static void MainMenu_InitWidgets()
 		{
 			{MENU_PLAY_A_GAME, NULL, STR_PLAY_A_GAME, -1},
 			{MENU_LOAD_GAME, NULL, STR_LOAD_GAME, -1,},
+			{MENU_LOAD_SCENARIO, "Load Scenario", STR_NULL, -1, },
 			{MENU_EXTRAS, "Options and Extras", STR_NULL, SCANCODE_O},
 			{MENU_HALL_OF_FAME, NULL, STR_HALL_OF_FAME, -1},
 			{MENU_EXIT_GAME, NULL, STR_EXIT_GAME, -1},
@@ -467,10 +471,10 @@ static void MainMenu_Initialise(Widget* w)
 
 	GUI_DrawText_Wrapper(NULL, 0, 0, 0, 0, 0x22);
 
-	prop13->height = 11 + 5 * g_fontCurrent->height;
+	prop13->height = 11 + 6 * g_fontCurrent->height;
 	prop13->width = w->width + 2 * 8;
 	prop13->xBase = (SCREEN_WIDTH - prop13->width) / 2;
-	prop13->yBase = 160 - prop13->height / 2;
+	prop13->yBase = 152 - prop13->height / 2;
 
 	while (w != NULL)
 	{
@@ -534,7 +538,6 @@ static MenuAction MainMenu_Loop()
 		g_campaignID = 0;
 		g_scenario_type = SCENARIO_CAMPAIGN;
 		Scenario_InitTables();
-		Scenario_SetCampaignAlliacnes();
 		MainMenu_SetupBlink(main_menu_widgets, widgetID);
 		return MENU_BLINK_CONFIRM | MENU_PICK_HOUSE;
 
@@ -546,6 +549,14 @@ static MenuAction MainMenu_Loop()
 		SaveMenu_InitSaveLoad(false);
 		MainMenu_SetupBlink(main_menu_widgets, widgetID);
 		return MENU_BLINK_CONFIRM | MENU_LOAD_GAME;
+
+	case 0x8000 | MENU_LOAD_SCENARIO:
+		g_campaignID = 0xFFFF;
+		ScenarioMenu_Init();
+		g_scenario_type = SCENARIO_CUSTOM;
+		Scenario_InitTables();
+		MainMenu_SetupBlink(main_menu_widgets, widgetID);
+		return MENU_BLINK_CONFIRM | MENU_LOAD_SCENARIO;
 
 	case 0x8000 | MENU_HALL_OF_FAME:
 		MainMenu_SetupBlink(main_menu_widgets, widgetID);
@@ -814,19 +825,13 @@ static MenuAction Briefing_Loop(MenuAction curr_menu, HouseType houseID, MentatS
 
 	case 0x8003: /* proceed */
 		if (curr_menu == MENU_BRIEFING_WIN)
-		{
 			return MENU_NO_TRANSITION | MENU_BATTLE_SUMMARY;
-		}
-		else if (curr_menu == MENU_BRIEFING_LOSE)
+
+		if (curr_menu == MENU_BRIEFING_LOSE)
 		{
 			if (g_campaignID == 0)
-			{
 				return MENU_NO_TRANSITION | MENU_BRIEFING;
-			}
-			else
-			{
-				return MENU_STRATEGIC_MAP;
-			}
+			return MENU_STRATEGIC_MAP;
 		}
 
 		return MENU_NO_TRANSITION | MENU_PLAY_A_GAME;
@@ -853,17 +858,17 @@ static MenuAction Briefing_Loop(MenuAction curr_menu, HouseType houseID, MentatS
 
 /*--------------------------------------------------------------*/
 
-static void PlayAGame_StartGame(bool new_game)
+static void PlayAGame_StartGame(bool new_game, const char* scenario)
 {
 	A5_UseTransform(SCREENDIV_MAIN);
-	GameLoop_Main(new_game);
+	GameLoop_Main(new_game, scenario);
 	Audio_PlayMusic(MUSIC_STOP);
 	A5_UseTransform(SCREENDIV_MENU);
 }
 
 static MenuAction PlayAGame_Loop(bool new_game)
 {
-	PlayAGame_StartGame(new_game);
+	PlayAGame_StartGame(new_game, NULL);
 
 	switch (g_gameMode)
 	{
@@ -897,23 +902,25 @@ static void LoadGame_Draw()
 	GUI_Widget_DrawAll(g_widgetLinkedListTail);
 }
 
+static void LoadScenario_Draw()
+{
+	GUI_Widget_DrawWindow(&g_scenarioLoadWindowDesc);
+	GUI_Widget_DrawAll(g_widgetLinkedListTail);
+}
+
 static MenuAction LoadGame_Loop()
 {
 	const int ret = SaveMenu_SaveLoad_Click(false);
 	bool redraw = false;
 
 	if (ret == -1)
-	{
 		return MENU_MAIN_MENU;
-	}
-	else if (ret == -2)
-	{
+
+	if (ret == -2)
 		return PlayAGame_Loop(false);
-	}
-	else if (ret == -3)
-	{
+
+	if (ret == -3)
 		redraw = true;
-	}
 
 	Widget* w = g_widgetLinkedListTail;
 	while (w != NULL)
@@ -931,6 +938,59 @@ static MenuAction LoadGame_Loop()
 	return (redraw ? MENU_REDRAW : MENU_NO_ACTION) | MENU_LOAD_GAME;
 }
 
+static MenuAction PlayScenario_Loop()
+{
+	do
+	{
+		PlayAGame_StartGame(true, g_selectedScenario);
+	} while (g_gameMode == GM_RESTART);
+
+	if (g_gameMode == GM_WIN)
+	{
+		Audio_PlayMusic((MusicID)g_table_houseInfo[g_playerHouseID].musicWin);
+		return MENU_FADE_IN | MENU_SKIRMISH_SUMMARY;
+	}
+
+	if (g_gameMode == GM_LOSE)
+	{
+		Audio_PlayMusic((MusicID)g_table_houseInfo[g_playerHouseID].musicLose);
+		return MENU_FADE_IN | MENU_SKIRMISH_SUMMARY;
+	}
+
+	Audio_PlayMusic(MUSIC_MAIN_MENU);
+	return MENU_MAIN_MENU;
+}
+
+static MenuAction LoadScenario_Loop()
+{
+	const int ret = ScenarioMenu_Click();
+	bool redraw = false;
+
+	if (ret == -1)
+		return MENU_MAIN_MENU;
+
+	if (ret == -2)
+		return PlayScenario_Loop();
+
+	if (ret == -3)
+		redraw = true;
+
+	Widget* w = g_widgetLinkedListTail;
+	while (w != NULL)
+	{
+		if ((w->state.selected != w->state.selectedLast) ||
+			(w->state.hover1 != w->state.hover1Last))
+		{
+			redraw = true;
+			break;
+		}
+
+		w = GUI_Widget_GetNext(w);
+	}
+
+	return (redraw ? MENU_REDRAW : MENU_NO_ACTION) | MENU_LOAD_SCENARIO;
+}
+
 static MenuAction PlaySkirmish_Loop()
 {
 	do
@@ -941,7 +1001,7 @@ static MenuAction PlaySkirmish_Loop()
 				return MENU_EXTRAS;
 		}
 
-		PlayAGame_StartGame(false);
+		PlayAGame_StartGame(false, NULL);
 		skirmish_regenerate_map = true;
 	}
 	while (g_gameMode == GM_RESTART);
@@ -951,25 +1011,24 @@ static MenuAction PlaySkirmish_Loop()
 		Audio_PlayMusic((MusicID)g_table_houseInfo[g_playerHouseID].musicWin);
 		return MENU_FADE_IN | MENU_SKIRMISH_SUMMARY;
 	}
-	else if (g_gameMode == GM_LOSE)
+
+	if (g_gameMode == GM_LOSE)
 	{
 		Audio_PlayMusic((MusicID)g_table_houseInfo[g_playerHouseID].musicLose);
 		return MENU_FADE_IN | MENU_SKIRMISH_SUMMARY;
 	}
-	else
-	{
-		Audio_PlayMusic(MUSIC_MAIN_MENU);
-		return MENU_EXTRAS;
-	}
+
+	Audio_PlayMusic(MUSIC_MAIN_MENU);
+	return MENU_EXTRAS;
 }
 
 /*--------------------------------------------------------------*/
 
 static void BattleSummary_Initialise(HouseType houseID, HallOfFameData* fame)
 {
-	uint16 harvestedAllied = g_scenario.harvestedAllied;
-	uint16 harvestedEnemy = g_scenario.harvestedEnemy;
-	uint16 score = Update_Score(g_scenario.score, &harvestedAllied, &harvestedEnemy, houseID);
+	uint32 harvestedAllied = g_scenario.harvestedAllied;
+	uint32 harvestedEnemy = g_scenario.harvestedEnemy;
+	uint32 score = Update_Score(g_scenario.score, &harvestedAllied, &harvestedEnemy, houseID);
 
 	fame->state = HALLOFFAME_PAUSE_START;
 	fame->pause_timer = Timer_GetTicks() + 45;
@@ -1500,8 +1559,11 @@ static void Skirmish_Initialise()
 {
 	Widget* w;
 
-	g_scenario_type = SCENARIO_SKIRMISH;
-	Scenario_InitTables();
+	if (g_scenario_type != SCENARIO_SKIRMISH)
+	{
+		g_scenario_type = SCENARIO_SKIRMISH;
+		Scenario_InitTables();
+	}
 
 	Skirmish_GenerateMap(false);
 	skirmish_regenerate_map = false;
@@ -1528,7 +1590,8 @@ static void Skirmish_Initialise()
 	for (HouseType h = HOUSE_HARKONNEN; h < HOUSE_MAX; h++)
 	{
 		si = Scrollbar_AllocItem(w, SCROLLBAR_BRAIN);
-		si->d.brain = &g_skirmish.brain[h];
+		si->d.br.brain = &g_skirmish.brain[h];
+		si->d.br.house = h;
 		snprintf(si->text, sizeof(si->text), "%s", g_table_houseInfo[h].name);
 	}
 
@@ -1598,29 +1661,27 @@ static MenuAction Skirmish_Loop(int widgetID)
 		{
 			Widget* w = GUI_Widget_Get_ByIndex(extras_widgets, 3);
 			ScrollbarItem* si = Scrollbar_GetSelectedItem(w);
-			Brain new_brain = *(si->d.brain);
+			Brain new_brain = *(si->d.br.brain);
 
 			if (Input_Test((Scancode)MOUSE_RMB))
-			{
-				new_brain = BRAIN_NONE;
-			}
+				g_table_houseInfo[si->d.br.house].spriteColor = (g_table_houseInfo[si->d.br.house].spriteColor + 1) % 6;
 			else
 			{
 				const int change_player = (widgetID == SCANCODE_KEYPAD_4) ? -1 : 1;
 
-				new_brain = (Brain)((new_brain + change_player) % (BRAIN_CPU_ALLY + 1));
+				new_brain = (Brain)((new_brain + change_player) % (BRAIN_CPU_ENEMY + 1));
 
 				/* Skip over human player if one is already selected. */
 				for (HouseType h = HOUSE_HARKONNEN; (new_brain == BRAIN_HUMAN) && (h < HOUSE_MAX); h++)
 				{
 					if (g_skirmish.brain[h] == BRAIN_HUMAN)
-						new_brain = (Brain)((new_brain + change_player) % (BRAIN_CPU_ALLY + 1));
+						new_brain = (Brain)((new_brain + change_player) % (BRAIN_CPU_ENEMY + 1));
 				}
 			}
 
-			if (*(si->d.brain) != new_brain)
+			if (*(si->d.br.brain) != new_brain)
 			{
-				*(si->d.brain) = new_brain;
+				*(si->d.br.brain) = new_brain;
 
 				if (!Skirmish_GenerateMap(false))
 					Skirmish_RequestRegeneration(true);
@@ -2002,6 +2063,12 @@ static void Menu_DrawFadeOut(int64_t fade_start)
 	Video_ShadeScreen(alpha);
 }
 
+void Menu_GameStarted()
+{
+	main_menu_run_intro = true;
+	Menu_Run();
+}
+
 void Menu_Run()
 {
 	MenuAction curr_menu = MENU_FADE_IN | MENU_MAIN_MENU;
@@ -2014,6 +2081,12 @@ void Menu_Run()
 	Menu_Init();
 
 	al_flush_event_queue(g_a5_input_queue);
+
+	if (main_menu_run_intro)
+	{
+		GameLoop_GameIntroAnimation();
+		main_menu_run_intro = false;
+	}
 
 	while (curr_menu != MENU_EXIT_GAME)
 	{
@@ -2084,6 +2157,10 @@ void Menu_Run()
 				LoadGame_Draw();
 				break;
 
+			case MENU_LOAD_SCENARIO:
+				LoadScenario_Draw();
+				break;
+
 			case MENU_BATTLE_SUMMARY:
 			case MENU_SKIRMISH_SUMMARY:
 				BattleSummary_Draw(g_playerHouseID, g_scenarioID, &g_hall_of_fame_state);
@@ -2151,6 +2228,10 @@ void Menu_Run()
 
 		case MENU_LOAD_GAME:
 			res = LoadGame_Loop();
+			break;
+
+		case MENU_LOAD_SCENARIO:
+			res = LoadScenario_Loop();
 			break;
 
 		case MENU_PLAY_SKIRMISH:

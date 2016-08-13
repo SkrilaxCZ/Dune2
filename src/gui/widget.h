@@ -36,7 +36,7 @@ enum WindowID
 	WINDOWID_MAINMENU_FRAME = 13,
 	WINDOWID_MAINMENU_ITEM = 21,
 	WINDOWID_RENDER_TEXTURE = 22,
-	WINDOWID_MAX = 23
+	WINDOWID_MAX = 24
 };
 
 struct Widget;
@@ -57,7 +57,7 @@ typedef bool (ClickProc)(struct Widget*);
 /**
  * A Widget as stored in the memory.
  */
-typedef struct Widget
+struct Widget
 {
 	struct Widget* next; /*!< Next widget in the list. */
 	uint16 index; /*!< Index of the widget. */
@@ -110,7 +110,7 @@ typedef struct Widget
 	uint16 stringID; /*!< Strings to print on the widget. Index above 0xFFF2 are special. */
 
 	ScreenDivID div;
-} Widget;
+};
 
 typedef void (ScrollbarDrawProc)(Widget*);
 
@@ -171,6 +171,7 @@ extern WindowDesc g_gameControlWindowDesc;
 extern WindowDesc g_yesNoWindowDesc;
 extern WindowDesc g_saveLoadWindowDesc;
 extern WindowDesc g_savegameNameWindowDesc;
+extern WindowDesc g_scenarioLoadWindowDesc;
 
 extern uint8 g_paletteActive[3 * 256];
 extern uint8 g_palette1[3 * 256];

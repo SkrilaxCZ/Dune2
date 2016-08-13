@@ -56,7 +56,8 @@ WidgetProperties g_widgetProperties[WINDOWID_MAX] = {
 	{0 * 8, 0, 0 * 8, 0, 0, 0, 0}, /* 19: hall of fame */
 	{2 * 8, 24, 36 * 8, 152, 12, 12, 0}, /* 20 */
 	{1 * 8, 6, 12 * 8, 3, 0, 15, 6}, /* 21: main menu item */
-	{0 * 8, 0, 1024,1024, 0, 0, 0} /* 22: texture rendering pseudo-widget */
+	{0 * 8, 0, 1024,1024, 0, 0, 0}, /* 22: texture rendering pseudo-widget */
+	{3 * 8, 36, 36 * 8, 148, 0, 0, 0} /* 23: load scenario */
 };
 
 uint16 g_curWidgetIndex; /*!< Index of the currently selected widget in #g_widgetProperties. */
@@ -185,7 +186,9 @@ void GUI_Widget_Draw(Widget* w)
 
 	assert(drawMode < DRAW_MODE_MAX);
 	if (drawMode != DRAW_MODE_NONE && drawMode != DRAW_MODE_CUSTOM_PROC && g_screenActiveID == SCREEN_0)
-	GUI_Mouse_Hide_InRegion(positionLeft, positionTop, positionRight, positionBottom);
+	{
+		GUI_Mouse_Hide_InRegion(positionLeft, positionTop, positionRight, positionBottom);
+	}
 
 	switch (drawMode)
 	{
@@ -219,7 +222,9 @@ void GUI_Widget_Draw(Widget* w)
 	}
 
 	if (drawMode != DRAW_MODE_NONE && drawMode != DRAW_MODE_CUSTOM_PROC && g_screenActiveID == SCREEN_0)
-	GUI_Mouse_Show_InRegion();
+	{
+		GUI_Mouse_Show_InRegion();
+	}
 }
 
 /**

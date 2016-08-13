@@ -113,7 +113,7 @@ static int UnitAI_CountUnits(HouseType houseID, UnitType unit_type);
 
 bool AI_IsBrutalAI(HouseType houseID)
 {
-	return (enhancement_brutal_ai && !House_AreAllied(houseID, g_playerHouseID));
+	return enhancement_brutal_ai;
 }
 
 /*--------------------------------------------------------------*/
@@ -552,13 +552,9 @@ bool UnitAI_ShouldDestructDevastator(const Unit* devastator)
 			int cost = g_table_unitInfo[u->o.type].o.buildCredits;
 
 			if (House_AreAllied(devastator->o.houseID, u->o.houseID))
-			{
 				net_damage += cost;
-			}
 			else
-			{
 				net_damage -= cost;
-			}
 		}
 	}
 
@@ -570,9 +566,7 @@ bool UnitAI_ShouldDestructDevastator(const Unit* devastator)
 void UnitAI_ClearSquads()
 {
 	for (int aiSquad = SQUADID_1; aiSquad <= SQUADID_MAX; aiSquad++)
-	{
 		s_aisquad[aiSquad].num_members = 0;
-	}
 }
 
 static void UnitAI_ClampWaypoint(int* x, int* y)

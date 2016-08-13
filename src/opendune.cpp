@@ -60,6 +60,7 @@ uint32 g_hintsShown1 = 0; /*!< A bit-array to indicate which hints has been show
 uint32 g_hintsShown2 = 0; /*!< A bit-array to indicate which hints has been show already (32-63). */
 GameMode g_gameMode = GM_NORMAL;
 GameOverlay g_gameOverlay;
+uint16 g_techLevel = 0;
 uint16 g_campaignID = 0;
 uint16 g_scenarioID = 1;
 uint16 g_activeAction = 0xFFFF; /*!< Action the controlled unit will do. */
@@ -74,6 +75,7 @@ uint32 g_readBufferSize = 0;
 static bool s_debugForceWin = false; /*!< When true, you immediately win the level. */
 
 uint16 g_validateStrictIfZero = 0; /*!< 0 = strict validation, basically: no-cheat-mode. */
+bool g_generatingMap = false;  /*!< 0 = strict validation, basically: no-cheat-mode. */
 static const bool g_running = true; /*!< true if game needs to keep running; false to stop the game. */
 uint16 g_selectionType = 0;
 uint16 g_selectionTypeNew = 0;
@@ -126,32 +128,22 @@ static bool GameLoop_IsLevelFinished()
 				continue;
 
 			if (House_AreAllied(s->o.houseID, g_playerHouseID))
-			{
 				countStructureFriendly++;
-			}
 			else
-			{
 				countStructureEnemy++;
-			}
 		}
 
 		if ((g_scenario.winFlags & 0x1) != 0 && countStructureEnemy == 0)
-		{
 			finish = true;
-		}
 		if ((g_scenario.winFlags & 0x2) != 0 && countStructureFriendly == 0)
-		{
 			finish = true;
-		}
 	}
 
 	/* Check for reaching spice quota */
 	if ((g_scenario.winFlags & 0x4) != 0 && g_playerCredits != 0xFFFF)
 	{
 		if (g_playerCredits >= g_playerHouse->creditsQuota)
-		{
 			finish = true;
-		}
 	}
 
 	/* Check for reaching timeout */
@@ -209,31 +201,22 @@ static bool GameLoop_IsLevelWon()
 				continue;
 
 			if (House_AreAllied(s->o.houseID, g_playerHouseID))
-			{
 				countStructureFriendly++;
-			}
 			else
-			{
 				countStructureEnemy++;
-			}
 		}
 
 		win = true;
 		if ((g_scenario.loseFlags & 0x1) != 0)
-		{
 			win = win && (countStructureEnemy == 0);
-		}
+
 		if ((g_scenario.loseFlags & 0x2) != 0)
-		{
 			win = win && (countStructureFriendly != 0);
-		}
 	}
 
 	/* Check for reaching spice quota */
 	if (!win && (g_scenario.loseFlags & 0x4) != 0 && g_playerCredits != 0xFFFF)
-	{
 		win = (g_playerCredits >= g_playerHouse->creditsQuota);
-	}
 
 	/* Check for reaching timeout */
 	if (!win && (g_scenario.loseFlags & 0x8) != 0)
@@ -302,9 +285,7 @@ static void GameLoop_LevelEnd()
 		}
 
 		GUI_ChangeSelectionType(SELECTIONTYPE_MENTAT);
-
 		g_playerHouse->flags.doneFullScaleAttack = false;
-
 		s_debugForceWin = false;
 		return;
 	}
@@ -680,6 +661,7 @@ static void GameLoop_GameIntroAnimationMenu()
 {
 	Timer_SetTimer(TIMER_GUI, true);
 
+	g_techLevel = 0;
 	g_campaignID = 0;
 	g_scenarioID = 1;
 	g_playerHouseID = HOUSE_INVALID;
@@ -733,7 +715,7 @@ static void GameLoop_GameIntroAnimationMenu()
 		g_readBufferSize = 0x6D60;
 		g_readBuffer = calloc(1, g_readBufferSize);
 
-		Menu_Run();
+		Menu_GameStarted();
 	}
 
 	GFX_SetPalette(g_palette1);
@@ -742,11 +724,12 @@ static void GameLoop_GameIntroAnimationMenu()
 /**
  * Main game loop.
  */
-void GameLoop_Main(bool new_game)
+void GameLoop_Main(bool new_game, const char* scenario)
 {
 	static int64_t l_timerNext = 0;
 	static int64_t l_timerUnitStatus = 0;
 	static int16 l_selectionState = -2;
+	int frames_skipped = 0;
 
 	Mouse_TransformFromDiv(SCREENDIV_MENU, &g_mouseX, &g_mouseY);
 
@@ -754,14 +737,20 @@ void GameLoop_Main(bool new_game)
 	Sprites_LoadTiles();
 	Viewport_Init();
 
-	GUI_Palette_CreateRemap(g_table_houseInfo[g_playerHouseID].spriteColor);
-	Audio_LoadSampleSet(g_table_houseInfo[g_playerHouseID].sampleSet);
-
 	if (new_game)
 	{
-		Game_LoadScenario(g_playerHouseID, g_scenarioID);
+		if (scenario)
+		{
+			if (!Game_LoadScenario(scenario))
+				goto end;
+		}
+		else
+			Game_LoadScenario(g_playerHouseID, g_scenarioID);
 		GUI_ChangeSelectionType(g_debugScenario ? SELECTIONTYPE_DEBUG : SELECTIONTYPE_STRUCTURE);
 	}
+
+	GUI_Palette_CreateRemap(g_table_houseInfo[g_playerHouseID].spriteColor);
+	Audio_LoadSampleSet(g_table_houseInfo[g_playerHouseID].sampleSet);
 
 	Timer_ResetScriptTimers();
 	Timer_SetTimer(TIMER_GAME, true);
@@ -775,7 +764,6 @@ void GameLoop_Main(bool new_game)
 	g_gameOverlay = GAMEOVERLAY_NONE;
 	Timer_RegisterSource();
 
-	int frames_skipped = 0;
 	while (g_gameMode == GM_NORMAL)
 	{
 		Timer_WaitForEvent();
@@ -802,21 +790,12 @@ void GameLoop_Main(bool new_game)
 		}
 
 		if (g_gameOverlay == GAMEOVERLAY_NONE && g_timerGame != curr_ticks)
-		{
 			g_timerGame = curr_ticks;
-		}
-		else if (g_gameOverlay != GAMEOVERLAY_NONE)
-		{
-		}
-		else
-		{
+		else if (g_gameOverlay == GAMEOVERLAY_NONE)
 			continue;
-		}
 
 		if (g_selectionTypeNew != g_selectionType)
-		{
 			GUI_ChangeSelectionType(g_selectionTypeNew);
-		}
 
 		GUI_PaletteAnimate();
 
@@ -885,9 +864,7 @@ void GameLoop_Main(bool new_game)
 		}
 
 		if (g_running && !g_debugScenario)
-		{
 			GameLoop_LevelEnd();
-		}
 
 		if (!g_running)
 			break;
@@ -897,13 +874,9 @@ void GameLoop_Main(bool new_game)
 			frames_skipped = 0;
 
 			if (g_gameOverlay == GAMEOVERLAY_NONE)
-			{
 				GUI_DrawInterfaceAndRadar();
-			}
 			else if (g_gameOverlay == GAMEOVERLAY_MENTAT)
-			{
 				MenuBar_DrawMentatOverlay();
-			}
 			else
 			{
 				GUI_DrawInterfaceAndRadar();
@@ -914,11 +887,9 @@ void GameLoop_Main(bool new_game)
 			A5_UseTransform(SCREENDIV_MAIN);
 		}
 		else
-		{
 			frames_skipped++;
-		}
 	}
-
+end:
 	Timer_UnregisterSource();
 
 	Audio_PlayVoice(VOICE_STOP);
@@ -932,7 +903,6 @@ void GameLoop_Main(bool new_game)
 
 static bool Unknown_25C4_000E()
 {
-
 	if (!Video_Init())
 		return false;
 
@@ -1055,9 +1025,7 @@ void Game_Prepare()
 		if (t->isUnveiled)
 		{
 			const int64_t backup = g_mapVisible[i].timeout;
-
 			Map_UnveilTile(i, g_playerHouseID);
-
 			g_mapVisible[i].timeout = backup;
 		}
 	}
@@ -1112,17 +1080,13 @@ void Game_Prepare()
 				s->countDown = 0;
 			}
 			else
-			{
 				Structure_SetState(s, STRUCTURE_STATE_READY);
-			}
 		}
 
 		Script_Load(&s->o.script, s->o.type);
 
 		if (s->o.type == STRUCTURE_PALACE)
-		{
 			House_Get_ByIndex(s->o.houseID)->palacePosition = s->o.position;
-		}
 
 		if ((House_Get_ByIndex(s->o.houseID)->palacePosition.x != 0) || (House_Get_ByIndex(s->o.houseID)->palacePosition.y != 0))
 			continue;
@@ -1147,13 +1111,10 @@ void Game_Prepare()
 	}
 
 	GUI_Palette_CreateRemap(g_table_houseInfo[g_playerHouseID].spriteColor);
-
 	Map_SetSelection(g_selectionPosition);
 
 	if (g_structureActiveType != 0xFFFF)
-	{
 		Map_SetSelectionSize(g_table_structureInfo[g_structureActiveType].layout);
-	}
 	else
 	{
 		Structure* s = Structure_Get_ByPackedTile(g_selectionPosition);
@@ -1215,11 +1176,10 @@ void Game_Init()
 void Game_LoadScenario(uint8 houseID, uint16 scenarioID)
 {
 	Audio_PlayVoice(VOICE_STOP);
-
 	Game_Init();
-
 	g_validateStrictIfZero++;
 
+	g_scenarioID = scenarioID;
 	if (!Scenario_Load(scenarioID, houseID))
 	{
 		GUI_DisplayModalMessage("No more scenarios!", 0xFFFF);
@@ -1237,6 +1197,29 @@ void Game_LoadScenario(uint8 houseID, uint16 scenarioID)
 	}
 
 	g_validateStrictIfZero--;
+}
+
+/**
+* Load a scenario in a safe way, and prepare the game.
+* @param houseID The House which is going to play the game.
+* @param scenarioID The Scenario to load.
+*/
+bool Game_LoadScenario(const char* scenario)
+{
+	Audio_PlayVoice(VOICE_STOP);
+	Game_Init();
+	g_validateStrictIfZero++;
+
+	g_scenarioID = 0xFFFF;
+	if (!Scenario_Load(scenario, SEARCHDIR_SCENARIO_DIR))
+		return false;
+
+	Game_Prepare();
+
+	g_hintsShown1 = 0;
+	g_hintsShown2 = 0;
+	g_validateStrictIfZero--;
+	return true;
 }
 
 /**

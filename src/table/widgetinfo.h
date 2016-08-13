@@ -28,10 +28,9 @@ enum GameWidgetType
 	GAME_WIDGET_MAX = 18,
 	GAME_WIDGET_INVALID = 0xFFFF
 };
-
 ENUM_MATH_OPERATORS(GameWidgetType)
 
-typedef struct WidgetInfo
+struct WidgetInfo
 {
 	int16 index; /*!< ?? */
 	ClickProc* clickProc; /*!< Function to execute when widget is pressed. */
@@ -45,7 +44,7 @@ typedef struct WidgetInfo
 	uint16 stringID; /*!< ?? */
 
 	ScreenDivID div;
-} WidgetInfo;
+};
 
 extern WidgetInfo g_table_gameWidgetInfo[GAME_WIDGET_MAX + 1];
 

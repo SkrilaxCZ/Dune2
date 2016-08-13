@@ -40,7 +40,8 @@ uint32 SaveLoad_GetLength(const SaveLoadDesc* sld)
 		case SLDT_SLD: length += SaveLoad_GetLength(sld->sld) * sld->count;
 			break;
 
-		case SLDT_CUSTOM: break;
+		case SLDT_CUSTOM:
+			break;
 
 		default: length += 0;
 		}

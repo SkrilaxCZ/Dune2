@@ -17,7 +17,7 @@
 /**
  * The flags of a WSA Header.
  */
-typedef struct WSAFlags
+struct WSAFlags
 {
 	BIT_U8 notmalloced:1; /*!< If the WSA is in memory of the caller. */
 	BIT_U8 malloced:1; /*!< If the WSA is malloc'd by us. */
@@ -27,12 +27,12 @@ typedef struct WSAFlags
 	BIT_U8 noAnimation:1; /*!< If the WSA has animation or not. */
 	BIT_U8 hasNoAnimation:1; /*!< The WSA has no animation. */
 	BIT_U8 isSpecial:1; /*!< Indicates if the WSA has a special buffer. */
-} WSAFlags;
+};
 
 /**
  * The header of a WSA file that is being read.
  */
-typedef struct WSAHeader
+struct WSAHeader
 {
 	uint16 frameCurrent; /*!< Current frame displaying. */
 	uint16 frames; /*!< Total frames in WSA. */
@@ -43,12 +43,12 @@ typedef struct WSAHeader
 	uint8* fileContent; /*!< The content of the file. */
 	char filename[13]; /*!< Filename of WSA. */
 	WSAFlags flags; /*!< Flags of WSA. */
-} WSAHeader;
+};
 
 /**
  * The header of a WSA file as on the disk.
  */
-typedef struct WSAFileHeader
+struct WSAFileHeader
 {
 	uint16 frames; /*!< Amount of animation frames in this WSA. */
 	uint16 width; /*!< Width of WSA. */
@@ -57,7 +57,7 @@ typedef struct WSAFileHeader
 	uint16 isSpecial; /*!< Indicates if the WSA has a special buffer. */
 	uint32 animationOffsetStart; /*!< Offset where animation starts. */
 	uint32 animationOffsetEnd; /*!< Offset where animation ends. */
-} WSAFileHeader;
+};
 
 /**
  * Get the amount of frames a WSA has.
@@ -91,9 +91,7 @@ static uint32 WSA_GetFrameOffset_FromMemory(WSAHeader* header, uint16 frame)
 
 	animation0 = READ_LE_UINT32(header->fileContent);
 	if (animation0 != 0)
-	{
 		lengthAnimation = READ_LE_UINT32(header->fileContent + 4) - animation0;
-	}
 
 	return animationFrame - lengthAnimation - 10;
 }
@@ -183,13 +181,9 @@ static uint16 WSA_GotoNextFrame(void* wsa, uint16 frame, uint8* dst)
 	Format80_Decode(header->buffer, buffer, header->bufferLength);
 
 	if (header->flags.displayInBuffer)
-	{
 		Format40_Decode(dst, header->buffer);
-	}
 	else
-	{
 		Format40_Decode_XorToScreen(dst, header->buffer, header->width);
-	}
 
 	return 1;
 }
@@ -232,7 +226,6 @@ void* WSA_LoadFile(const char* filename, void* wsa, uint32 wsaSize, bool reserve
 	if (fileheader.isSpecial)
 	{
 		flags.isSpecial = true;
-
 		lengthSpecial = 0x300;
 	}
 
@@ -240,13 +233,9 @@ void* WSA_LoadFile(const char* filename, void* wsa, uint32 wsaSize, bool reserve
 
 	lengthAnimation = 0;
 	if (fileheader.animationOffsetStart != 0)
-	{
 		lengthAnimation = fileheader.animationOffsetEnd - fileheader.animationOffsetStart;
-	}
 	else
-	{
 		flags.hasNoAnimation = true;
-	}
 
 	lengthFileContent -= lengthSpecial + lengthAnimation + 10;
 
@@ -263,9 +252,9 @@ void* WSA_LoadFile(const char* filename, void* wsa, uint32 wsaSize, bool reserve
 	if (wsaSize > 1 && wsaSize < bufferSizeMinimal)
 	{
 		File_Close(fileno);
-
 		return NULL;
 	}
+
 	if (wsaSize == 0)
 		wsaSize = bufferSizeOptimal;
 	if (wsaSize == 1)
@@ -274,29 +263,19 @@ void* WSA_LoadFile(const char* filename, void* wsa, uint32 wsaSize, bool reserve
 	if (wsa == NULL)
 	{
 		if (wsaSize == 0)
-		{
 			wsaSize = bufferSizeOptimal;
-		}
 		else if (wsaSize == 1)
-		{
 			wsaSize = bufferSizeMinimal;
-		}
 		else if (wsaSize >= bufferSizeOptimal)
-		{
 			wsaSize = bufferSizeOptimal;
-		}
 		else
-		{
 			wsaSize = bufferSizeMinimal;
-		}
 
 		wsa = calloc(1, wsaSize);
 		flags.malloced = true;
 	}
 	else
-	{
 		flags.notmalloced = true;
-	}
 
 	header = (WSAHeader *)wsa;
 	buffer = (uint8 *)wsa + sizeof(WSAHeader);
@@ -304,16 +283,12 @@ void* WSA_LoadFile(const char* filename, void* wsa, uint32 wsaSize, bool reserve
 	header->flags = flags;
 
 	if (reserveDisplayFrame)
-	{
 		memset(buffer, 0, displaySize);
-	}
 
 	buffer += displaySize;
 
 	if ((fileheader.frames & 0x8000) != 0)
-	{
 		fileheader.frames &= 0x7FFF;
-	}
 
 	header->frameCurrent = fileheader.frames;
 	header->frames = fileheader.frames;
@@ -479,13 +454,9 @@ bool WSA_DisplayFrame(void* wsa, uint16 frameNext, uint16 posX, uint16 posY, Scr
 		if (!header->flags.hasNoAnimation)
 		{
 			if (!header->flags.displayInBuffer)
-			{
 				Format40_Decode_ToScreen(dst, header->buffer, header->width);
-			}
 			else
-			{
 				Format40_Decode(dst, header->buffer);
-			}
 		}
 
 		header->frameCurrent = 0;
@@ -499,13 +470,9 @@ bool WSA_DisplayFrame(void* wsa, uint16 frameNext, uint16 posX, uint16 posY, Scr
 		frameCount = header->frames - frameNext + header->frameCurrent;
 
 		if (frameCount < frameDiff && !header->flags.noAnimation)
-		{
 			direction = -1;
-		}
 		else
-		{
 			frameCount = frameDiff;
-		}
 	}
 	else
 	{
@@ -547,7 +514,6 @@ bool WSA_DisplayFrame(void* wsa, uint16 frameNext, uint16 posX, uint16 posY, Scr
 				frame = header->frames;
 
 			WSA_GotoNextFrame(wsa, frame, dst);
-
 			frame += direction;
 		}
 	}
@@ -557,9 +523,7 @@ bool WSA_DisplayFrame(void* wsa, uint16 frameNext, uint16 posX, uint16 posY, Scr
 	if (header->flags.displayInBuffer)
 	{
 		Screen oldScreenID = GFX_Screen_SetActive(screenID);
-
 		WSA_DrawFrame(posX, posY, header->width, header->height, 0, dst);
-
 		GFX_Screen_SetActive(oldScreenID);
 	}
 
